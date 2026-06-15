@@ -27,3 +27,104 @@
 	<stdio.h>
 	<stdlib.h>
 
+1781556417 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/arbolBinBusq.h
+	<stdlib.h>
+	<string.h>
+	"common.h"
+
+1781556417 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.h
+	<stdio.h>
+	<stdarg.h>
+
+1781551418 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/bandido.c
+	<stdlib.h>
+	"bandido.h"
+
+1781550057 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/bandido.h
+
+1781559484 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/cola.c
+	"cola.h"
+
+1781556417 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/cola.h
+	<stdlib.h>
+	<string.h>
+	"common.h"
+
+1781556417 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.c
+	"common.h"
+
+1781551418 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.c
+	<string.h>
+	<stdio.h>
+	"jugador.h"
+
+1781550059 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.h
+
+1781562043 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
+	"listaCircularDoble.h"
+
+1781560892 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/listaCircularDoble.h
+	<stdlib.h>
+	<string.h>
+	"common.h"
+
+1781556417 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/main.c
+	<stdio.h>
+	<stdlib.h>
+	"interfaz.h"
+	"AdministradorDeJuego.h"
+
+1781560576 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/interfaz.h
+	<stdio.h>
+
+1781556417 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
+	"juego.h"
+
+1781560576 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/juego.h
+	"bandido.h"
+	"jugador.h"
+	"tablero.h"
+	"turnos.h"
+
+1781561884 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/tablero.h
+	"bandido.h"
+	"jugador.h"
+	"listaCircularDoble.h"
+	<string.h>
+
+1781551543 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/turnos.h
+	"bandido.h"
+	"jugador.h"
+	"tablero.h"
+
+1781550871 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/turnos.c
+	"turnos.h"
+	<stdio.h>
+
+1781558961 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/interfaz.c
+	"interfaz.h"
+	<string.h>
+	<stdio.h>
+
+1781559634 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/arbolBinBusq.c
+	"arbolBinBusq.h"
+
+1781561871 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/tablero.c
+	"tablero.h"
+	"jugador.h"
+	"bandido.h"
+	<stdlib.h>
+	<stdio.h>
+
+1781560648 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.c
+	"AdministradorDeJuego.h"
+	"juego.h"
+
+1781560882 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/juego.c
+	<stdio.h>
+	<stdlib.h>
+	"juego.h"
+	"tablero.h"
+	"jugador.h"
+	"bandido.h"
+

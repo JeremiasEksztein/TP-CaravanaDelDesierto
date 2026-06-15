@@ -17,13 +17,13 @@
 #define CASILLA_INICIO 'I'
 #define CASILLA_JUGADOR 'J'
 #define OK 0
-//Otros defines
+// Otros defines
 #define ARCHIVO_CONFIG_TABLERO "config.txt"
 #define ERROR_ARCHIVO 4
 #define TAM_LINEA 150
-#define ES_PRIMERA_LINEA cfg->cantCasillas==1
+#define ES_PRIMERA_LINEA cfg->cantCasillas == 1
 
-//Sencilla configuracion por defecto, para testing:
+// Sencilla configuracion por defecto, para testing:
 #define CANT_CASILLAS_DEFAULT 20
 #define CANT_BANDIDOS_DEFAULT 3
 #define CANT_OASIS_DEFAULT 2
@@ -31,13 +31,27 @@
 #define CANT_VIDA_DEFAULT 2
 #define CANT_TOR_DEFAULT 2
 
+/**
+ * @typedef tTipoCasilla
+ * @brief Tipo numerico para identificar el tipo de casilla.
+ */
+typedef unsigned char tTipoCasilla;
+typedef unsigned char tTipoPieza;
 
-typedef unsigned char tTipoCasilla; // 1 byte
-
+/**
+ * @struct tCasilla
+ * @brief Representa una casilla individual del tablero.
+ *
+ * Cada casilla tiene un tipo base (normal, oasis, tormenta, etc.),
+ * una pieza que la ocupa (jugador, bandido o vacio) y un contador
+ * de bandidos presentes.
+ */
 typedef struct {
-  tTipoCasilla base;        // O/T/P/V/I/S/.
-  unsigned char hayJugador; // 0/1
-  unsigned char hayBandido; // 0/1
+  tTipoCasilla base; /**< Tipo base de la casilla (CASILLA_NORMAL,
+                        CASILLA_OASIS, etc.) */
+  tTipoPieza pieza;  /**< Pieza que ocupa la casilla ('J', 'B' o 0 si vacia) */
+  int cantBandidosEnCasilla; /**< Cantidad de bandidos actualmente en esta
+                                casilla */
 } tCasilla;
 
 typedef struct {
@@ -62,13 +76,77 @@ int verificarCapacidad(const tConfigTablero *cfg);
 int buscarJugadorEnTablero(tTablero *t);
 void mostrarTablero(const tTablero *t);
 void eliminarBandidoDeTablero(tTablero *t, tBandido *b);
+/**
+ * @brief Decrementa en uno el contador de bandidos de una casilla.
+ *
+ * Si la cantidad de bandidos llega a cero, elimina la pieza de la casilla.
+ * Util para reflejar la eliminacion o salida de un bandido de una posicion.
+ *
+ * @param t   Puntero al tablero donde se encuentra la casilla.
+ * @param pos Indice de la casilla de la que se quita el bandido.
+ */
+void quitarBandidoDePos(tTablero *t, int pos);
+
+/**
+ * @brief Quita al jugador de una casilla especifica del tablero.
+ *
+ * Elimina la pieza del jugador ('J') de la casilla indicada, dejandola
+ * con su tipo base original.
+ *
+ * @param t   Puntero al tablero donde se encuentra la casilla.
+ * @param pos Indice de la casilla de la que se quita al jugador.
+ */
+void quitarJugadorDePos(tTablero *t, int pos);
+
+/**
+ * @brief Coloca al jugador en una casilla especifica del tablero.
+ *
+ * Asigna la pieza del jugador ('J') a la casilla indicada.
+ *
+ * @param t   Puntero al tablero donde se encuentra la casilla.
+ * @param pos Indice de la casilla donde se coloca al jugador.
+ */
+void ponerJugadorEnPosTablero(tTablero *t, int pos);
+
+/**
+ * @brief Consume el efecto especial de una casilla, devolviendola a estado
+ * normal.
+ *
+ * Transforma el tipo base de la casilla en la posicion indicada a
+ * CASILLA_NORMAL. Se utiliza despues de que el jugador haya obtenido
+ * un premio o una vida extra en esa casilla.
+ *
+ * @param t   Puntero al tablero donde se encuentra la casilla.
+ * @param pos Indice de la casilla a consumir.
+ */
+void consumirCasilla(tTablero *t, int pos);
+
+/**
+ * @brief Sincroniza la posicion del jugador en el tablero.
+ *
+ * Quita al jugador de su posicion anterior y lo coloca en la actual.
+ * Maneja correctamente casillas con bandidos.
+ *
+ * @param j Puntero al jugador a sincronizar.
+ * @param t Puntero al tablero donde se realiza el movimiento.
+ */
+void sincronizarJugadorEnTablero(tJugador *j, tTablero *t);
+
+/**
+ * @brief Sincroniza la posicion de un bandido en el tablero.
+ *
+ * Quita el bandido de su posicion anterior (decrementando contador) y
+ * lo coloca en la nueva (incrementando contador).
+ *
+ * @param b Puntero al bandido a sincronizar.
+ * @param t Puntero al tablero donde se realiza el movimiento.
+ */
+void sincronizarBandidoEnTablero(tBandido *b, tTablero *t);
 
 // OTRAS FUNCIONES AUXILIARES PARA EL MANEJO DEL TABLERO:
 int CargarConfiguracionDeTablero(const char *nombreArchivo,
                                  tConfigTablero *cfg);
 
-//OTRAS FUNCIONES AUXILIARES PARA EL MANEJO DEL TABLERO:
-int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg);
-int ContarOcurrencias(const char* cadena, char caracter) ;
+int ContarOcurrencias(const char *cadena, char caracter);
 int CargarConfiguracionPorDefecto(tConfigTablero *cfg);
 #endif

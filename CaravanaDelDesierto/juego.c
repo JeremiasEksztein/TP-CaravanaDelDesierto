@@ -133,8 +133,8 @@ static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
 	*/
 	moverJugador(j, t->mov, juego->tablero.cant);
 
-	list_see_in_pos(&juego->tablero.casillas, &tc, sizeof(tCasilla),
-			j->pos);
+	listaCircularDobleMirarEnPos(&juego->tablero.casillas, &tc,
+				     sizeof(tCasilla), j->pos);
 
 	for (i = 0; i < juego->cantBandidosActivos; i++) {
 		if (hayCaptura(j, &juego->bandido[i])) {
