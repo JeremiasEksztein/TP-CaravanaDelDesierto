@@ -33,37 +33,37 @@ void _postorden(const tArbolBinBusq *bst, fnImprimir imprimir)
     imprimir((*bst)->data);
 }
 
-void _mut_inorden(tArbolBinBusq *bst, fnAccion, void *usuario)
+void _mut_inorden(tArbolBinBusq *bst, fnAccion accion, void *usuario)
 {
     if(!*bst) {
         return;
     }
 
     _mut_inorden(&(*bst)->izq, accion, usuario);
-    imprimir((*bst)->data);
+    accion((*bst)->data, usuario);
     _mut_inorden(&(*bst)->der, accion, usuario);
 }
 
-void _mut_preorden(tArbolBinBusq *bst, fnAccion, void *usuario)
+void _mut_preorden(tArbolBinBusq *bst, fnAccion accion, void *usuario)
 {
     if(!*bst) {
         return;
     }
 
-    imprimir((*bst)->data);
-    _mut_preorden(&(*bst)->izq, fnAccion, usuario);
-    _mut_preorden()&(*bst)->der, fnAccion, usuario);
+    accion((*bst)->data, usuario);
+    _mut_preorden(&(*bst)->izq, accion, usuario);
+    _mut_preorden(&(*bst)->der, accion, usuario);
 }
 
-void _mut_postorden(tArbolBinBusq *bst, fnAccion, void *usuario)
+void _mut_postorden(tArbolBinBusq *bst, fnAccion accion, void *usuario)
 {
     if(!*bst) {
         return;
     }
 
-    _mut_postorden(&(*bst)->izq, fnAccion, usuario);
-    _mut_postorden(&(*bst)->der, fnAccion, usuario);
-    imprimir((*bst)->data);
+    _mut_postorden(&(*bst)->izq, accion, usuario);
+    _mut_postorden(&(*bst)->der, accion, usuario);
+    accion((*bst)->data, usuario);
 }
 
 
@@ -84,7 +84,7 @@ unsigned _alturaArbol(const tArbolBinBusq *bst)
 void _eliminarRaiz(tArbolBinBusq *bst)
 {
     tNodoArbol *tmp;
-    tArbolBinBusq *reemplazo;
+    tArbolBinBusq *reemplazo = bst;
     unsigned altL, altR;
 
     altL = _alturaArbol(&(*bst)->izq);
@@ -180,7 +180,7 @@ int arbolBinBusqSacar(
     }
 
     while(!*bst) {
-        compar = cmp((*bst)->data, data);
+        compar = cmp((*bst)->data, clave);
 
         if(compar > 0) {
             bst = &(*bst)->izq;
@@ -219,7 +219,7 @@ int arbolBinBusqBuscar(
     }
 
     while(!*bst) {
-        compar = cmp((*bst)->data, data);
+        compar = cmp((*bst)->data, clave);
 
         if(compar > 0) {
             bst = &(*bst)->izq;
