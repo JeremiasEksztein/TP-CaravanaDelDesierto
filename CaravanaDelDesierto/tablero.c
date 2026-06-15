@@ -215,3 +215,52 @@ void eliminarBandidoDeTablero(tTablero *t, tBandido *b)
 	c.hayJugador = 0;
 	list_update_by_pos(&t->casillas, &c, b->pos, cambiarANormal);
 }
+//Extras
+int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
+{
+	char* letra;
+	char linea[TAM_LINEA];
+	FILE* arch = fopen(nombreArchivo, "rt");
+	if(!arch)
+	{
+		return ERROR_ARCHIVO;
+	}
+	//Inicializo los valores
+	cfg->cantCasillas = 0;
+	cfg->maxBands = 0;
+	cfg->maxOasis = 0;
+	cfg->maxPrem = 0;
+	cfg->maxVida = 0;
+	cfg->maxTor = 0;
+	//Ahora cargo el archivo:
+	while(fgets(linea,sizeof(linea), arch))
+	{
+		cfg->cantCasillas++;
+		
+		letra = strchr(linea, 'O');
+		if(letra)
+		{
+			cfg->maxOasis;
+		}
+		letra = strchr(linea,'P')
+		if(letra)
+		{
+			cfg->maxPrem++;
+		}
+		letra = strchr(linea,'')
+		if(letra)
+		{
+
+		}
+		letra = strchr(linea, 'B');
+		if(letra && cfg->cantCasillas!=1)
+		{
+			cfg->maxBands++;
+		}
+	}
+
+
+
+	fclose(arch);
+	return 0;
+}

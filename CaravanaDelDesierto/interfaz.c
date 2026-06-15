@@ -1,6 +1,6 @@
 #include "interfaz.h"
 
-int CrearMenuInicial(const char* menuTexto, const char* opciones)
+char CrearMenuInicial(const char* menuTexto, const char* opciones)
 {
     char opcion=1;
     while (strchr(opciones, opcion) == NULL) {
