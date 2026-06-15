@@ -10,7 +10,7 @@
 #ifndef JUEGO_H
 #define JUEGO_H
 
-#include "../tipos.h"
+#include "tipos.h"
 
 /**
  * @def FILE_CONFIG
@@ -131,6 +131,6 @@ int correrTurno(tJuego *juego, tTurno *t);
  *
  * @return Un numero entero aleatorio entre 1 y DADO.
  */
-int tirarDado();
+int tirarDado(void);
 
 #endif

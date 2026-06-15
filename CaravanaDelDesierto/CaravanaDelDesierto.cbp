@@ -39,12 +39,33 @@
 		<Unit filename="arbolBinBusq.h">
 			<Option virtualFolder="utils/" />
 		</Unit>
+		<Unit filename="bandido.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="juego/entidades/" />
+		</Unit>
+		<Unit filename="bandido.h">
+			<Option virtualFolder="juego/entidades/" />
+		</Unit>
 		<Unit filename="cola.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="utils/" />
 		</Unit>
 		<Unit filename="cola.h">
 			<Option virtualFolder="utils/" />
+		</Unit>
+		<Unit filename="juego.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="juego/" />
+		</Unit>
+		<Unit filename="juego.h">
+			<Option virtualFolder="juego/" />
+		</Unit>
+		<Unit filename="jugador.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="juego/entidades/" />
+		</Unit>
+		<Unit filename="jugador.h">
+			<Option virtualFolder="juego/entidades/" />
 		</Unit>
 		<Unit filename="listaCircularDoble.c">
 			<Option compilerVar="CC" />
@@ -56,6 +77,20 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="start/" />
+		</Unit>
+		<Unit filename="tablero.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="juego/tablero/" />
+		</Unit>
+		<Unit filename="tablero.h">
+			<Option virtualFolder="juego/tablero/" />
+		</Unit>
+		<Unit filename="turnos.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="juego/" />
+		</Unit>
+		<Unit filename="turnos.h">
+			<Option virtualFolder="juego/" />
 		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />

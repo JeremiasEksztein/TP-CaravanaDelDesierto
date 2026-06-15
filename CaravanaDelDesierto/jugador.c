@@ -8,9 +8,10 @@
  * puntos, invulnerabilidad y control de turno.
  */
 
-#include "jugador.h"
 #include <string.h>
 #include <stdio.h>
+
+#include "jugador.h"
 
 /**
  * @brief Inicializa un jugador con nombre, vidas y valores por defecto.

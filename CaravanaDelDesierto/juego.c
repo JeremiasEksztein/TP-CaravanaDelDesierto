@@ -6,14 +6,13 @@
  *          y finalización de la partida.
  */
 
-#include "juego.h"
 #include <stdio.h>
-
-#include "../tablero/tablero.h"
-#include "../entidades/jugador.h"
-#include "../entidades/bandido.h"
-
 #include <stdlib.h>
+
+#include "juego.h"
+#include "tablero.h"
+#include "jugador.h"
+#include "bandido.h"
 
 /**
  * @brief Simula el lanzamiento de un dado.

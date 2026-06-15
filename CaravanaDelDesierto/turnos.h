@@ -6,7 +6,8 @@
 
 #ifndef TURNOS_H
 #define TURNOS_H
-#include "../tipos.h"
+
+#include "tipos.h"
 
 /**
  * @brief Crea un turno para un jugador en el tablero.

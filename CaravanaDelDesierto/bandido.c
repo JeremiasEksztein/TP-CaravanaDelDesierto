@@ -1,5 +1,6 @@
-#include "bandido.h"
 #include <stdlib.h>
+
+#include "bandido.h"
 
 /**
  * @file bandido.c

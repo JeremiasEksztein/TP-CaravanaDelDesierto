@@ -1,8 +1,9 @@
-#include "tablero.h"
-#include "../entidades/jugador.h"
-#include "../entidades/bandido.h"
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "tablero.h"
+#include "jugador.h"
+#include "bandido.h"
 
 void cambiarANormal(void* ctx, const void* d)
 {
