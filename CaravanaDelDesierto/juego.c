@@ -36,6 +36,7 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 	tTablero t;
 	tBandido *b;
 
+	// Verificar que la configuración es válida antes de proceder con la inicialización.
 	if ((code = verificarCapacidad(&(c->tCfg))) != OK) {
 		return code;
 	}
