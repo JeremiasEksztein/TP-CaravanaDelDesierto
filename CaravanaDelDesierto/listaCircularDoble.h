@@ -1,6 +1,11 @@
 #ifndef LISTA_CIRCULAR_DOBLE_H
 #define LISTA_CIRCULAR_DOBLE_H
 
+#include <stdlib.h>
+#include <string.h>
+
+#include "common.h"
+
 typedef struct sNodo2 tNodo2;
 struct sNodo2 {
     tNodo2 *ant, *sig;
