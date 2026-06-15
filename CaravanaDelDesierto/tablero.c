@@ -241,19 +241,23 @@ int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
 		letra = strchr(linea, 'O');
 		if(letra)
 		{
-			cfg->maxOasis;
+			cfg->maxOasis++;
 		}
-		letra = strchr(linea,'P')
+		letra = strchr(linea,'P');
 		if(letra)
 		{
 			cfg->maxPrem++;
 		}
-		letra = strchr(linea,'T')
+		letra = strchr(linea,'T');
 		if(letra)
 		{
 			cfg->maxTor++;
 		}
-		
+		letra = strchr(linea,'V');
+		if(letra)
+		{
+			cfg->maxVida++;
+		}
 		cantidadDeApariciones = ContarOcurrencias(linea,'B');
 		if(cantidadDeApariciones && !(ES_PRIMERA_LINEA))
 		{
