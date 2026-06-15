@@ -31,6 +31,7 @@
 	"interfaz.h"
 	"AdministradorDeJuego.h"
 
+<<<<<<< HEAD
 1781556417 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/arbolBinBusq.c
 	"arbolBinBusq.h"
 
@@ -161,3 +162,5 @@
 	"turnos.h"
 	<stdio.h>
 
+=======
+>>>>>>> 643c5e002fde5a51945a9ab3ecf1043c70d2db7a

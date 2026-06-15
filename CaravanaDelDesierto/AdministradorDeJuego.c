@@ -8,7 +8,7 @@ int AdministrarInicioJuego()
 
     if(CargarConfiguracionDeTablero(ARCHIVO_CONFIG_TABLERO, &configActual) != 0)
     {
-        MostrarMensajeArchivoNoEncontrado(ARCHIVO_CONFIG_TABLERO);
+        //MostrarMensajeArchivoNoEncontrado(ARCHIVO_CONFIG_TABLERO);
         CargarConfiguracionPorDefecto(&configActual);
     }
     //crearConfig(&configActual, NIVEL_DEFAULT, DIFICULTAD_DEFAULT);

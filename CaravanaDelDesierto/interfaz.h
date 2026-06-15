@@ -11,7 +11,7 @@
 #define SALIR '3'
 #define JUGAR '1'
 #define RANKING '2'
-
+#include <stdio.h>
 char CrearMenuInicial(const char* menuTexto, const char* opciones);
 
 #endif
