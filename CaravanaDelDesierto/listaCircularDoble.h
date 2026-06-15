@@ -26,6 +26,15 @@ int listaCircularDobleBuscar(
     fnCmp cmp
 );
 
+int listaCircularDobleActualizarEnPos(
+    tListaCircularDoble *l,
+    const void *data,
+    int pos,
+    fnAccion accion,
+);
+
+unsigned listaCircularDobleLargo(const tListaCircularDoble *l);
+
 void listaCircularDobleDestruir(tListaCircularDoble *l);
 
 #endif

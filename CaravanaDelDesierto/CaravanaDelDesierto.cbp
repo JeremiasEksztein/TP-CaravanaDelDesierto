@@ -32,6 +32,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="AdministradorDeJuego.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="AdministradorDeJuego.h" />
 		<Unit filename="arbolBinBusq.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="utils/" />
@@ -60,6 +64,10 @@
 		<Unit filename="common.h">
 			<Option virtualFolder="utils/" />
 		</Unit>
+		<Unit filename="interfaz.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interfaz.h" />
 		<Unit filename="juego.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="juego/" />
