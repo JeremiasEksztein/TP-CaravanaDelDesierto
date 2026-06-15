@@ -31,7 +31,8 @@
 	"interfaz.h"
 	"AdministradorDeJuego.h"
 
-<<<<<<< HEAD
+1781555924 D
+
 1781556417 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/arbolBinBusq.c
 	"arbolBinBusq.h"
 
@@ -131,7 +132,8 @@
 	<string.h>
 	<stdio.h>
 
-1781559459 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/interfaz.h
+1781560893 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/interfaz.h
+	<stdio.h>
 
 1781559789 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.h
 	<stdlib.h>
@@ -162,5 +164,7 @@
 	"turnos.h"
 	<stdio.h>
 
-=======
->>>>>>> 643c5e002fde5a51945a9ab3ecf1043c70d2db7a
+1781550777 
+
+1781550777 c5e002fde5a51945a9ab3ecf1043c70d2db7a
+

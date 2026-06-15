@@ -107,6 +107,9 @@
 		<Unit filename="turnos.h">
 			<Option virtualFolder="juego/" />
 		</Unit>
+		<Unit filename="usuarios_db.h">
+			<Option virtualFolder="usuario/" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
