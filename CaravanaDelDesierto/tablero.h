@@ -1,6 +1,9 @@
 #ifndef TABLERO_H
 #define TABLERO_H
 
+
+#include <string.h>
+
 #define FILE_TABLERO "caravana.txt"
 #define CASILLA_NORMAL '.'
 #define CASILLA_OASIS 'O'
@@ -11,6 +14,11 @@
 #define CASILLA_META 'S'
 #define CASILLA_INICIO 'I'
 #define CASILLA_JUGADOR 'J'
+
+//Otros defines
+#define ARCHIVO_CONFIG_TABLERO "config.txt"
+#define ERROR_ARCHIVO 4
+#define TAM_LINEA 150
 
 typedef unsigned char tTipoCasilla; // 1 byte
 
@@ -42,5 +50,9 @@ int verificarCapacidad(const tConfigTablero *cfg);
 int buscarJugadorEnTablero(tTablero *t);
 void mostrarTablero(const tTablero *t);
 void eliminarBandidoDeTablero(tTablero *t, tBandido *b);
+
+
+//OTRAS FUNCIONES AUXILIARES PARA EL MANEJO DEL TABLERO:
+int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg);
 
 #endif
