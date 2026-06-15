@@ -5,12 +5,13 @@
 
 1781550777 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/bandido.h
 
-1781550546 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/cola.c
+1781559789 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/cola.c
+	"cola.h"
 
 1781551565 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/common.c
 	"common.h"
 
-1781552050 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/common.h
+1781556253 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/common.h
 	<stdio.h>
 	<stdarg.h>
 
@@ -21,11 +22,14 @@
 
 1781550777 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/jugador.h
 
-1781550546 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
+1781559789 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
+	"listaCircularDoble.h"
 
-1781549956 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/main.c
+1781555924 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/main.c
 	<stdio.h>
 	<stdlib.h>
+	"interfaz.h"
+	"AdministradorDeJuego.h"
 
 1781556417 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/arbolBinBusq.c
 	"arbolBinBusq.h"
@@ -106,5 +110,54 @@
 1781558961 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/interfaz.c
 	"interfaz.h"
 	<string.h>
+	<stdio.h>
+
+1781559262 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/arbolBinBusq.c
+	"arbolBinBusq.h"
+
+1781552106 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/arbolBinBusq.h
+	<stdlib.h>
+	<string.h>
+	"common.h"
+
+1781553804 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/cola.h
+	<stdlib.h>
+	<string.h>
+	"common.h"
+
+1781559789 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/interfaz.c
+	"interfaz.h"
+	<string.h>
+	<stdio.h>
+
+1781559459 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/interfaz.h
+
+1781559789 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.h
+	<stdlib.h>
+	<string.h>
+	"common.h"
+
+1781555924 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
+	"juego.h"
+
+1781555924 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/juego.h
+	"bandido.h"
+	"jugador.h"
+	"tablero.h"
+	"turnos.h"
+
+1781559789 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/tablero.h
+	"bandido.h"
+	"jugador.h"
+	"listaCircularDoble.h"
+	<string.h>
+
+1781551686 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/turnos.h
+	"bandido.h"
+	"jugador.h"
+	"tablero.h"
+
+1781550777 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/turnos.c
+	"turnos.h"
 	<stdio.h>
 
