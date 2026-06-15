@@ -26,7 +26,7 @@ int main()
         case RANKING:
             printf("Mostrando el ranking...\n");
             //  lógica para el ranking
-            if(MostrarRankingDeJugadores()!=0)
+            if(AdministrarRanking(MOSTRAR,NULL)!=0)
             {
                 printf("No se encuentra el ranking.\n");
             }

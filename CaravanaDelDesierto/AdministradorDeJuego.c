@@ -3,6 +3,7 @@
 
 int AdministrarInicioJuego()
 {
+    short int retorno;
 	tJuego partidaActual;
 	tConfig configActual;
 	tJugador jugadorActual;
@@ -14,6 +15,22 @@ int AdministrarInicioJuego()
 	}
 	//crearConfig(&configActual, NIVEL_DEFAULT, DIFICULTAD_DEFAULT);
 	crearJugador(&jugadorActual, "Jugador1", VIDAS_DEFAULT);
-
-	return iniciarJuego(&partidaActual, &jugadorActual, &configActual);
+    retorno = iniciarJuego(&partidaActual, &jugadorActual, &configActual);
+    if(retorno == JUGADOR_GANO)
+    {
+        AdministrarDeRanking(AGREGADO, &jugadorActual);
+    }
+	return 0;
+}
+int AdministrarRanking(int operacion, void* extras)
+{
+    switch(operacion)
+    {
+        case AGREGADO:
+            GuardarJugadorEnRanking(extras);
+            break;
+        case MOSTRAR:
+            MostrarRankingDeJugadores();
+            break;
+    }
 }
