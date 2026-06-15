@@ -1,7 +1,9 @@
 #ifndef TABLERO_H
 #define TABLERO_H
 
-
+#include "bandido.h"
+#include "jugador.h"
+#include "listaCircularDoble.h"
 #include <string.h>
 
 #define FILE_TABLERO "caravana.txt"
@@ -39,7 +41,7 @@ typedef struct {
 } tCasilla;
 
 typedef struct {
-  double_list_t casillas;
+  tListaCircularDoble casillas;
   int cant;
 } tTablero;
 
@@ -61,6 +63,9 @@ int buscarJugadorEnTablero(tTablero *t);
 void mostrarTablero(const tTablero *t);
 void eliminarBandidoDeTablero(tTablero *t, tBandido *b);
 
+// OTRAS FUNCIONES AUXILIARES PARA EL MANEJO DEL TABLERO:
+int CargarConfiguracionDeTablero(const char *nombreArchivo,
+                                 tConfigTablero *cfg);
 
 //OTRAS FUNCIONES AUXILIARES PARA EL MANEJO DEL TABLERO:
 int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg);

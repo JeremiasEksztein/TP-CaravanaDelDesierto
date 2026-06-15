@@ -2,96 +2,94 @@
 
 void colaCrear(tCola *c)
 {
-    if(!c) {
-        return;
-    }
+	if (!c) {
+		return;
+	}
 
-    c->pri = c->ult = NULL;
+	c->pri = c->ult = NULL;
 }
 
 int colaEncolar(tCola *c, const void *data, unsigned n)
 {
-    tNodo *nuevo;
+	tNodo *nuevo;
 
-    if(!c || !data) {
-        return ERR;
-    }
+	if (!c || !data) {
+		return ERR;
+	}
 
-    nuevo = malloc(sizeof(tNodo));
+	nuevo = malloc(sizeof(tNodo));
 
-    if(!nuevo) {
-        return ERR;
-    }
+	if (!nuevo) {
+		return ERR;
+	}
 
-    nuevo->data = malloc(n);
+	nuevo->data = malloc(n);
 
-    if(!nuevo->data) {
-        free(nuevo);
-        return ERR;
-    }
+	if (!nuevo->data) {
+		free(nuevo);
+		return ERR;
+	}
 
-    if(!c->pri) {
-        c->pri = nuevo;
-    } else {
-        c->ult->sig = nuevo;
-    }
+	if (!c->pri) {
+		c->pri = nuevo;
+	} else {
+		c->ult->sig = nuevo;
+	}
 
-    q->ult = nuevo;
+	c->ult = nuevo;
 
-    return OK;
+	return OK;
 }
 
 int colaDesencolar(tCola *c, void *buf, unsigned n)
 {
-    tNodo borrar;
+	tNodo *borrar;
 
-    if(!c || !c->pri || !c->ult || !buf) {
-        return ERR;
-    }
+	if (!c || !c->pri || !c->ult || !buf) {
+		return ERR;
+	}
 
-    borrar = c->pri;
-    c->pri = c->pri->sig;
+	borrar = c->pri;
+	c->pri = c->pri->sig;
 
-    memcpy(buf, borrar->data, MIN(borrar->n, n));
+	memcpy(buf, borrar->data, MIN(borrar->n, n));
 
-    free(borrar->data);
-    free(borrar);
+	free(borrar->data);
+	free(borrar);
 
-    return OK;
+	return OK;
 }
 
 int colaFrente(const tCola *c, void *buf, unsigned n)
 {
-    tNodo tmp;
+	if (!c || !c->pri || !c->ult || !buf) {
+		return ERR;
+	}
 
-    if(!c || !c->pri || !c->ult || !buf) {
-        return ERR;
-    }
+	memcpy(buf, c->pri->data, MIN(c->pri->n, n));
 
-    memcpy(buf, c->pri->data, MIN(c->pri->n, n));
-
-    return OK;
+	return OK;
 }
 
 int colaEstaVacia(const tCola *c)
 {
-    if(!c) {
-        return TRUE;
-    }
+	if (!c) {
+		return TRUE;
+	}
 
-    return (c->pri == c->ult) ? TRUE : FALSE;
+	return (c->pri == c->ult) ? TRUE : FALSE;
 }
 
 void colaDestruir(tCola *c)
 {
-    tNodo *tmp;
+	tNodo *tmp;
 
-    while(c->pri) {
-        tmp = c->pri;
-        c->pri = c->pri->sig;
-        free(tmp->data);
-        free(tmp);
-    }
+	while (c->pri) {
+		tmp = c->pri;
+		c->pri = c->pri->sig;
+		free(tmp->data);
+		free(tmp);
+	}
 
-    c->pri = c->ult = NULL;
+	c->pri = c->ult = NULL;
 }
