@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void cambiarANormal(void *ctx, const void *d)
+void cambiarANormal(void *ctx, void *d)
 {
 	tCasilla *c = (tCasilla *)ctx;
 	if (c->base == CASILLA_JUGADOR || c->base == CASILLA_BANDIDO) {
@@ -14,7 +14,7 @@ void cambiarANormal(void *ctx, const void *d)
 	c->hayBandido = 0;
 }
 
-void cambiarAJugador(void *ctx, const void *d)
+void cambiarAJugador(void *ctx, void *d)
 {
 	tCasilla *c = (tCasilla *)ctx, *datos = (tCasilla *)d;
 	if (c->base == CASILLA_NORMAL) {
@@ -23,7 +23,7 @@ void cambiarAJugador(void *ctx, const void *d)
 	c->hayJugador = datos->hayJugador;
 }
 
-void cambiarABandido(void *ctx, const void *d)
+void cambiarABandido(void *ctx, void *d)
 {
 	tCasilla *c = (tCasilla *)ctx, *datos = (tCasilla *)d;
 	if (c->base == CASILLA_NORMAL) {
@@ -45,7 +45,7 @@ void prnt(const void *d)
 }
 
 /*Solo se debe usar al inicio de la partida*/
-static int ponerCasilla(tCasilla *c, double_list_t *l)
+static int ponerCasilla(tCasilla *c, tListaCircularDoble *l)
 {
 	int code;
 
@@ -204,7 +204,7 @@ int buscarJugadorEnTablero(tTablero *t)
 	c.base = CASILLA_JUGADOR;
 	c.hayJugador = 1;
 	c.hayBandido = 0;
-	return list_search_pos(&(t->casillas), &c, cmpJugador);
+	return listaCircularDobleBuscarPos(&(t->casillas), &c, cmpJugador);
 }
 
 void eliminarBandidoDeTablero(tTablero *t, tBandido *b)
@@ -213,17 +213,17 @@ void eliminarBandidoDeTablero(tTablero *t, tBandido *b)
 	c.base = CASILLA_NORMAL;
 	c.hayBandido = 0;
 	c.hayJugador = 0;
-	list_update_by_pos(&t->casillas, &c, b->pos, cambiarANormal);
+	listaCircularDobleActualizarEnPos(&t->casillas, &c, b->pos,
+					  cambiarANormal);
 }
 //Extras
 int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
 {
 	int cantidadDeApariciones;
-	char* letra;
+	char *letra;
 	char linea[TAM_LINEA];
-	FILE* arch = fopen(nombreArchivo, "rt");
-	if(!arch)
-	{
+	FILE *arch = fopen(nombreArchivo, "rt");
+	if (!arch) {
 		return ERROR_ARCHIVO;
 	}
 	//Inicializo los valores
@@ -234,10 +234,9 @@ int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
 	cfg->maxVida = 0;
 	cfg->maxTor = 0;
 	//Ahora cargo el archivo:
-	while(fgets(linea,sizeof(linea), arch))
-	{
+	while (fgets(linea, sizeof(linea), arch)) {
 		cfg->cantCasillas++;
-		
+
 		letra = strchr(linea, 'O');
 		if(letra)
 		{
@@ -267,22 +266,22 @@ int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
 	fclose(arch);
 	return 0;
 }
-int ContarOcurrencias(const char* cadena, char caracter) 
+int ContarOcurrencias(const char *cadena, char caracter)
 {
 	int contador = 0;
 
-    if (cadena == NULL) {
-        return 0;
-    }
+	if (cadena == NULL) {
+		return 0;
+	}
 
-    while (*cadena != '\0') {
-        if (*cadena == caracter) {
-            contador++;
-        }
-        cadena++;
-    }
+	while (*cadena != '\0') {
+		if (*cadena == caracter) {
+			contador++;
+		}
+		cadena++;
+	}
 
-    return contador;
+	return contador;
 }
 int CargarConfiguracionPorDefecto(tConfigTablero *cfg)
 {

@@ -27,23 +27,3 @@
 	<stdio.h>
 	<stdlib.h>
 
-1781553348 source:/media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/bandido.c
-	<stdlib.h>
-	"bandido.h"
-
-1781553348 /media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/bandido.h
-
-1781553348 source:/media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.c
-	"common.h"
-
-1781556530 /media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.h
-	<stdio.h>
-	<stdarg.h>
-
-1781553348 source:/media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.c
-	<string.h>
-	<stdio.h>
-	"jugador.h"
-
-1781553348 /media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.h
-
