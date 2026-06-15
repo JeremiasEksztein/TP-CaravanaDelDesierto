@@ -218,6 +218,7 @@ void eliminarBandidoDeTablero(tTablero *t, tBandido *b)
 //Extras
 int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
 {
+	int cantidadDeApariciones;
 	char* letra;
 	char linea[TAM_LINEA];
 	FILE* arch = fopen(nombreArchivo, "rt");
@@ -247,20 +248,45 @@ int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
 		{
 			cfg->maxPrem++;
 		}
-		letra = strchr(linea,'')
+		letra = strchr(linea,'T')
 		if(letra)
 		{
-
+			cfg->maxTor++;
 		}
-		letra = strchr(linea, 'B');
-		if(letra && cfg->cantCasillas!=1)
+		
+		cantidadDeApariciones = ContarOcurrencias(linea,'B');
+		if(cantidadDeApariciones && !(ES_PRIMERA_LINEA))
 		{
-			cfg->maxBands++;
+			cfg->maxBands+=cantidadDeApariciones;
 		}
 	}
-
-
-
 	fclose(arch);
 	return 0;
+}
+int ContarOcurrencias(const char* cadena, char caracter) 
+{
+	int contador = 0;
+
+    if (cadena == NULL) {
+        return 0;
+    }
+
+    while (*cadena != '\0') {
+        if (*cadena == caracter) {
+            contador++;
+        }
+        cadena++;
+    }
+
+    return contador;
+}
+int CargarConfiguracionPorDefecto(tConfigTablero *cfg)
+{
+	cfg->cantCasillas = CANT_CASILLAS_DEFAULT;
+	cfg->maxBands = CANT_BANDIDOS_DEFAULT;
+	cfg->maxOasis = CANT_OASIS_DEFAULT;
+	cfg->maxPrem = CANT_PREMIO_DEFAULT;
+	cfg->maxVida = CANT_VIDA_DEFAULT;
+	cfg->maxTor = CANT_TOR_DEFAULT;
+	return OK;
 }
