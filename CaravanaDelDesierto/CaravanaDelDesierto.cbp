@@ -5,7 +5,7 @@
 		<Option title="CaravanaDelDesierto" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="utils/;juego/;escena/;tui/" />
+		<Option virtualFolders="utils/;tui/;juego/;escenas/;usuario/;juego/tablero/;juego/entidades/;start/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/CaravanaDelDesierto" prefix_auto="1" extension_auto="1" />
@@ -32,8 +32,30 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="arbolBinBusq.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="utils/" />
+		</Unit>
+		<Unit filename="arbolBinBusq.h">
+			<Option virtualFolder="utils/" />
+		</Unit>
+		<Unit filename="cola.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="utils/" />
+		</Unit>
+		<Unit filename="cola.h">
+			<Option virtualFolder="utils/" />
+		</Unit>
+		<Unit filename="listaCircularDoble.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="utils/" />
+		</Unit>
+		<Unit filename="listaCircularDoble.h">
+			<Option virtualFolder="utils/" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="start/" />
 		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
