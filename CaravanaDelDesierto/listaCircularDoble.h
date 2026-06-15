@@ -1,6 +1,11 @@
 #ifndef LISTA_CIRCULAR_DOBLE_H
 #define LISTA_CIRCULAR_DOBLE_H
 
+#include <stdlib.h>
+#include <string.h>
+
+#include "common.h"
+
 typedef struct sNodo2 tNodo2;
 struct sNodo2 {
     tNodo2 *ant, *sig;
@@ -25,6 +30,15 @@ int listaCircularDobleBuscar(
     unsigned n,
     fnCmp cmp
 );
+
+int listaCircularDobleActualizarEnPos(
+    tListaCircularDoble *l,
+    const void *data,
+    int pos,
+    fnAccion accion,
+);
+
+unsigned listaCircularDobleLargo(const tListaCircularDoble *l);
 
 void listaCircularDobleDestruir(tListaCircularDoble *l);
 

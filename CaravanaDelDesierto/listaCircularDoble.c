@@ -78,6 +78,39 @@ int listaCircularDobleBuscar(
     return ERR;
 }
 
+int listaCircularDobleActualizarEnPos(
+    tListaCircularDoble *l,
+    const void *data,
+    int pos,
+    fnAccion accion,
+) {
+    tNodo2 *pri, *act;
+    int i = 0;
+
+    if(!l || !*l || !data || !accion) {
+        return ERR;
+    }
+
+    pri = *l;
+    act = pri;
+
+    do {
+        if(i == pos) {
+            break;
+        }
+
+        act = act->sig;
+    } while(act != pri);
+
+    if(i != pos) {
+        return ERR;
+    }
+
+    accion(act->data, data);
+
+    return OK;
+}
+
 void listaCircularDobleDestruir(tListaCircularDoble *l)
 {
     tNodo2 *tmp;

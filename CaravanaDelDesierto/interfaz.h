@@ -14,6 +14,4 @@
 
 char CrearMenuInicial(const char* menuTexto, const char* opciones);
 
-
-
 #endif
