@@ -53,6 +53,13 @@
 		<Unit filename="cola.h">
 			<Option virtualFolder="utils/" />
 		</Unit>
+		<Unit filename="common.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="utils/" />
+		</Unit>
+		<Unit filename="common.h">
+			<Option virtualFolder="utils/" />
+		</Unit>
 		<Unit filename="juego.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="juego/" />
