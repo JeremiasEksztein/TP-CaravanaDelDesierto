@@ -1,0 +1,2 @@
+RANKING |    NOMBRE   |  MOVIMIENTOS |  PUNTAJE
+-------------------------------------------------
