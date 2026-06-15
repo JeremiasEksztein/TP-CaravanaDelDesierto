@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1781551303 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/bandido.c
+	<stdlib.h>
+	"bandido.h"
+
+1781550777 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/bandido.h
+
+1781550546 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/cola.c
+
+1781551565 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/common.c
+	"common.h"
+
+1781552050 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/common.h
+	<stdio.h>
+	<stdarg.h>
+
+1781551327 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/jugador.c
+	<string.h>
+	<stdio.h>
+	"jugador.h"
+
+1781550777 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/jugador.h
+
+1781550546 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
+
+1781549956 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/main.c
+	<stdio.h>
+	<stdlib.h>
+

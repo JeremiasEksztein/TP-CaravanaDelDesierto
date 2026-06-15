@@ -1,12 +1,71 @@
 #include "arbolBinBusq.h"
 
-void _inorden(const tArbolBinBusq *bst, fnImprimir imprimir);
-void _preorden(const tArbolBinBusq *bst, fnImprimir imprimir);
-void _postorden(const tArbolBinBusq *bst, fnImprimir imprimir);
+void _inorden(const tArbolBinBusq *bst, fnImprimir imprimir)
+{
+    if(!*bst) {
+        return;
+    }
 
-void _mut_inorden(tArbolBinBusq *bst, fnAccion, void *usuario);
-void _mut_preorden(tArbolBinBusq *bst, fnAccion, void *usuario);
-void _mut_postorden(tArbolBinBusq *bst, fnAccion, void *usuario);
+    _inorden(&(*bst)->izq, imprimir);
+    imprimir((*bst)->data);
+    _inorden(&(*bst)->der, imprimir);
+}
+
+void _preorden(const tArbolBinBusq *bst, fnImprimir imprimir)
+{
+    if(!*bst) {
+        return;
+    }
+
+    imprimir((*bst)->data);
+    _preorden(&(*bst)->izq, imprimir);
+    _preorden(&(*bst)->der, imprimir);
+}
+
+void _postorden(const tArbolBinBusq *bst, fnImprimir imprimir)
+{
+    if(!*bst) {
+        return;
+    }
+
+    _postorden(&(*bst)->izq, imprimir);
+    _postorden(&(*bst)->der, imprimir);
+    imprimir((*bst)->data);
+}
+
+void _mut_inorden(tArbolBinBusq *bst, fnAccion, void *usuario)
+{
+    if(!*bst) {
+        return;
+    }
+
+    _mut_inorden(&(*bst)->izq, accion, usuario);
+    imprimir((*bst)->data);
+    _mut_inorden(&(*bst)->der, accion, usuario);
+}
+
+void _mut_preorden(tArbolBinBusq *bst, fnAccion, void *usuario)
+{
+    if(!*bst) {
+        return;
+    }
+
+    imprimir((*bst)->data);
+    _mut_preorden(&(*bst)->izq, fnAccion, usuario);
+    _mut_preorden()&(*bst)->der, fnAccion, usuario);
+}
+
+void _mut_postorden(tArbolBinBusq *bst, fnAccion, void *usuario)
+{
+    if(!*bst) {
+        return;
+    }
+
+    _mut_postorden(&(*bst)->izq, fnAccion, usuario);
+    _mut_postorden(&(*bst)->der, fnAccion, usuario);
+    imprimir((*bst)->data);
+}
+
 
 unsigned _alturaArbol(const tArbolBinBusq *bst)
 {
@@ -187,9 +246,11 @@ void arbolBinBusqImprimir(
 
     switch(tipo) {
         case E_INORDEN:
-            _inorden()
+            _inorden(bst, imprimir);
         case E_PREORDEN:
+            _preorden(bst, imprimir);
         case E_POSTORDEN:
+            _postorden(bst, imprimir);
         default:
             return;
     }
@@ -200,7 +261,23 @@ void arbolBinBusqVisitar(
     eTipoRecorrido tipo,
     fnAccion accion,
     void *usuario
-);
+) {
+
+    if(!bst || !accion) {
+        return;
+    }
+
+    switch(tipo) {
+        case E_INORDEN:
+            _mut_inorden(bst, accion, usuario);
+        case E_PREORDEN:
+            _mut_preorden(bst, accion, usuario);
+        case E_POSTORDEN:
+            _mut_postorden(bst, accion, usuario);
+        default:
+            return;
+    }
+}
 
 void arbolBinBusqDestruir(tArbolBinBusq *bst)
 {
