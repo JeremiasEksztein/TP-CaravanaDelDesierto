@@ -6,8 +6,18 @@
 
 #ifndef TURNOS_H
 #define TURNOS_H
+#include "bandido.h"
+#include "jugador.h"
+#include "tablero.h"
 
-#include "tipos.h"
+typedef enum { EVT_JUGADOR, EVT_BANDIDO } tTipoTurno;
+
+typedef struct {
+  tTipoTurno tipo;
+  int id;  // 0 para jugador, o id de bandido
+  int mov; // cantidad de pasos (1..6)
+  int dir; // +1 adelante, -1 atrás
+} tTurno;
 
 /**
  * @brief Crea un turno para un jugador en el tablero.
@@ -21,8 +31,8 @@
  * @param tab Puntero al tablero actual.
  * @param j Puntero al jugador que realiza el turno.
  */
-void crearTurnoJugador(tTurno *t, const int mov,
-                       const tTablero *tab, const tJugador *j);
+void crearTurnoJugador(tTurno *t, const int mov, const tTablero *tab,
+                       const tJugador *j);
 
 /**
  * @brief Crea un turno para un bandido que persigue al jugador.

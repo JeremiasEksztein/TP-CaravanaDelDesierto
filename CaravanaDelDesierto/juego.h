@@ -9,8 +9,24 @@
 
 #ifndef JUEGO_H
 #define JUEGO_H
+#include "bandido.h"
+#include "jugador.h"
+#include "tablero.h"
+#include "turnos.h"
 
-#include "tipos.h"
+typedef struct {
+  int vidasInicio;
+  tConfigTablero tCfg;
+} tConfig;
+
+typedef struct {
+  tBandido *bandido;
+  tJugador *jugador;
+  tTablero tablero;
+  tConfig cfg;
+  int cantBandidosActivos;
+  int turno;
+} tJuego;
 
 /**
  * @def FILE_CONFIG
@@ -26,13 +42,15 @@
 
 /**
  * @def VIDAS_DEFAULT
- * @brief Cantidad de vidas iniciales por defecto si no se especifica en la configuracion.
+ * @brief Cantidad de vidas iniciales por defecto si no se especifica en la
+ * configuracion.
  */
 #define VIDAS_DEFAULT 3
 
 /**
  * @def CANT_POSICIONES_DEFAULT
- * @brief Cantidad de casillas del tablero por defecto si no se especifica en la configuracion.
+ * @brief Cantidad de casillas del tablero por defecto si no se especifica en la
+ * configuracion.
  */
 #define CANT_POSICIONES_DEFAULT 25
 
@@ -67,7 +85,8 @@
 #define MAX_TORMENTAS_DEFAULT 2
 
 /**
- * @brief Inicializa el estado del juego y del jugador a partir de la configuracion.
+ * @brief Inicializa el estado del juego y del jugador a partir de la
+ * configuracion.
  *
  * Carga la configuracion, genera el tablero con sus casillas especiales,
  * inicializa los bandidos y posiciona al jugador en la casilla de inicio.
@@ -115,7 +134,8 @@ void terminarJuego(const tJuego *juego);
  * @brief Procesa un movimiento individual dentro del turno.
  *
  * Ejecuta el desplazamiento de un jugador o un bandido sobre el tablero
- * y resuelve las consecuencias del movimiento (colisiones, casillas especiales).
+ * y resuelve las consecuencias del movimiento (colisiones, casillas
+ * especiales).
  *
  * @param juego Puntero al estado del juego.
  * @param t Puntero a la estructura que describe el movimiento a realizar.
