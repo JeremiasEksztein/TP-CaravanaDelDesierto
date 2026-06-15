@@ -6,7 +6,7 @@
 
 #define AGREGADO 2
 #define MOSTRAR 1
-
+#define JUGADOR_GANO 0
 
 int AdministrarInicioJuego();
 

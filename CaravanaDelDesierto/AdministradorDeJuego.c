@@ -18,7 +18,7 @@ int AdministrarInicioJuego()
     retorno = iniciarJuego(&partidaActual, &jugadorActual, &configActual);
     if(retorno == JUGADOR_GANO)
     {
-        AdministrarDeRanking(AGREGADO, &jugadorActual);
+        AdministrarRanking(AGREGADO, &jugadorActual);
     }
 	return 0;
 }
@@ -33,4 +33,5 @@ int AdministrarRanking(int operacion, void* extras)
             MostrarRankingDeJugadores();
             break;
     }
+    return 0;
 }
