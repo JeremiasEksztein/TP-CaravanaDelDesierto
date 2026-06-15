@@ -5,7 +5,7 @@ int AdministrarInicioJuego()
     tJuego partidaActual;
     tConfig configActual;
     tJugador jugadorActual;
-
+    
     if(CargarConfiguracionDeTablero(ARCHIVO_CONFIG_TABLERO, &configActual) != 0)
     {
         //MostrarMensajeArchivoNoEncontrado(ARCHIVO_CONFIG_TABLERO);
