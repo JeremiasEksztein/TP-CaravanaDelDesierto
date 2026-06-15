@@ -153,7 +153,4 @@ int correrTurno(tJuego *juego, tTurno *t);
  */
 int tirarDado(void);
 
-
-
-
 #endif

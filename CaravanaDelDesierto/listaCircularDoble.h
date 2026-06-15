@@ -31,5 +31,9 @@ unsigned listaCircularDobleLargo(const tListaCircularDoble *l);
 void listaCircularDobleDestruir(tListaCircularDoble *l);
 int listaCircularDobleBuscarPos(tListaCircularDoble *l, const void *d,
                                 fnCmp cmp);
+int listaCircularDobleMostrarLR(const tListaCircularDoble *l,
+                                const fnAccion print);
 
+int listaCircularDobleMirarEnPos(tListaCircularDoble *l, void *buff,
+                                 const unsigned tam, int pos);
 #endif
