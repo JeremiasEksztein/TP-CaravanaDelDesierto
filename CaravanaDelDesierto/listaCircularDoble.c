@@ -35,8 +35,8 @@ int listaCircularDobleEmpujar(tListaCircularDoble *l, const void *data,
 	nuevo->n = n;
 
 	if (!*l) {
-		(*l)->sig = nuevo;
-		(*l)->ant = nuevo;
+		nuevo->sig = nuevo;
+		nuevo->ant = nuevo;
 		(*l) = nuevo;
 	} else {
 		nuevo->ant = (*l)->ant;
