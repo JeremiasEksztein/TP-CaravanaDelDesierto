@@ -341,9 +341,10 @@ int cmpBandido(const void *a, const void *b)
 
 void mostrarTableroCompacto(const tTablero *t)
 {
-	int i;
+	int i, b;
 	tCasilla c;
-	char base_char, band_char, jug_char;
+	char base_char;
+	int has_jugador, n_bandidos;
 
 	if (t == NULL || t->cant == 0) {
 		return;
@@ -356,22 +357,22 @@ void mostrarTableroCompacto(const tTablero *t)
 			break;
 		}
 
-		/* Slot 1: base type (or '.' if normal) */
 		base_char = (c.base != CASILLA_NORMAL) ? (char)c.base : '.';
+		has_jugador = (c.pieza == CASILLA_JUGADOR);
+		n_bandidos = c.cantBandidosEnCasilla;
 
-		/* Slot 2: bandit count as digit (capped at 9), or space if 0 */
-		if (c.cantBandidosEnCasilla >= 9) {
-			band_char = '9';
-		} else if (c.cantBandidosEnCasilla > 0) {
-			band_char = '0' + (char)c.cantBandidosEnCasilla;
-		} else {
-			band_char = ' ';
-		}
+		printf("[%c", base_char);
 
-		/* Slot 3: player if present, otherwise space */
-		jug_char = (c.pieza == CASILLA_JUGADOR) ? 'J' : ' ';
+		if (has_jugador)
+			printf(" J");
 
-		printf("[%c%c%c]", base_char, band_char, jug_char);
+		for (b = 0; b < n_bandidos; b++)
+			printf(" B");
+
+		if (!has_jugador && n_bandidos == 0)
+			printf(" .");
+
+		printf("]");
 	}
 	printf("\n");
 }
