@@ -182,9 +182,10 @@
 	<string.h>
 	"common.h"
 
-1781570783 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
+1781574126 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
 	"juego.h"
 	"Ranking.h"
+	"cola.h"
 
 1781572397 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/juego.h
 	<string.h>
@@ -351,11 +352,13 @@
 	"turnos.h"
 	<stdio.h>
 
-<<<<<<< Updated upstream
+1781553348 ated upstream
+
 1781570714 source:/media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/Ranking.c
 	"Ranking.h"
 
-=======
+1781570714 "
+
 1781570783 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.c
 	"AdministradorDeJuego.h"
 	"juego.h"
@@ -384,4 +387,5 @@
 	<stdlib.h>
 	<stdio.h>
 
->>>>>>> Stashed changes
+1781568775 shed changes
+
