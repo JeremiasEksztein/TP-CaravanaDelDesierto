@@ -290,14 +290,23 @@ int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
 {
 	FILE *f;
 	char linea[TAM_LINEA];
+	char* iterador;
 	int valor;
 
 	f = fopen(nombreArchivo, "rt");
 	if (!f) {
 		return -1;
 	}
-	while (fscanf(f, "%49[^:]: %d\n", linea, &valor)) {
-		if (strcmp(linea, "cant_posiciones") == 0) {
+	while (fgets(linea,sizeof(linea),f)) {
+        iterador = strrchr(linea,'\n');
+        if(iterador)
+        {
+            *iterador = '\0';
+        }
+        iterador = strrchr(linea,':');
+        valor = atoi((iterador+2));
+        *iterador = '\0';
+		if (strcmp(linea, "cantidad_posiciones") == 0) {
 			cfg->tCfg.cantCasillas = valor;
 		} else if (strcmp(linea, "vidas_inicio") == 0) {
 			cfg->vidasInicio = valor;
