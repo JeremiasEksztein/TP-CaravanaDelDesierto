@@ -4,6 +4,27 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+void esperar(unsigned int ms)
+{
+#ifdef _WIN32
+	Sleep(ms);
+#else
+	usleep(ms * 1000);
+#endif
+}
+
+void limpiarPantalla(void)
+{
+	printf("\033[2J\033[H");
+	fflush(stdout);
+}
+
 // Wrappers
 static int casillaPonerJugador(tCasilla *c)
 {
@@ -318,9 +339,50 @@ int cmpBandido(const void *a, const void *b)
 	return -1;
 }
 
+void mostrarTableroCompacto(const tTablero *t)
+{
+	int i;
+	tCasilla c;
+	char base_char, piece_char;
+
+	if (t == NULL || t->cant == 0) {
+		return;
+	}
+
+	for (i = 0; i < t->cant; i++) {
+		if (listaCircularDobleMirarEnPos(
+			    (tListaCircularDoble *)&(t->casillas), &c,
+			    sizeof(tCasilla), i) != OK) {
+			break;
+		}
+
+		/* Slot 1: base type, or 'B' if 2+ bandidos on normal terrain */
+		if (c.base != CASILLA_NORMAL) {
+			base_char = (char)c.base;
+		} else if (c.cantBandidosEnCasilla >= 2 &&
+			   c.pieza != CASILLA_JUGADOR) {
+			base_char = 'B';
+		} else {
+			base_char = '.';
+		}
+
+		/* Slot 2: player takes priority, then bandido, then empty */
+		if (c.pieza == CASILLA_JUGADOR) {
+			piece_char = 'J';
+		} else if (c.cantBandidosEnCasilla >= 1) {
+			piece_char = 'B';
+		} else {
+			piece_char = '.';
+		}
+
+		printf("[%c %c]", base_char, piece_char);
+	}
+	printf("\n");
+}
+
 void mostrarTablero(const tTablero *t)
 {
-	listaCircularDobleMostrarLR(&(t->casillas), prnt);
+	mostrarTableroCompacto(t);
 }
 
 static void sincronizarPieza(tTablero *t, int posAnterior, int posActual,

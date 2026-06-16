@@ -106,6 +106,13 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 					  jug, partida, dado);
 		}
 		banderaDeVictoria = correrTurno(jue, &actual);
+
+		if (!banderaDeVictoria && ConsultarVidasJugador(jug) > 0) {
+			limpiarPantalla();
+			mostrarTablero(partida);
+			esperar(500);
+		}
+
 		if (banderaDeVictoria) {
 			colaDestruir(&colaDeTurnos);
 			return JUGADOR_GANO;
