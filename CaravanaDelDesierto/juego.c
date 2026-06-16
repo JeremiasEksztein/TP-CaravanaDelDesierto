@@ -63,7 +63,7 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 	juego->tablero = t;
 	juego->turno = 0;
 	juego->cantBandidosActivos = c->tCfg.maxBands;
-
+	
 	return OK;
 }
 

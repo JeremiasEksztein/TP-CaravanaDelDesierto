@@ -49,4 +49,8 @@ void crearTurnoJugador(tTurno *t, const int mov, const tTablero *tab,
  */
 void crearTurnoBandido(tTurno *t, const tBandido *b, const tJugador *j,
                        const tTablero *tab, const int mov);
-#endif
+
+
+
+void IniciarElTurnoDelJugador(tTurno* turno);
+                       #endif

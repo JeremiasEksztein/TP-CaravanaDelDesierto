@@ -17,7 +17,7 @@ int AdministrarJuego()
 	retorno = iniciarJuego(&partidaActual, &jugadorActual, &configActual);
 	if (retorno != 0) {
         //Jugar
-		retorno = Jugar(&partidaActual,&jugadorActual);
+		retorno = Jugar(&partidaActual,&jugadorActual, &partidaActual);
 	}
     //AdministrarRanking(AGREGADO, &jugadorActual);
 	return retorno;
@@ -34,18 +34,21 @@ int AdministrarRanking(int operacion, void *extras)
 	}
 	return 0;
 }
-int Jugar(tJuego* jue,tJugador* jug)
+int Jugar(tJuego* jue,tJugador* jug, tTablero* partida)
 {
 	/*
 	tCola colaDeTurnos;
-	colaCrear(&colaDeTurnos);
 	tTurno actual;
-	tTurno* turnos = (tTurno*)malloc((jue->cantBandidosActivos+1)*sizeof(tTurno));
+	int i,j;
+	unsigned totalDeTurnos = 1 + jue->cantBandidosActivos;
+	tTurno* turnos = (tTurno*)malloc(totalDeTurnos*sizeof(tTurno));
+	colaCrear(&colaDeTurnos);
 	if(!turnos)
 	{
-		return -1;
+		return MEMORIA_LLENA;
 	}
-	turnos[0].id = 0;
+		//Siempre el primer turno es del jugador.
+	IniciarElTurnoDelJugador(&(turnos[0]));
 	for(int i = 0; i < 1 + jue->cantBandidosActivos ; i++)
 	{
 		colaEncolar(&colaDeTurnos,turnos+rand()%(1+jue->cantBandidosActivos),sizeof(tTurno));

@@ -85,3 +85,10 @@ void crearTurnoBandido(tTurno *t, const tBandido *b, const tJugador *j,
 		t->mov = -mov;
 	}
 }
+void IniciarElTurnoDelJugador(tTurno* turno)
+{
+	turno->tipo = EVT_JUGADOR;
+	turno->id = 0; //Id del jugador;
+	turno->mov = 0;
+	turno->dir = 0;
+}
