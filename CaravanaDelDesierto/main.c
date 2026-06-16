@@ -17,7 +17,7 @@ int main()
         case JUGAR:
             printf("Iniciando el juego...\n");
             // lógica inicio juego
-            if(AdministrarInicioJuego()==1)
+            if(AdministrarJuego()==1)
             {
                 //Guardar en ranking;
             }

@@ -57,6 +57,7 @@ typedef struct {
   int maxVida;
   int maxOasis;
   int maxTor;
+  int vidasInicio;
 } tConfigTablero;
 
 void crearTablero(tTablero *t, int nCasillas);

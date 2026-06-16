@@ -21,5 +21,5 @@ int MostrarRankingDeJugadores()
 }
 int GuardarJugadorEnRanking(tJugador* jugador)
 {
-    
+    return 0;
 }

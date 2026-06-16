@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TAM_LINEA 100
+
 #define NOMBRE_ARCHIVO_RANKING "Ranking.bin"
 
 int MostrarRankingDeJugadores();

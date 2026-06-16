@@ -9,6 +9,7 @@
 
 #ifndef JUEGO_H
 #define JUEGO_H
+#include <string.h>
 #include "bandido.h"
 #include "jugador.h"
 #include "tablero.h"

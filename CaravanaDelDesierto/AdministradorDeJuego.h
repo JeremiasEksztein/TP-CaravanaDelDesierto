@@ -8,7 +8,7 @@
 #define MOSTRAR 1
 #define JUGADOR_GANO 0
 
-int AdministrarInicioJuego();
+int AdministrarJuego();
 
 int AdministrarRanking(int operacion, void* extras);
 

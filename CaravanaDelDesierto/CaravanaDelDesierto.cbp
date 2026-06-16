@@ -36,6 +36,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="AdministradorDeJuego.h" />
+		<Unit filename="Ranking.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Ranking.h" />
 		<Unit filename="arbolBinBusq.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="utils/" />
