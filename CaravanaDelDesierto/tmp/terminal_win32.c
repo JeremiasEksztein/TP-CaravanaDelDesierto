@@ -31,6 +31,7 @@ int terminalCrear(tTerminal *term)
     stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
     if(stdinHandle == INVALID_HANDLE_VALUE || stdoutHandle == INVALID_HANDLE_VALUE) {
+        fclose(backend);
         return ERR;
     }
 
@@ -171,6 +172,7 @@ void terminalColorTexto(
         case COLOR_MAGENTA: codigoColor = "\x1b[35m"; break;
         case COLOR_CYAN: codigoColor = "\x1b[36m"; break;
         case COLOR_BLANCO: codigoColor = "\x1b[37m"; break;
+        case COLOR_DEFAULT: codigoColor = "\x1b[39m"; break;
     }
 
     fputs(codigoColor, stdout);
@@ -195,6 +197,7 @@ void terminalColorFondo(
         case COLOR_MAGENTA: codigoColor = "\x1b[45m"; break;
         case COLOR_CYAN: codigoColor = "\x1b[46m"; break;
         case COLOR_BLANCO: codigoColor = "\x1b[47m"; break;
+        case COLOR_DEFAULT: codigoColor = "\x1b[49m"; break;
     }
 
     fputs(codigoColor, stdout);
@@ -237,13 +240,16 @@ void terminalObtenerTam(
     unsigned *filas,
     unsigned *columnas
 ) {
+    tWin32TermBackend *backend;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
 
     if(!term || !term->backend || !filas || !columnas) {
         return;
     }
 
-    if(GetConsoleScreenBufferInfo(term->backend->stdoutHandle, &csbi) == 0) {
+    backend = term->backend;
+
+    if(GetConsoleScreenBufferInfo(backend->stdoutHandle, &csbi) == 0) {
         *filas = 0;
         *columnas = 0;
         return;
@@ -255,6 +261,7 @@ void terminalObtenerTam(
 
 void terminalActualizar(tTerminal *term)
 {
+    tWin32TermBackend *backend;
     DWORD written = 0;
     int ret;
 
@@ -262,8 +269,10 @@ void terminalActualizar(tTerminal *term)
         return;
     }
 
+    backend = term->backend;
+
     ret = WriteConsoleA(
-        term->backend->stdout_handle,
+        backend->stdout_handle,
         term->draw_buf,
         term->draw_buf_pos,
         &written, NULL

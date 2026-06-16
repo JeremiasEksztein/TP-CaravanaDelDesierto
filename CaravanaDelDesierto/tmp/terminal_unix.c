@@ -1,5 +1,6 @@
 #include "terminal.h"
 
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -15,18 +16,18 @@ int terminalCrear(tTerminal *term)
     tUnixTermBackend *backend;
 
     if(!term) {
-        return ERR;
+        return 1;
     }
 
     backend = malloc(sizeof(tUnixTermBackend));
 
     if(!backend) {
-        return ERR;
+        return 1;
     }
 
-    terminal->backend = backend;
+    term->backend = backend;
 
-    return OK;
+    return 0;
 }
 
 void terminalDestruir(tTerminal *term)
@@ -45,28 +46,28 @@ int terminalEntrarModoCrudo(tTerminal *term)
     struct termios modoCrudo;
 
     if(!term || !term->backend) {
-        return ERR;
+        return 1;
     }
 
     backend = term->backend;
 
     if(tcgetattr(STDIN_FILENO, &backend->modoOriginal) == -1) {
-        return ERR;
+        return 1;
     }
 
     modoCrudo = backend->modoOriginal;
-    modoCrudo.c_iflag &= (u32)~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-    modoCrudo.c_oflag &= (u32)~(OPOST);
+    modoCrudo.c_iflag &= (unsigned)~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
+    modoCrudo.c_oflag &= (unsigned)~(OPOST);
     modoCrudo.c_cflag |= (CS8);
-    modoCrudo.c_lflag &= (u32)~(ECHO | ICANON | IEXTEN | ISIG);
+    modoCrudo.c_lflag &= (unsigned)~(ECHO | ICANON | IEXTEN | ISIG);
     modoCrudo.c_cc[VMIN] = 0;
     modoCrudo.c_cc[VTIME] = 0;
 
     if(tcsetattr(STDIN_FILENO, TCSANOW, &modoCrudo) == -1) {
-        return ERR;
+        return 1;
     }
 
-    return OK;
+    return 0;
 }
 
 void terminalSalirModoCrudo(tTerminal *term)
@@ -99,11 +100,11 @@ void terminalMoverCursor(
     unsigned fila,
     unsigned columna
 ) {
+    char buffer[32];
+
     if(!term || !term->backend) {
         return;
     }
-
-    char buffer[32];
 
     snprintf(buffer, sizeof(buffer), "\x1b[%u;%uH", fila + 1, columna + 1);
     fputs(buffer, stdout);
@@ -133,11 +134,11 @@ void terminalColorTexto(
     tTerminal *term,
     eColor color
 ) {
+    const char *codigoColor;
+
       if(!term || !term->backend) {
         return;
     }
-
-    const char *codigoColor;
 
     switch(color) {
         case COLOR_NEGRO: codigoColor = "\x1b[30m"; break;
@@ -148,6 +149,7 @@ void terminalColorTexto(
         case COLOR_MAGENTA: codigoColor = "\x1b[35m"; break;
         case COLOR_CYAN: codigoColor = "\x1b[36m"; break;
         case COLOR_BLANCO: codigoColor = "\x1b[37m"; break;
+        case COLOR_DEFAULT: codigoColor = "\x1b[39m"; break;
     }
 
     fputs(codigoColor, stdout);  
@@ -157,11 +159,11 @@ void terminalColorFondo(
     tTerminal *term,
     eColor color
 ) {
-        if(!term || !term->backend) {
+    const char *codigoColor;
+    
+    if(!term || !term->backend) {
         return;
     }
-
-    const char *codigoColor;
 
     switch(color) {
         case COLOR_NEGRO: codigoColor = "\x1b[40m"; break;
@@ -172,12 +174,21 @@ void terminalColorFondo(
         case COLOR_MAGENTA: codigoColor = "\x1b[45m"; break;
         case COLOR_CYAN: codigoColor = "\x1b[46m"; break;
         case COLOR_BLANCO: codigoColor = "\x1b[47m"; break;
+        case COLOR_DEFAULT: codigoColor = "\x1b[49m"; break;
     }
 
     fputs(codigoColor, stdout);
 }
 
-void terminalRestablecerAtributos(tTerminal *term);
+void terminalRestablecerAtributos(tTerminal *term)
+{
+    if(!term || !term->backend) {
+        return;
+    }
+
+    fputs("\x1b[0m", stdout);
+    fflush(stdout);
+}
 
 void terminalEscribir(
     tTerminal *term,

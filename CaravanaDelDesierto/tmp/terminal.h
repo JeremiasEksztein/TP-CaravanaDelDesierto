@@ -42,7 +42,7 @@ typedef struct {
     char caracter;
 } tEventoTecla;
 
-int terminalCrear(tTerminal **term);
+int terminalCrear(tTerminal *term);
 void terminalDestruir(tTerminal *term);
 
 int terminalEntrarModoCrudo(tTerminal *term);
