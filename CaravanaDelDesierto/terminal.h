@@ -3,7 +3,9 @@
 
 #include <stddef.h>
 
-typedef struct sTerminal tTerminal;
+typedef struct {
+    void *backend;
+} tTerminal;
 
 typedef enum {
     COLOR_NEGRO,
