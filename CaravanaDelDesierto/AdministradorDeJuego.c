@@ -79,6 +79,12 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 		colaEncolar(&colaDeTurnos, turnos + i, sizeof(tTurno));
 	}
 	free(turnos);
+
+	/* Mostrar tablero inicial antes del primer turno */
+	limpiarPantalla();
+	mostrarTableroCompacto(partida);
+	MostrarEstadoJugador(jug);
+
 	while (!colaEstaVacia(&colaDeTurnos)) {
 		//Aun quedan turnos.
 		colaDesencolar(&colaDeTurnos, &actual, sizeof(tTurno));
@@ -100,11 +106,9 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 				actual.dir *= dado;
 				crearTurnoJugador(&actual, dado, partida, jug);
 			}
-			esperar(1000);
 		} else {
 			dado = tirarDado();
 			MostrarMensajeTurnoBandido(dado);
-			esperar(1000);
 			//Hay que buscar el id del correspondiente bandido
 			i = BuscarIndiceDeBandido(jue->bandido, actual.id,
 						  jue->cantBandidosActivos);
@@ -130,6 +134,7 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 			return DERROTA;
 		}
 
+		/* Refrescar tablero para el próximo turno (el clear va ANTES del próximo mensaje) */
 		limpiarPantalla();
 		mostrarTableroCompacto(partida);
 		MostrarEstadoJugador(jug);
