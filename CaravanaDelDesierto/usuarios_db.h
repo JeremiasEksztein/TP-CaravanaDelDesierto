@@ -13,6 +13,8 @@
 
 #define ARCHPATHLEN         256
 
+#define INDICE_CLAVE_LEN    256
+
 #define NOMBRECUENTALEN     64
 #define NOMBREUSUARIOLEN    64
 
@@ -33,17 +35,6 @@ typedef struct {
 } tRegistroPartida;
 
 typedef struct {
-    long offset;
-    char nombreCuenta[NOMBRECUENTALEN];
-} tIndiceJugadores;
-
-typedef struct {
-    long offset;
-    char nombreCuenta[NOMBRECUENTALEN];
-    int idPartida;
-} tIndicePartidas;
-
-typedef struct {
     FILE *archDatos;
 
     tArbolBinBusq indice;
@@ -57,6 +48,12 @@ typedef struct {
     int indiceSucio;
 } tTabla;
 
+
+typedef struct { 
+    char clave[INDICE_CLAVE_LEN];
+    long offset;
+} tEntradaIndice;
+
 int tablaCrear(
     tTabla *t, 
     const char *pathDatos, 
@@ -66,6 +63,12 @@ int tablaCrear(
     unsigned regTam, 
     unsigned claveTam
 );
+
+int jugadorIndiceCmp(const void *a, const void *b);
+int jugadorLeerClave(void *out, void *in);
+
+int partidaIndiceCmp(const void *a, const void *b);
+int partidaLeerClave(void *out, void *in);
 
 int tablaAbrir(tTabla *t);
 

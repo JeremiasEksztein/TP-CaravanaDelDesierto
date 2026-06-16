@@ -177,7 +177,7 @@
 1781560893 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/interfaz.h
 	<stdio.h>
 
-1781559789 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.h
+1781562332 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.h
 	<stdlib.h>
 	<string.h>
 	"common.h"
@@ -191,7 +191,7 @@
 	"tablero.h"
 	"turnos.h"
 
-1781559789 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/tablero.h
+1781570783 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/tablero.h
 	"bandido.h"
 	"jugador.h"
 	"listaCircularDoble.h"
