@@ -52,3 +52,30 @@ int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado)
 	}
 	return caracter == 'A' ? 1 : -1;
 }
+
+void MostrarEstadoJugador(const tJugador *j)
+{
+	printf("---------------------------------\n");
+	printf(" Jugador: %s\n", j->name);
+	printf(" Vidas: %d\n", j->vidas);
+	printf(" Puntos: %d\n", j->puntos);
+	if (j->invulnerable > 0)
+		printf(" Estado: INMUNE\n");
+	if (j->omitirTurno > 0)
+		printf(" Estado: TURNO OMITIDO\n");
+	printf("---------------------------------\n");
+}
+
+void MostrarMensajeDerrota(const char *nombre)
+{
+	printf("\n=================================\n");
+	printf("  %s HA MUERTO EN EL DESIERTO\n", nombre);
+	printf("=================================\n");
+}
+
+void MostrarMensajeVictoria(const char *nombre)
+{
+	printf("\n=================================\n");
+	printf("  %s HA LLEGADO A LA META!\n", nombre);
+	printf("=================================\n");
+}
