@@ -28,7 +28,11 @@ int terminalCrear(tTerminal *term)
     if(!backend) {
         return ERR;
     }
-
+    
+    backend->stdinHandle = NULL;
+    backend->stdoutHandle = NULL;
+    backend->modoInputOriginal = 0;
+    backend->modoOutputOriginal = 0;
     stdinHandle = GetStdHandle(STD_INPUT_HANDLE);
     stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -42,7 +46,6 @@ int terminalCrear(tTerminal *term)
 
     term->backend = backend;
 
-    /* Inicializamos el buffer interno para dibujado */
     term->cap = 4096;
     term->len = 0;
     term->buffer = malloc(term->cap);
@@ -52,6 +55,7 @@ int terminalCrear(tTerminal *term)
         return ERR;
     }
 
+    term->len = 0;
     return OK;
 }
 
@@ -60,6 +64,14 @@ void terminalDestruir(tTerminal *term)
     if(!term || !term->backend) {
         return;
     }
+
+    /* Liberar buffer interno si existe */
+    if (term->buffer) {
+        free(term->buffer);
+        term->buffer = NULL;
+    }
+    term->cap = 0;
+    term->len = 0;
 
     free(term->backend);
     term->backend = NULL;
@@ -94,6 +106,8 @@ int terminalEntrarModoCrudo(tTerminal *term)
 
     backend->modoOutputOriginal = 0;
     if(GetConsoleMode(stdoutHandle, &backend->modoOutputOriginal) == 0) {
+        /* restaurar modo de entrada si falló obtener el modo de salida */
+        SetConsoleMode(stdinHandle, backend->modoInputOriginal);
         return ERR;
     }
 
@@ -101,6 +115,8 @@ int terminalEntrarModoCrudo(tTerminal *term)
     nuevoModo |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
     if(SetConsoleMode(stdoutHandle, nuevoModo) == 0) {
+        /* restaurar modo de entrada si la activación del modo de salida falla */
+        SetConsoleMode(stdinHandle, backend->modoInputOriginal);
         return ERR;
     }
 
@@ -217,6 +233,7 @@ void terminalColorFondo(
     }
 
     fputs(codigoColor, stdout);
+    fflush(stdout);
 }
 
 void terminalRestablecerAtributos(tTerminal *term)
@@ -226,6 +243,7 @@ void terminalRestablecerAtributos(tTerminal *term)
     }
 
     fputs("\x1b[0m", stdout);
+    fflush(stdout);
 }
 
 void terminalEscribir(
@@ -236,15 +254,38 @@ void terminalEscribir(
         return;
     }
 
-    /* Append to internal buffer if possible, otherwise fall back to stdout */
+    /* Append to internal buffer if possible, otherwise flush and write */
     size_t tlen = strlen(texto);
-    if(term->buffer && term->len + tlen < term->cap) {
-        memcpy(term->buffer + term->len, texto, tlen);
-        term->len += (unsigned)tlen;
+    if (term->buffer) {
+        /* if fits, append */
+        if (term->len + tlen <= term->cap) {
+            memcpy(term->buffer + term->len, texto, tlen);
+            term->len += (unsigned)tlen;
+            return;
+        }
+
+        /* flush existing buffer first */
+        if (term->len > 0) {
+            fwrite(term->buffer, 1, term->len, stdout);
+            fflush(stdout);
+            term->len = 0;
+        }
+
+        /* if message is larger than buffer capacity, write directly */
+        if (tlen > term->cap) {
+            fwrite(texto, 1, tlen, stdout);
+            fflush(stdout);
+            return;
+        }
+
+        /* otherwise append into empty buffer */
+        memcpy(term->buffer, texto, tlen);
+        term->len = (unsigned)tlen;
         return;
     }
 
-    fputs(texto, stdout);
+    /* no internal buffer, write straight to stdout */
+    fwrite(texto, 1, tlen, stdout);
     fflush(stdout);
 }
 
@@ -332,28 +373,20 @@ void terminalActualizar(tTerminal *term)
     }
 
     backend = term->backend;
-
-    /* If there is buffered output in term->buffer, write it to the console */
+    
+    fputs("\x1b[H\x1b[2J", stdout);
+    
+    /* If there is buffered output in term->buffer, write it to stdout */
     if (term->buffer && term->len > 0) {
-        BOOL ok = WriteConsoleA(
-            backend->stdoutHandle,
-            (LPCVOID)term->buffer,
-            (DWORD)term->len,
-            &written,
-            NULL
-        );
-
-        /* If WriteConsoleA failed, fallback to fwrite */
-        if (!ok || written == 0) {
-            fwrite(term->buffer, 1, term->len, stdout);
-            fflush(stdout);
+        size_t w = fwrite(term->buffer, 1, term->len, stdout);
+        if (w < term->len) {
+            /* best-effort: nothing else to do */
         }
-
+        fflush(stdout);
         term->len = 0;
     }
 
     /* Keep cursor hidden and ensure screen is flushed */
     fputs("\x1b[?25l", stdout);
-    fputs("\x1b[H\x1b[2J", stdout);
     fflush(stdout);
 }
