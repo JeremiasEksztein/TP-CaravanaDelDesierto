@@ -171,14 +171,14 @@ static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
 		omitirTurno(j);
 		break;
 	case CASILLA_OASIS:
-		j->invulnerable++;
+		hacerInvulnerable(j);
 		break;
 	case CASILLA_PREMIO:
-		j->puntos++;
+		obtenerPunto(j);
 		consumirCasilla(&(juego->tablero), j->pos);
 		break;
 	case CASILLA_VIDA:
-		j->vidas++;
+		obtenerVida(j);
 		consumirCasilla(&(juego->tablero), j->pos);
 		break;
 	}

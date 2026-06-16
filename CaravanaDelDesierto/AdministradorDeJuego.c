@@ -45,7 +45,7 @@ int AdministrarRanking(int operacion, void *extras)
 int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 {
 	//Auxiliares
-	unsigned totalDeTurnos = jue->cantBandidosActivos;
+	unsigned totalDeTurnos = 1 + jue->cantBandidosActivos;
 	short int dado;
 	int i;
 	//Vitales
@@ -54,68 +54,56 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 	short int banderaDeVictoria = 0;
 
 	tTurno *turnos = (tTurno *)malloc(totalDeTurnos * sizeof(tTurno));
-	tTurno turnoJugador;
 
 	if (!turnos) {
 		return MEMORIA_LLENA;
 	}
 
-	colaCrear(&colaDeTurnos);
-	//Siempre el primer turno es del jugador.
-	IniciarElTurnoDelJugador(&turnoJugador);
-	colaEncolar(&colaDeTurnos, &turnoJugador, sizeof(tTurno));
+	/* ---------- Fase 1: crear todos los turnos ---------- */
 
-	for (i = 0; i < jue->cantBandidosActivos; i++) {
-		//Suma uno en la posición de turnos, porque el [0] es el jugador
-		IniciarElTurnoDelBandido(&(turnos[i]),
-					 obtenerIdBandido(&(jue->bandido[i])));
+	/* Turno del jugador (si no está omitido) */
+	if (ConsultarOmisionDeTurno(jug) > 0) {
+		MostrarMensajeOmisionDeTurno(jug->name);
+		quitarOmitirTurno(jug);
+		esperar(1500);
+		/* Sin turno de jugador: solo bandidos */
+		totalDeTurnos = jue->cantBandidosActivos;
+	} else {
+		MostrarMensajeEsTurnoDeJugador(jug->name);
+		dado = tirarDado();
+		actual.dir = SolicitarDireccionDeMovimiento(jug->name, dado);
+		actual.dir *= dado;
+		IniciarElTurnoDelJugador(&actual);
+		crearTurnoJugador(&actual, dado, partida, jug);
+		turnos[0] = actual;
 	}
-	//Comienza Turno
-	//Primero los desordenamos
-	DesordenarVectorDeTurnos(turnos, totalDeTurnos);
 
-	//Colocarlos en la cola
+	/* Turnos de los bandidos */
+	for (i = 0; i < jue->cantBandidosActivos; i++) {
+		dado = tirarDado();
+		MostrarMensajeTurnoBandido(dado);
+		IniciarElTurnoDelBandido(&actual,
+					 obtenerIdBandido(&(jue->bandido[i])));
+		crearTurnoBandido(&actual, jue->bandido + i, jug, partida,
+				  dado);
+		turnos[totalDeTurnos - jue->cantBandidosActivos + i] = actual;
+	}
+
+	/* Fase 2: desordenar y encolar */
+	colaCrear(&colaDeTurnos);
+	DesordenarVectorDeTurnos(turnos, totalDeTurnos);
 	for (i = 0; i < totalDeTurnos; i++) {
 		colaEncolar(&colaDeTurnos, turnos + i, sizeof(tTurno));
 	}
 	free(turnos);
 
-	/* Mostrar tablero inicial antes del primer turno */
+	/* Fase 3: ejecutar turnos uno por uno */
 	limpiarPantalla();
 	mostrarTableroCompacto(partida, jug->pos);
 	MostrarEstadoJugador(jug);
 
 	while (!colaEstaVacia(&colaDeTurnos)) {
-		//Aun quedan turnos.
 		colaDesencolar(&colaDeTurnos, &actual, sizeof(tTurno));
-		if (esTurnoDeJugador(&actual)) {
-			//El jugador solo puede hacer algo si no está en estado de omisión
-			MostrarMensajeEsTurnoDeJugador(jug->name);
-			if (ConsultarOmisionDeTurno(jug) > 0) {
-				//Realizar un mensaje que explique al jugador que no puede jugar.
-				MostrarMensajeOmisionDeTurno(jug->name);
-				quitarOmitirTurno(jug);
-				esperar(1500);
-
-			} else {
-				//Lógica de jugabilidad.
-				dado = tirarDado();
-				//Logica de eleccion de direccion
-
-				actual.dir = SolicitarDireccionDeMovimiento(
-					jug->name, dado);
-				actual.dir *= dado;
-				crearTurnoJugador(&actual, dado, partida, jug);
-			}
-		} else {
-			dado = tirarDado();
-			MostrarMensajeTurnoBandido(dado);
-			//Hay que buscar el id del correspondiente bandido
-			i = BuscarIndiceDeBandido(jue->bandido, actual.id,
-						  jue->cantBandidosActivos);
-			crearTurnoBandido(&actual, jue->bandido + i, jug,
-					  partida, dado);
-		}
 		banderaDeVictoria = correrTurno(jue, &actual);
 
 		if (banderaDeVictoria) {
@@ -135,11 +123,10 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 			return DERROTA;
 		}
 
-		/* Refrescar tablero para el próximo turno (el clear va ANTES del próximo mensaje) */
 		limpiarPantalla();
 		mostrarTableroCompacto(partida, jug->pos);
 		MostrarEstadoJugador(jug);
-		esperar(2000);
+		esperar(500);
 	}
 
 	colaDestruir(&colaDeTurnos);
