@@ -292,8 +292,6 @@ int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
 	crearCasilla(&c, CASILLA_META);
 	ponerCasilla(&c, &(t->casillas));
 
-	listaCircularDobleMostrarLR(&(t->casillas), prnt);
-
 	return OK;
 }
 
@@ -339,7 +337,7 @@ int cmpBandido(const void *a, const void *b)
 	return -1;
 }
 
-void mostrarTableroCompacto(const tTablero *t)
+void mostrarTableroCompacto(const tTablero *t, int posJugador)
 {
 	int i, b;
 	tCasilla c;
@@ -358,7 +356,7 @@ void mostrarTableroCompacto(const tTablero *t)
 		}
 
 		base_char = (c.base != CASILLA_NORMAL) ? (char)c.base : '.';
-		has_jugador = (c.pieza == CASILLA_JUGADOR);
+		has_jugador = (i == posJugador);
 		n_bandidos = c.cantBandidosEnCasilla;
 
 		printf("[%c", base_char);
@@ -379,7 +377,7 @@ void mostrarTableroCompacto(const tTablero *t)
 
 void mostrarTablero(const tTablero *t)
 {
-	mostrarTableroCompacto(t);
+	mostrarTableroCompacto(t, -1);
 }
 
 static void sincronizarPieza(tTablero *t, int posAnterior, int posActual,

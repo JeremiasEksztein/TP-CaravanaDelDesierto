@@ -16,7 +16,7 @@ int AdministrarJuego()
 	crearJugador(&jugadorActual, "Jugador1", VIDAS_DEFAULT);
 	retorno = iniciarJuego(&partidaActual, &jugadorActual, &configActual);
 
-	mostrarTableroCompacto(&partidaActual.tablero);
+	mostrarTableroCompacto(&partidaActual.tablero, jugadorActual.pos);
 	if (retorno == 0) {
 		retorno = JUEGO_CONTINUA;
 		while (retorno == JUEGO_CONTINUA) {
@@ -82,7 +82,7 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 
 	/* Mostrar tablero inicial antes del primer turno */
 	limpiarPantalla();
-	mostrarTableroCompacto(partida);
+	mostrarTableroCompacto(partida, jug->pos);
 	MostrarEstadoJugador(jug);
 
 	while (!colaEstaVacia(&colaDeTurnos)) {
@@ -120,7 +120,7 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 
 		if (banderaDeVictoria) {
 			limpiarPantalla();
-			mostrarTableroCompacto(partida);
+			mostrarTableroCompacto(partida, jug->pos);
 			MostrarEstadoJugador(jug);
 			MostrarMensajeVictoria(jug->name);
 			colaDestruir(&colaDeTurnos);
@@ -128,7 +128,7 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 		}
 		if (ConsultarVidasJugador(jug) == 0) {
 			limpiarPantalla();
-			mostrarTableroCompacto(partida);
+			mostrarTableroCompacto(partida, jug->pos);
 			MostrarEstadoJugador(jug);
 			MostrarMensajeDerrota(jug->name);
 			colaDestruir(&colaDeTurnos);
@@ -137,7 +137,7 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 
 		/* Refrescar tablero para el próximo turno (el clear va ANTES del próximo mensaje) */
 		limpiarPantalla();
-		mostrarTableroCompacto(partida);
+		mostrarTableroCompacto(partida, jug->pos);
 		MostrarEstadoJugador(jug);
 		esperar(2000);
 	}

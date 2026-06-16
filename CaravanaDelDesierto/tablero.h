@@ -67,7 +67,7 @@ void moverPiezaDeTablero(tTipoCasilla tc, void *pieza, tTablero *t);
 int verificarCapacidad(const tConfigTablero *cfg);
 int buscarJugadorEnTablero(tTablero *t);
 void mostrarTablero(const tTablero *t);
-void mostrarTableroCompacto(const tTablero *t);
+void mostrarTableroCompacto(const tTablero *t, int posJugador);
 void limpiarPantalla(void);
 void esperar(unsigned int ms);
 void eliminarBandidoDeTablero(tTablero *t, tBandido *b);
