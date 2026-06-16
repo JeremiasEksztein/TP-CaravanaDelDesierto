@@ -343,7 +343,7 @@ void mostrarTableroCompacto(const tTablero *t)
 {
 	int i;
 	tCasilla c;
-	char base_char, piece_char;
+	char base_char, band_char, jug_char;
 
 	if (t == NULL || t->cant == 0) {
 		return;
@@ -356,26 +356,22 @@ void mostrarTableroCompacto(const tTablero *t)
 			break;
 		}
 
-		/* Slot 1: base type, or 'B' if 2+ bandidos on normal terrain */
-		if (c.base != CASILLA_NORMAL) {
-			base_char = (char)c.base;
-		} else if (c.cantBandidosEnCasilla >= 2 &&
-			   c.pieza != CASILLA_JUGADOR) {
-			base_char = 'B';
+		/* Slot 1: base type (or '.' if normal) */
+		base_char = (c.base != CASILLA_NORMAL) ? (char)c.base : '.';
+
+		/* Slot 2: bandit count as digit (capped at 9), or space if 0 */
+		if (c.cantBandidosEnCasilla >= 9) {
+			band_char = '9';
+		} else if (c.cantBandidosEnCasilla > 0) {
+			band_char = '0' + (char)c.cantBandidosEnCasilla;
 		} else {
-			base_char = '.';
+			band_char = ' ';
 		}
 
-		/* Slot 2: player takes priority, then bandido, then empty */
-		if (c.pieza == CASILLA_JUGADOR) {
-			piece_char = 'J';
-		} else if (c.cantBandidosEnCasilla >= 1) {
-			piece_char = 'B';
-		} else {
-			piece_char = '.';
-		}
+		/* Slot 3: player if present, otherwise space */
+		jug_char = (c.pieza == CASILLA_JUGADOR) ? 'J' : ' ';
 
-		printf("[%c %c]", base_char, piece_char);
+		printf("[%c%c%c]", base_char, band_char, jug_char);
 	}
 	printf("\n");
 }
