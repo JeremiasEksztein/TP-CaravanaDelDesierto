@@ -45,7 +45,6 @@ int AdministrarRanking(int operacion, void *extras)
 int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 {
 	//Auxiliares
-	unsigned totalDeTurnos = 1 + jue->cantBandidosActivos;
 	short int dado;
 	int i;
 	//Vitales
@@ -53,32 +52,32 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 	tTurno actual;
 	short int banderaDeVictoria = 0;
 
-	tTurno *turnos = (tTurno *)malloc(totalDeTurnos * sizeof(tTurno));
+	tTurno *turnos = (tTurno *)malloc(jue->cantBandidosActivos * sizeof(tTurno));
 
 	if (!turnos) {
 		return MEMORIA_LLENA;
 	}
 
+	colaCrear(&colaDeTurnos);
+
 	/* ---------- Fase 1: crear todos los turnos ---------- */
 
-	/* Turno del jugador (si no está omitido) */
+	/* Turno del jugador (si no está omitido) — siempre primero */
 	if (ConsultarOmisionDeTurno(jug) > 0) {
 		MostrarMensajeOmisionDeTurno(jug->name);
 		quitarOmitirTurno(jug);
 		esperar(1500);
-		/* Sin turno de jugador: solo bandidos */
-		totalDeTurnos = jue->cantBandidosActivos;
 	} else {
 		MostrarMensajeEsTurnoDeJugador(jug->name);
 		dado = tirarDado();
 		actual.dir = SolicitarDireccionDeMovimiento(jug->name, dado);
 		actual.dir *= dado;
 		IniciarElTurnoDelJugador(&actual);
-		crearTurnoJugador(&actual, dado, partida, jug);
-		turnos[0] = actual;
+		crearTurnoJugador(&actual, actual.dir, partida, jug);
+		colaEncolar(&colaDeTurnos, &actual, sizeof(tTurno));
 	}
 
-	/* Turnos de los bandidos */
+	/* Turnos de los bandidos (se desordenan entre sí) */
 	for (i = 0; i < jue->cantBandidosActivos; i++) {
 		dado = tirarDado();
 		MostrarMensajeTurnoBandido(dado);
@@ -86,13 +85,12 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 					 obtenerIdBandido(&(jue->bandido[i])));
 		crearTurnoBandido(&actual, jue->bandido + i, jug, partida,
 				  dado);
-		turnos[totalDeTurnos - jue->cantBandidosActivos + i] = actual;
+		turnos[i] = actual;
 	}
 
-	/* Fase 2: desordenar y encolar */
-	colaCrear(&colaDeTurnos);
-	DesordenarVectorDeTurnos(turnos, totalDeTurnos);
-	for (i = 0; i < totalDeTurnos; i++) {
+	/* Fase 2: desordenar bandidos y encolar */
+	DesordenarVectorDeTurnos(turnos, jue->cantBandidosActivos);
+	for (i = 0; i < jue->cantBandidosActivos; i++) {
 		colaEncolar(&colaDeTurnos, turnos + i, sizeof(tTurno));
 	}
 	free(turnos);
