@@ -91,10 +91,11 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 		if (esTurnoDeJugador(&actual)) {
 			//El jugador solo puede hacer algo si no está en estado de omisión
 			MostrarMensajeEsTurnoDeJugador(jug->name);
-			if (ConsultarOmisionDeTurno(jug) == OMISION) {
+			if (ConsultarOmisionDeTurno(jug) > 0) {
 				//Realizar un mensaje que explique al jugador que no puede jugar.
 				MostrarMensajeOmisionDeTurno(jug->name);
 				quitarOmitirTurno(jug);
+				esperar(1500);
 
 			} else {
 				//Lógica de jugabilidad.
@@ -138,7 +139,7 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 		limpiarPantalla();
 		mostrarTableroCompacto(partida);
 		MostrarEstadoJugador(jug);
-		esperar(500);
+		esperar(2000);
 	}
 
 	colaDestruir(&colaDeTurnos);

@@ -168,7 +168,7 @@ static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
 
 	switch (tc.base) {
 	case CASILLA_TORMENTA:
-		j->omitirTurno++;
+		omitirTurno(j);
 		break;
 	case CASILLA_OASIS:
 		j->invulnerable++;
