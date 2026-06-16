@@ -22,10 +22,10 @@
 
 1781550777 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/jugador.h
 
-1781559789 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
+1781568775 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
 	"listaCircularDoble.h"
 
-1781555924 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/main.c
+1781570783 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/main.c
 	<stdio.h>
 	<stdlib.h>
 	"interfaz.h"
@@ -182,10 +182,13 @@
 	<string.h>
 	"common.h"
 
-1781555924 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
+1781570783 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
 	"juego.h"
+	"Ranking.h"
 
-1781555924 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/juego.h
+1781572397 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/juego.h
+	<string.h>
+	<ctype.h>
 	"bandido.h"
 	"jugador.h"
 	"tablero.h"
@@ -348,6 +351,37 @@
 	"turnos.h"
 	<stdio.h>
 
+<<<<<<< Updated upstream
 1781570714 source:/media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/Ranking.c
 	"Ranking.h"
 
+=======
+1781570783 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.c
+	"AdministradorDeJuego.h"
+	"juego.h"
+
+1781570783 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/Ranking.h
+	"jugador.h"
+	"usuarios_db.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1781570079 /home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/usuarios_db.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"arbolBinBusq.h"
+	"common.h"
+
+1781570783 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/Ranking.c
+	"Ranking.h"
+
+1781568775 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/tablero.c
+	"tablero.h"
+	"jugador.h"
+	"bandido.h"
+	<stdlib.h>
+	<stdio.h>
+
+>>>>>>> Stashed changes
