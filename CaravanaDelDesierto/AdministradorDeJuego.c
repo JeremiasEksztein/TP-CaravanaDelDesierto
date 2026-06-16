@@ -68,12 +68,13 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 		quitarOmitirTurno(jug);
 		esperar(1500);
 	} else {
+		short int movJugador;
 		MostrarMensajeEsTurnoDeJugador(jug->name);
 		dado = tirarDado();
-		actual.dir = SolicitarDireccionDeMovimiento(jug->name, dado);
-		actual.dir *= dado;
+		movJugador = SolicitarDireccionDeMovimiento(jug->name, dado);
+		movJugador *= dado;
 		IniciarElTurnoDelJugador(&actual);
-		crearTurnoJugador(&actual, actual.dir, partida, jug);
+		crearTurnoJugador(&actual, movJugador, partida, jug);
 		colaEncolar(&colaDeTurnos, &actual, sizeof(tTurno));
 	}
 
