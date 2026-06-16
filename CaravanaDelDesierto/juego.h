@@ -32,8 +32,8 @@ typedef struct {
 } tConfig;
 
 typedef struct {
-  tBandido *bandido;
-  tJugador *jugador;
+  tBandido *bandido; //Este es un array de bandidos
+  tJugador *jugador; //Esste si es un puntero a una estructura
   tTablero tablero;
   tConfig cfg;
   int cantBandidosActivos;

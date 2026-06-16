@@ -188,3 +188,11 @@ void moverJugador(tJugador *j, const int mov, const int n)
 	printf("[DEBUG moverJugador] OUT: pos=%d posAnt=%d\n", j->pos,
 	       j->posAnterior);
 }
+int ConsultarOmisionDeTurno(tJugador* t)
+{
+	return t->omitirTurno == OMISION ? OMISION : 0;
+}
+int ConsultarVidasJugador(tJugador* jugador)
+{
+	return jugador->vidas;
+}

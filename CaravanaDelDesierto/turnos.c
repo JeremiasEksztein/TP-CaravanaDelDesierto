@@ -92,3 +92,28 @@ void IniciarElTurnoDelJugador(tTurno* turno)
 	turno->mov = 0;
 	turno->dir = 0;
 }
+void IniciarElTurnoDelBandido(tTurno* turno, int  idDelBandido)
+{
+	turno->tipo = EVT_BANDIDO;
+	turno->id = idDelBandido;
+	turno->mov = 0;
+	turno->dir = 0;
+}
+void DesordenarVectorDeTurnos(tTurno* turnos, int cantTotal)
+{
+	int nroTurno;
+	int i;
+	tTurno auxSwapping;
+	//permutar artificialmente
+	for(i = 0; i < cantTotal ; i++)
+	{
+		nroTurno = rand()%(cantTotal-i);
+		auxSwapping = *(turnos+i);
+		*(turnos+i) = *(turnos+nroTurno);
+		*(turnos+nroTurno) = auxSwapping;
+	}
+}
+int esTurnoDeJugador(tTurno* turno)
+{
+	return turno->tipo == EVT_JUGADOR ? 1 : 0;
+}

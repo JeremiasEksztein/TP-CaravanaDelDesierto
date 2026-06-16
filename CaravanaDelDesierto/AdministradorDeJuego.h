@@ -8,7 +8,8 @@
 #define MOSTRAR 1
 #define JUGADOR_GANO 0
 #define MEMORIA_LLENA -1
-
+#define DERROTA -1
+#define JUEGO_CONTINUA 1
 int AdministrarJuego();
 
 int AdministrarRanking(int operacion, void* extras);

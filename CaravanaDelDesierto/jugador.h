@@ -9,7 +9,7 @@
 
 #ifndef JUGADOR_H
 #define JUGADOR_H
-
+#define OMISION 1
 /*Tipos de jugador*/
 #define TAM_NOMBRE 10
 typedef struct {
@@ -150,4 +150,7 @@ void moverJugador(tJugador *j, const int mov, const int n);
  */
 void obtenerVida(tJugador *j);
 
+int ConsultarOmisionDeTurno(tJugador* t);
+
+int ConsultarVidasJugador(tJugador* jugador);
 #endif

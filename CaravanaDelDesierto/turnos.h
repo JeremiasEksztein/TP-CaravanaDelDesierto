@@ -53,4 +53,7 @@ void crearTurnoBandido(tTurno *t, const tBandido *b, const tJugador *j,
 
 
 void IniciarElTurnoDelJugador(tTurno* turno);
+void IniciarElTurnoDelBandido(tTurno* turno, int  idDelBandido);
+void DesordenarVectorDeTurnos(tTurno* turnos, int cantTotal);
+int esTurnoDeJugador(tTurno* turno);
                        #endif
