@@ -4,38 +4,35 @@
 #include "interfaz.h"
 #include "AdministradorDeJuego.h"
 
-
 int main()
 {
-    char opcion;
+	char opcion;
 
-    // En esta parte hay un menú
-    opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
-    while(opcion!=SALIR)
-    {
-        switch (opcion) {
-        case JUGAR:
-            printf("Iniciando el juego...\n");
-            // lógica inicio juego
-            if(AdministrarJuego()==1)
-            {
-                //Guardar en ranking;
-            }
-            //Guardar progreso
-            break;
-        case RANKING:
-            printf("Mostrando el ranking...\n");
-            //  lógica para el ranking
-            if(AdministrarRanking(MOSTRAR,NULL)!=0)
-            {
-                printf("No se encuentra el ranking.\n");
-            }
-            break;
-        default:
-            printf("Opción inválida. Por favor, intente de nuevo.\n");
-        }
-        opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
-    }
-    printf("Hello world!\n");
-    return 0;
+	// En esta parte hay un menú
+	opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
+	limpiarBuff();
+
+	while (opcion != SALIR) {
+		switch (opcion) {
+		case JUGAR:
+			printf("Iniciando el juego...\n");
+			// lógica inicio juego
+			if (AdministrarJuego() == 1) {
+				//Guardar en ranking;
+			}
+			//Guardar progreso
+			break;
+		case RANKING:
+			printf("Mostrando el ranking...\n");
+			//  lógica para el ranking
+			if (AdministrarRanking(MOSTRAR, NULL) != 0) {
+				printf("No se encuentra el ranking.\n");
+			}
+			break;
+		default:
+			printf("Opción inválida. Por favor, intente de nuevo.\n");
+		}
+		opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
+	}
+	return 0;
 }

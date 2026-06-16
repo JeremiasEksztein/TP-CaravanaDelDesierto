@@ -11,32 +11,31 @@ void colaCrear(tCola *c)
 
 int colaEncolar(tCola *c, const void *data, unsigned n)
 {
-	tNodo *nuevo;
+	tNodo *nue = (tNodo *)malloc(sizeof(tNodo));
 
-	if (!c || !data) {
-		return ERR;
+	if (!nue) {
+		return ERR; /* Error: sin memoria para el nodo */
 	}
 
-	nuevo = malloc(sizeof(tNodo));
-
-	if (!nuevo) {
-		return ERR;
+	nue->data = malloc(n);
+	if (!nue->data) {
+		free(nue);
+		return ERR; /* Error: sin memoria para los datos */
 	}
 
-	nuevo->data = malloc(n);
+	memcpy(nue->data, data, n);
+	nue->n = n;
+	nue->sig = NULL;
 
-	if (!nuevo->data) {
-		free(nuevo);
-		return ERR;
-	}
-
-	if (!c->pri) {
-		c->pri = nuevo;
+	if (c->ult == NULL) {
+		/* Cola vacía: el nuevo nodo es tanto primero como último */
+		c->pri = nue;
+		c->ult = nue;
 	} else {
-		c->ult->sig = nuevo;
+		/* Cola no vacía: conectar después del último nodo */
+		c->ult->sig = nue;
+		c->ult = nue;
 	}
-
-	c->ult = nuevo;
 
 	return OK;
 }
@@ -50,9 +49,17 @@ int colaDesencolar(tCola *c, void *buf, unsigned n)
 	}
 
 	borrar = c->pri;
-	c->pri = c->pri->sig;
 
 	memcpy(buf, borrar->data, MIN(borrar->n, n));
+
+	if (c->pri == c->ult) {
+		/* Solo hay un elemento: eliminarlo y dejar cola vacía */
+		c->pri = NULL;
+		c->ult = NULL;
+	} else {
+		/* Hay múltiples elementos: mover el siguiente al frente */
+		c->pri = c->pri->sig;
+	}
 
 	free(borrar->data);
 	free(borrar);
@@ -77,7 +84,7 @@ int colaEstaVacia(const tCola *c)
 		return TRUE;
 	}
 
-	return (c->pri == c->ult) ? TRUE : FALSE;
+	return (c->pri == NULL) ? TRUE : FALSE;
 }
 
 void colaDestruir(tCola *c)

@@ -67,7 +67,7 @@ int listaCircularDobleActualizarEnPos(tListaCircularDoble *l, const void *data,
 	tNodo2 *pri, *act;
 	int i = 0;
 
-	if (!l || !*l || !data || !accion) {
+	if (!l || !*l || !accion || pos < 0) {
 		return ERR;
 	}
 
@@ -78,6 +78,7 @@ int listaCircularDobleActualizarEnPos(tListaCircularDoble *l, const void *data,
 		if (i == pos) {
 			break;
 		}
+		i++;
 
 		act = act->sig;
 	} while (act != pri);
@@ -140,29 +141,6 @@ int listaCircularDobleMostrarLR(const tListaCircularDoble *l,
 		cant++;
 	} while (act != start);
 	return cant;
-}
-int listaCirclarDobleMirarEnPos(tListaCircularDoble *l, void *buff,
-				const unsigned tam, int pos)
-{
-	if (!l || !*l || pos < 0)
-		return ERR;
-
-	tNodo2 *head = *l;
-	tNodo2 *act = head;
-	int i = 0;
-	do {
-		if (i == pos)
-			break;
-		act = act->sig;
-		i++;
-	} while (act != head);
-
-	if (i != pos)
-		return ERR;
-
-	if (buff)
-		memcpy(buff, act->data, MIN(tam, act->n));
-	return OK;
 }
 int listaCircularDobleMirarEnPos(tListaCircularDoble *l, void *buff,
 				 const unsigned tam, int pos)

@@ -45,11 +45,9 @@
 	<string.h>
 	"common.h"
 
-1781556417 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.h
-	<stdio.h>
+1781625011 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.h
 	<stdarg.h>
 	<stdio.h>
-	<stdarg.h>
 
 1781551418 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/bandido.c
 	<stdlib.h>
@@ -59,8 +57,7 @@
 
 1781550057 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/bandido.h
 
-1781559484 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/cola.c
-	"cola.h"
+1781625011 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/cola.c
 	"cola.h"
 
 1781556417 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/cola.h
@@ -71,37 +68,25 @@
 	<string.h>
 	"common.h"
 
-1781556417 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.c
-	"common.h"
+1781625011 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/common.c
 	"common.h"
 
-1781551418 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.c
-	<string.h>
-	<stdio.h>
-	"jugador.h"
+1781625010 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.c
 	<string.h>
 	<stdio.h>
 	"jugador.h"
 
-1781550059 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.h
+1781625010 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/jugador.h
 
-1781562043 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
-	"listaCircularDoble.h"
+1781625011 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/listaCircularDoble.c
 	"listaCircularDoble.h"
 
-1781560892 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/listaCircularDoble.h
-	<stdlib.h>
-	<string.h>
-	"common.h"
+1781562152 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/listaCircularDoble.h
 	<stdlib.h>
 	<string.h>
 	"common.h"
 
-1781556417 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/main.c
-	<stdio.h>
-	<stdlib.h>
-	"interfaz.h"
-	"AdministradorDeJuego.h"
+1781625011 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/main.c
 	<stdio.h>
 	<stdlib.h>
 	"interfaz.h"
@@ -110,41 +95,31 @@
 1781560576 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/interfaz.h
 	<stdio.h>
 
-1781556417 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
+1781625010 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.h
 	"juego.h"
-	"juego.h"
+	"Ranking.h"
+	"cola.h"
 
-1781560576 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/juego.h
-	"bandido.h"
-	"jugador.h"
-	"tablero.h"
-	"turnos.h"
-	"bandido.h"
-	"jugador.h"
-	"tablero.h"
-	"turnos.h"
-
-1781561884 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/tablero.h
-	"bandido.h"
-	"jugador.h"
-	"listaCircularDoble.h"
+1781625010 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/juego.h
 	<string.h>
+	<ctype.h>
+	"bandido.h"
+	"jugador.h"
+	"tablero.h"
+	"turnos.h"
+
+1781571011 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/tablero.h
 	"bandido.h"
 	"jugador.h"
 	"listaCircularDoble.h"
 	<string.h>
 
-1781551543 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/turnos.h
-	"bandido.h"
-	"jugador.h"
-	"tablero.h"
+1781625010 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/turnos.h
 	"bandido.h"
 	"jugador.h"
 	"tablero.h"
 
-1781550871 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/turnos.c
-	"turnos.h"
-	<stdio.h>
+1781625010 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/turnos.c
 	"turnos.h"
 	<stdio.h>
 
@@ -213,18 +188,18 @@
 
 1781550777 c5e002fde5a51945a9ab3ecf1043c70d2db7a
 
-1781561871 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/tablero.c
+1781568486 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/tablero.c
 	"tablero.h"
 	"jugador.h"
 	"bandido.h"
 	<stdlib.h>
 	<stdio.h>
 
-1781560648 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.c
+1781622071 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.c
 	"AdministradorDeJuego.h"
 	"juego.h"
 
-1781560882 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/juego.c
+1781619668 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/juego.c
 	<stdio.h>
 	<stdlib.h>
 	"juego.h"
@@ -351,11 +326,13 @@
 	"turnos.h"
 	<stdio.h>
 
-<<<<<<< Updated upstream
+1781553348 ated upstream
+
 1781570714 source:/media/kiye/UnidadSSD/Facultad/TERCER ANIO/Algoritmos_Y_Estructuras_De_Datos/ESTE SI ES EL TP/JeremiasEksztein/TP-CaravanaDelDesierto/CaravanaDelDesierto/Ranking.c
 	"Ranking.h"
 
-=======
+1781570714 "
+
 1781570783 source:/home/jeremias-eksztein/Programacion/TP-CaravanasDelDesierto/CaravanaDelDesierto/AdministradorDeJuego.c
 	"AdministradorDeJuego.h"
 	"juego.h"
@@ -384,4 +361,22 @@
 	<stdlib.h>
 	<stdio.h>
 
->>>>>>> Stashed changes
+1781568775 shed changes
+
+1781571011 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/Ranking.h
+	"jugador.h"
+	"usuarios_db.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1781572079 /home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/usuarios_db.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"arbolBinBusq.h"
+	"common.h"
+
+1781571011 source:/home/agustin/Dev/Lab/TP-CaravanaDelDesierto/CaravanaDelDesierto/Ranking.c
+	"Ranking.h"
+
