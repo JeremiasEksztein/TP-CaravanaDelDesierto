@@ -1,9 +1,10 @@
 #include "terminal.h"
+#include "../common.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <Windows.h>
+#include <windows.h>
 
 typedef struct {
     HANDLE stdinHandle;
@@ -229,7 +230,7 @@ void terminalRestablecerAtributos(tTerminal *term)
 
 void terminalEscribir(
     tTerminal *term,
-    const char *texto,
+    const char *texto
 ) {
     if(!term || !term->backend) {
         return;
