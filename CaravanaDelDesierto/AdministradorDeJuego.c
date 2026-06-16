@@ -60,7 +60,7 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 	//Siempre el primer turno es del jugador.
 	IniciarElTurnoDelJugador(&(turnos[0]));
 
-	for (i = 0; i < 1 + jue->cantBandidosActivos; i++) {
+	for (i = 0; i < jue->cantBandidosActivos; i++) {
 		//Suma uno en la posición de turnos, porque el [0] es el jugador
 		IniciarElTurnoDelBandido(&(turnos[i + 1]),
 					 obtenerIdBandido(&(jue->bandido[i])));
@@ -97,12 +97,13 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 			}
 		} else 
 		{
-			MostrarMensajeTurnoBandido();
+			dado = tirarDado();
+			MostrarMensajeTurnoBandido(dado);
 			//Hay que buscar el id del correspondiente bandido
 			i = BuscarIndiceDeBandido(jue->bandido,actual.id, jue->cantBandidosActivos);
 			crearTurnoBandido(&actual, 
 				jue->bandido + i,
-					  jug, partida, tirarDado());
+					  jug, partida, dado);
 		}
 		banderaDeVictoria = correrTurno(jue, &actual);
 		if (banderaDeVictoria) {

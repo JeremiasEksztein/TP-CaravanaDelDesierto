@@ -28,13 +28,15 @@ void MostrarMensajeOmisionDeTurno(const char* jugNombre)
 {
 	printf("¡Vaya! Parece que la tormenta te ha atrapado. No puedes jugar este turno.\n");
 }
-void MostrarMensajeTurnoBandido()
+void MostrarMensajeTurnoBandido(int numDado)
 {
 	printf("¡Es el turno de los Bandidos!\n");
+	printf("Ha Sacado: %d En el dado\n", numDado);
 }
 int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado)
 {
 	char caracter = 0;
+	printf("Has Sacado: %d En el Dado\n", numDado);
 	printf("¿Que direccion pretendes  moverte?...\n\'A\' para Avanzar \n\'R\' para retroceder\n");
 	while(caracter != 'A' && caracter != 'R')
 	{

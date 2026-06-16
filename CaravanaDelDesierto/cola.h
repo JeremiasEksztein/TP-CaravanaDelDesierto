@@ -10,8 +10,8 @@ typedef struct sNodo {
     struct sNodo *sig;
     unsigned n;
     void *data;
-};
-typedef struct sNodo tNodo;
+}tNodo;
+//typedef struct sNodo tNodo;
 
 typedef struct {
     tNodo *pri, *ult;

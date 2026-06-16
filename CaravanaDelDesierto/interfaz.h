@@ -15,6 +15,6 @@
 char CrearMenuInicial(const char* menuTexto, const char* opciones);
 void MostrarMensajeEsTurnoDeJugador(const char* jugNombre);
 void MostrarMensajeOmisionDeTurno(const char* jugNombre);
-void MostrarMensajeTurnoBandido();
+void MostrarMensajeTurnoBandido(int numDado);
 int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado);
 #endif
