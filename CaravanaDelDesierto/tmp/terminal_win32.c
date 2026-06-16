@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <Windows.h>
 
 typedef struct {
@@ -31,7 +32,7 @@ int terminalCrear(tTerminal *term)
     stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
     if(stdinHandle == INVALID_HANDLE_VALUE || stdoutHandle == INVALID_HANDLE_VALUE) {
-        fclose(backend);
+        free(backend);
         return ERR;
     }
 
@@ -39,6 +40,16 @@ int terminalCrear(tTerminal *term)
     backend->stdoutHandle = stdoutHandle;
 
     term->backend = backend;
+
+    /* Inicializamos el buffer interno para dibujado */
+    term->cap = 4096;
+    term->len = 0;
+    term->buffer = malloc(term->cap);
+    if(!term->buffer) {
+        free(backend);
+        term->backend = NULL;
+        return ERR;
+    }
 
     return OK;
 }
@@ -115,8 +126,8 @@ void terminalLimpiar(tTerminal *term)
     if(!term || !term->backend) {
         return;
     }
-
-    fputs("\x1b[H\x1b[2J", stdout); /* Mueve el cursor a la posición inicial y limpia la pantalla */
+    /* Mueve el cursor a la posición inicial y limpia la pantalla */
+    fputs("\x1b[H\x1b[2J", stdout);
     fflush(stdout);
 }
 
@@ -131,6 +142,7 @@ void terminalMoverCursor(
 
     char buffer[32];
 
+    /* _GNU_SOURCE en Windows? */
     snprintf(buffer, sizeof(buffer), "\x1b[%u;%uH", fila + 1, columna + 1);
     fputs(buffer, stdout); 
 }
@@ -142,6 +154,7 @@ void terminalOcultarCursor(tTerminal *term)
     }
 
     fputs("\x1b[?25l", stdout);
+    fflush(stdout);
 }
 
 void terminalMostrarCursor(tTerminal *term)
@@ -151,6 +164,7 @@ void terminalMostrarCursor(tTerminal *term)
     }
 
     fputs("\x1b[?25h", stdout);
+    fflush(stdout);
 }
 
 void terminalColorTexto(
@@ -176,6 +190,7 @@ void terminalColorTexto(
     }
 
     fputs(codigoColor, stdout);
+    fflush(stdout);
 }
 
 void terminalColorFondo(
@@ -214,13 +229,22 @@ void terminalRestablecerAtributos(tTerminal *term)
 
 void terminalEscribir(
     tTerminal *term,
-    const char *texto
+    const char *texto,
 ) {
     if(!term || !term->backend) {
         return;
     }
 
+    /* Append to internal buffer if possible, otherwise fall back to stdout */
+    size_t tlen = strlen(texto);
+    if(term->buffer && term->len + tlen < term->cap) {
+        memcpy(term->buffer + term->len, texto, tlen);
+        term->len += (unsigned)tlen;
+        return;
+    }
+
     fputs(texto, stdout);
+    fflush(stdout);
 }
 
 int terminalLeerEvento(
@@ -231,8 +255,46 @@ int terminalLeerEvento(
         return ERR;
     }
 
-    /* Implementación pendiente: Leer eventos de teclado usando ReadConsoleInput y mapearlos a tEventoTecla */
-    return ERR;
+    tWin32TermBackend *backend = term->backend;
+    INPUT_RECORD rec;
+    DWORD read = 0;
+
+    while (1) {
+        if (ReadConsoleInputA(backend->stdinHandle, &rec, 1, &read) == 0) {
+            return ERR;
+        }
+
+        if (rec.EventType != KEY_EVENT) {
+            continue;
+        }
+
+        KEY_EVENT_RECORD ker = rec.Event.KeyEvent;
+        if (!ker.bKeyDown) {
+            continue;
+        }
+
+        /* Printable ASCII character */
+        if (ker.uChar.AsciiChar != 0) {
+            ev->tipo = TECLA_CARACTER;
+            ev->caracter = (char)ker.uChar.AsciiChar;
+            return OK;
+        }
+
+        /* Special keys mapped by virtual-key code */
+        switch (ker.wVirtualKeyCode) {
+            case VK_RETURN: ev->tipo = TECLA_ENTER; return OK;
+            case VK_ESCAPE: ev->tipo = TECLA_ESC; return OK;
+            case VK_BACK: ev->tipo = TECLA_BACKSPACE; return OK;
+            case VK_TAB: ev->tipo = TECLA_TAB; return OK;
+            case VK_UP: ev->tipo = TECLA_ARRIBA; return OK;
+            case VK_DOWN: ev->tipo = TECLA_ABAJO; return OK;
+            case VK_LEFT: ev->tipo = TECLA_IZQUIERDA; return OK;
+            case VK_RIGHT: ev->tipo = TECLA_DERECHA; return OK;
+            default:
+                /* Unhandled key, ignore and continue */
+                continue;
+        }
+    }
 }
 
 void terminalObtenerTam(
@@ -263,7 +325,6 @@ void terminalActualizar(tTerminal *term)
 {
     tWin32TermBackend *backend;
     DWORD written = 0;
-    int ret;
 
     if(!term || !term->backend) {
         return;
@@ -271,20 +332,27 @@ void terminalActualizar(tTerminal *term)
 
     backend = term->backend;
 
-    ret = WriteConsoleA(
-        backend->stdout_handle,
-        term->draw_buf,
-        term->draw_buf_pos,
-        &written, NULL
-    );
+    /* If there is buffered output in term->buffer, write it to the console */
+    if (term->buffer && term->len > 0) {
+        BOOL ok = WriteConsoleA(
+            backend->stdoutHandle,
+            (LPCVOID)term->buffer,
+            (DWORD)term->len,
+            &written,
+            NULL
+        );
 
-    if (ret == FALSE || written != term->draw_buf_pos) {
-        return;
+        /* If WriteConsoleA failed, fallback to fwrite */
+        if (!ok || written == 0) {
+            fwrite(term->buffer, 1, term->len, stdout);
+            fflush(stdout);
+        }
+
+        term->len = 0;
     }
 
-    term->draw_buf_pos = 0;
-
-    fputs("\x1b[?25l", stdout); /* Oculta el cursor para evitar parpadeos */
-    fputs("\x1b[H\x1b[2J", stdout); /* Mueve el cursor a la posición inicial y limpia la pantalla */
+    /* Keep cursor hidden and ensure screen is flushed */
+    fputs("\x1b[?25l", stdout);
+    fputs("\x1b[H\x1b[2J", stdout);
     fflush(stdout);
 }
