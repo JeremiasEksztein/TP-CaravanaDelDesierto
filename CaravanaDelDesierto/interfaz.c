@@ -18,3 +18,35 @@ char CrearMenuInicial(const char *menuTexto, const char *opciones)
 	}
 	return opcion;
 }
+void MostrarMensajeEsTurnoDeJugador(const char* jugNombre)
+{
+	printf("---------------------------------\n");
+	printf("¡Es tu turno %s!\n",jugNombre);
+	printf("---------------------------------\n");
+}
+void MostrarMensajeOmisionDeTurno(const char* jugNombre)
+{
+	printf("¡Vaya! Parece que la tormenta te ha atrapado. No puedes jugar este turno.\n");
+}
+void MostrarMensajeTurnoBandido()
+{
+	printf("¡Es el turno de los Bandidos!\n");
+}
+int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado)
+{
+	char caracter = 0;
+	printf("¿Que direccion pretendes  moverte?...\n\'A\' para Avanzar \n\'R\' para retroceder\n");
+	while(caracter != 'A' && caracter != 'R')
+	{
+		scanf("%c", &caracter);
+		while(caracter == '\n')
+		{
+			scanf("%c", &caracter);
+		}
+		if(caracter != 'A' && caracter != 'R')
+		{
+			printf("\nError, Intenta de nuevo\n");
+		}
+	}
+	return caracter == 'A' ? 1 : -1;
+}

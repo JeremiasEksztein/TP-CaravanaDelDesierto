@@ -15,7 +15,7 @@ int AdministrarJuego()
 	//crearConfig(&configActual, NIVEL_DEFAULT, DIFICULTAD_DEFAULT);
 	crearJugador(&jugadorActual, "Jugador1", VIDAS_DEFAULT);
 	retorno = iniciarJuego(&partidaActual, &jugadorActual, &configActual);
-	if (retorno != 0) {
+	if (retorno == 0) {
 		retorno = JUEGO_CONTINUA;
 		while (retorno == JUEGO_CONTINUA) {
 			//Jugar
@@ -80,22 +80,28 @@ int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
 		colaDesencolar(&colaDeTurnos, &actual, sizeof(tTurno));
 		if (esTurnoDeJugador(&actual)) {
 			//El jugador solo puede hacer algo si no está en estado de omisión
+			MostrarMensajeEsTurnoDeJugador(jug->name);
 			if (ConsultarOmisionDeTurno(jug) == OMISION) {
 				//Realizar un mensaje que explique al jugador que no puede jugar.
-				//MostrarMensajeOmisionDeTurno()
+				MostrarMensajeOmisionDeTurno(jug->name);
 				quitarOmitirTurno(jug);
 
 			} else {
 				//Lógica de jugabilidad.
-				//SolicitarLanzamientoDeDado()
 				dado = tirarDado();
 				//Logica de eleccion de direccion
-				//EleccionDeDireccionJugador()
+				
+				actual.dir =  SolicitarDireccionDeMovimiento(jug->name, dado);	
+				actual.dir*=dado;
 				crearTurnoJugador(&actual, dado, partida, jug);
 			}
-		} else {
+		} else 
+		{
+			MostrarMensajeTurnoBandido();
 			//Hay que buscar el id del correspondiente bandido
-			crearTurnoBandido(&actual, jue->bandido + actual.id,
+			i = BuscarIndiceDeBandido(jue->bandido,actual.id, jue->cantBandidosActivos);
+			crearTurnoBandido(&actual, 
+				jue->bandido + i,
 					  jug, partida, tirarDado());
 		}
 		banderaDeVictoria = correrTurno(jue, &actual);

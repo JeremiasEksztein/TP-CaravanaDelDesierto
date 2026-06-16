@@ -1,6 +1,7 @@
 #ifndef INTERFAZ_H_INCLUDED
 #define INTERFAZ_H_INCLUDED
 
+#include <stdio.h>
 #define MENU_TEXTO "==========================\n"\
                     "Bienvenido a la Caravana del Desierto\n"\
                     "\n1. JUGAR\n"\
@@ -11,7 +12,9 @@
 #define SALIR '3'
 #define JUGAR '1'
 #define RANKING '2'
-#include <stdio.h>
 char CrearMenuInicial(const char* menuTexto, const char* opciones);
-
+void MostrarMensajeEsTurnoDeJugador(const char* jugNombre);
+void MostrarMensajeOmisionDeTurno(const char* jugNombre);
+void MostrarMensajeTurnoBandido();
+int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado);
 #endif

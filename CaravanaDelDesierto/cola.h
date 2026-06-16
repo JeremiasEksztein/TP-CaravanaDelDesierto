@@ -6,12 +6,12 @@
 
 #include "common.h"
 
-typedef struct sNodo tNodo;
-struct sNodo {
-    tNodo *sig;
+typedef struct sNodo {
+    struct sNodo *sig;
     unsigned n;
     void *data;
 };
+typedef struct sNodo tNodo;
 
 typedef struct {
     tNodo *pri, *ult;

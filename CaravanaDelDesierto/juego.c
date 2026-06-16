@@ -312,6 +312,7 @@ int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
 			cfg->tCfg.cantCasillas = valor;
 		} else if (strcmp(linea, "vidas_inicio") == 0) {
 			cfg->vidasInicio = valor;
+			cfg->tCfg.vidasInicio = valor;
 		} else if (strcmp(linea, "maximo_bandidos") == 0) {
 			cfg->tCfg.maxBands = valor;
 		} else if (strcmp(linea, "maximo_premios") == 0) {
