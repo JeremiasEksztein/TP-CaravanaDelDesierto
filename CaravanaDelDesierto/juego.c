@@ -259,6 +259,7 @@ static void moverYActualizarBandido(tJuego *juego, const tTurno *t)
  */
 int correrTurno(tJuego *juego, tTurno *t)
 {
+	//Si el turno es de jugador
 	if (t->tipo == EVT_JUGADOR) {
 		moverYActualizarJugador(juego, t);
 		if (obtenerPosJugador(juego->jugador) ==
@@ -267,6 +268,7 @@ int correrTurno(tJuego *juego, tTurno *t)
 		}
 		return 0;
 	}
+	//Si es de bandido:
 	moverYActualizarBandido(juego, t);
 	return 0;
 }
@@ -318,7 +320,7 @@ int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
 			cfg->tCfg.maxVida = valor;
 		} else if (strcmp(linea, "maximo_oasis") == 0) {
 			cfg->tCfg.maxOasis = valor;
-		} else if (strcmp(linea, "maximo_tormetas") == 0) {
+		} else if (strcmp(linea, "maximo_tormentas") == 0) {
 			cfg->tCfg.maxTor = valor;
 		}
 	}
