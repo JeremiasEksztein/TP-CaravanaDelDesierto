@@ -116,6 +116,9 @@ void terminalLimpiar(tTerminal *term)
     if(!term || !term->backend) {
         return;
     }
+
+    fputs("\x1b[H\x1b[2J", stdout); /* Mueve el cursor a la posición inicial y limpia la pantalla */
+    fflush(stdout);
 }
 
 void terminalMoverCursor(
@@ -130,7 +133,7 @@ void terminalMoverCursor(
     char buffer[32];
 
     snprintf(buffer, sizeof(buffer), "\x1b[%u;%uH", fila + 1, columna + 1);
-    fputs(buffer, stdout); /* Shouldn't it be stdout?*/ 
+    fputs(buffer, stdout); 
 }
 
 void terminalOcultarCursor(tTerminal *term)
@@ -139,7 +142,7 @@ void terminalOcultarCursor(tTerminal *term)
         return;
     }
 
-    fputs("\x1b[?25l", stdout); /* Shouldn't it be stdout?*/
+    fputs("\x1b[?25l", stdout);
 }
 
 void terminalMostrarCursor(tTerminal *term)
@@ -148,7 +151,7 @@ void terminalMostrarCursor(tTerminal *term)
         return;
     }
 
-    fputs("\x1b[?25h", term->backend->stdoutHandle); /* Shouldn't it be stdout?*/
+    fputs("\x1b[?25h", stdout);
 }
 
 void terminalColorTexto(
@@ -172,7 +175,7 @@ void terminalColorTexto(
         case COLOR_BLANCO: codigoColor = "\x1b[37m"; break;
     }
 
-    fputs(codigoColor, term->backend->stdoutHandle);
+    fputs(codigoColor, stdout);
 }
 
 void terminalColorFondo(
@@ -196,7 +199,7 @@ void terminalColorFondo(
         case COLOR_BLANCO: codigoColor = "\x1b[47m"; break;
     }
 
-    fputs(codigoColor, term->backend->stdoutHandle);
+    fputs(codigoColor, stdout);
 }
 
 void terminalRestablecerAtributos(tTerminal *term)
@@ -205,7 +208,7 @@ void terminalRestablecerAtributos(tTerminal *term)
         return;
     }
 
-    fputs("\x1b[0m", term->backend->stdoutHandle);
+    fputs("\x1b[0m", stdout);
 }
 
 void terminalEscribir(
@@ -216,7 +219,7 @@ void terminalEscribir(
         return;
     }
 
-    fputs(texto, term->backend->stdoutHandle);
+    fputs(texto, stdout);
 }
 
 int terminalLeerEvento(
@@ -274,7 +277,7 @@ void terminalActualizar(tTerminal *term)
 
     term->draw_buf_pos = 0;
 
-    fputs("\x1b[?25l", term->backend->stdoutHandle); /* Oculta el cursor para evitar parpadeos */
-    fputs("\x1b[H\x1b[2J", term->backend->stdoutHandle); /* Mueve el cursor a la posición inicial y limpia la pantalla */
-    fflush(term->backend->stdoutHandle);
+    fputs("\x1b[?25l", stdout); /* Oculta el cursor para evitar parpadeos */
+    fputs("\x1b[H\x1b[2J", stdout); /* Mueve el cursor a la posición inicial y limpia la pantalla */
+    fflush(stdout);
 }
