@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "interfaz.h"
 #include "AdministradorDeJuego.h"
@@ -7,6 +8,8 @@
 int main()
 {
 	char opcion;
+
+	srand(time(NULL));
 
 	// En esta parte hay un menú
 	opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
