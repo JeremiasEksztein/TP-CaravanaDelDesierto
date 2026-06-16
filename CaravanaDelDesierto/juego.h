@@ -13,6 +13,16 @@
 #include "jugador.h"
 #include "tablero.h"
 #include "turnos.h"
+#define FILE_CONFIG "config.txt"
+
+// Sencilla configuracion por defecto, para testing:
+#define CANT_CASILLAS_DEFAULT 20
+#define CANT_BANDIDOS_DEFAULT 3
+#define CANT_OASIS_DEFAULT 2
+#define CANT_PREMIO_DEFAULT 2
+#define CANT_VIDA_DEFAULT 2
+#define CANT_TOR_DEFAULT 2
+#define CANT_VIDAS_INICIO_DEFAULT 3
 
 typedef struct {
   int vidasInicio;
@@ -153,4 +163,7 @@ int correrTurno(tJuego *juego, tTurno *t);
  */
 int tirarDado(void);
 
+int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg);
+
+int cargarConfiguracionPorDefecto(const char *nom, const tConfig *cfg);
 #endif

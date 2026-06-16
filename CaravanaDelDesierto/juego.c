@@ -285,3 +285,56 @@ void terminarTurno(tJuego *j)
  * @param juego Puntero constante a la estructura del juego.
  */
 void terminarJuego(const tJuego *juego);
+
+int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
+{
+	FILE *f;
+	char *linea;
+	int valor;
+
+	f = fopen(nombreArchivo, "rt");
+	if (!f) {
+		return -1;
+	}
+	linea = malloc(50);
+	while (fscanf(f, "%49[^=]=%d\n", linea, &valor) == 2) {
+		if (strcmp(linea, "CANT_CASILLAS") == 0) {
+			cfg->tCfg.cantCasillas = valor;
+		} else if (strcmp(linea, "VIDAS_INICIO") == 0) {
+			cfg->vidasInicio = valor;
+		} else if (strcmp(linea, "MAXIMO_BANDIDOS") == 0) {
+			cfg->tCfg.maxBands = valor;
+		} else if (strcmp(linea, "MAXIMO_PREMIOS") == 0) {
+			cfg->tCfg.maxPrem = valor;
+		} else if (strcmp(linea, "MAXIMO_VIDAS_EXTRAS") == 0) {
+			cfg->tCfg.maxVida = valor;
+		} else if (strcmp(linea, "MAXIMO_OASIS") == 0) {
+			cfg->tCfg.maxOasis = valor;
+		} else if (strcmp(linea, "MAXIMO_TORMENTAS") == 0) {
+			cfg->tCfg.maxTor = valor;
+		}
+	}
+	free(linea);
+
+	fclose(f);
+	return OK;
+}
+
+int cargarConfiguracionPorDefecto(const char *nom, const tConfig *cfg)
+{
+	FILE *f = fopen(nom, "wt");
+	if (!f) {
+		return -1;
+	}
+
+	fprintf(f, "CANT_CASILLAS=%d\n", cfg->tCfg.cantCasillas);
+	fprintf(f, "VIDAS_INICIO=%d\n", cfg->vidasInicio);
+	fprintf(f, "MAXIMO_BANDIDOS=%d\n", cfg->tCfg.maxBands);
+	fprintf(f, "MAXIMO_PREMIOS=%d\n", cfg->tCfg.maxPrem);
+	fprintf(f, "MAXIMO_VIDAS_EXTRAS=%d\n", cfg->tCfg.maxVida);
+	fprintf(f, "MAXIMO_OASIS=%d\n", cfg->tCfg.maxOasis);
+	fprintf(f, "MAXIMO_TORMENTAS=%d\n", cfg->tCfg.maxTor);
+
+	fclose(f);
+	return OK;
+}

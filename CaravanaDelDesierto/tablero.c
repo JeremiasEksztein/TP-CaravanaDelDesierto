@@ -191,6 +191,7 @@ static int ponerCasilla(tCasilla *c, tListaCircularDoble *l)
 static void crearCasilla(tCasilla *c, const tTipoCasilla tipo)
 {
 	if (tipo == CASILLA_INICIO) {
+		c->cantBandidosEnCasilla = 0;
 		c->base = tipo;
 		c->pieza = CASILLA_JUGADOR;
 	} else if (tipo == CASILLA_BANDIDO) {
@@ -401,50 +402,6 @@ void eliminarBandidoDeTablero(tTablero *t, tBandido *b)
 }
 
 //Extras
-int CargarConfiguracionDeTablero(const char *nombreArchivo, tConfigTablero *cfg)
-{
-	int cantidadDeApariciones;
-	char *letra;
-	char linea[TAM_LINEA];
-	FILE *arch = fopen(nombreArchivo, "rt");
-	if (!arch) {
-		return ERROR_ARCHIVO;
-	}
-	//Inicializo los valores
-	cfg->cantCasillas = 0;
-	cfg->maxBands = 0;
-	cfg->maxOasis = 0;
-	cfg->maxPrem = 0;
-	cfg->maxVida = 0;
-	cfg->maxTor = 0;
-	//Ahora cargo el archivo:
-	while (fgets(linea, sizeof(linea), arch)) {
-		cfg->cantCasillas++;
-
-		letra = strchr(linea, 'O');
-		if (letra) {
-			cfg->maxOasis++;
-		}
-		letra = strchr(linea, 'P');
-		if (letra) {
-			cfg->maxPrem++;
-		}
-		letra = strchr(linea, 'T');
-		if (letra) {
-			cfg->maxTor++;
-		}
-		letra = strchr(linea, 'V');
-		if (letra) {
-			cfg->maxVida++;
-		}
-		cantidadDeApariciones = ContarOcurrencias(linea, 'B');
-		if (cantidadDeApariciones && !(ES_PRIMERA_LINEA)) {
-			cfg->maxBands += cantidadDeApariciones;
-		}
-	}
-	fclose(arch);
-	return 0;
-}
 
 int ContarOcurrencias(const char *cadena, char caracter)
 {
@@ -462,15 +419,4 @@ int ContarOcurrencias(const char *cadena, char caracter)
 	}
 
 	return contador;
-}
-
-int CargarConfiguracionPorDefecto(tConfigTablero *cfg)
-{
-	cfg->cantCasillas = CANT_CASILLAS_DEFAULT;
-	cfg->maxBands = CANT_BANDIDOS_DEFAULT;
-	cfg->maxOasis = CANT_OASIS_DEFAULT;
-	cfg->maxPrem = CANT_PREMIO_DEFAULT;
-	cfg->maxVida = CANT_VIDA_DEFAULT;
-	cfg->maxTor = CANT_TOR_DEFAULT;
-	return OK;
 }

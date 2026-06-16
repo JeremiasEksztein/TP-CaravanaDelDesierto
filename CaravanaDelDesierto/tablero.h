@@ -18,18 +18,9 @@
 #define CASILLA_JUGADOR 'J'
 #define OK 0
 // Otros defines
-#define ARCHIVO_CONFIG_TABLERO "config.txt"
 #define ERROR_ARCHIVO 4
 #define TAM_LINEA 150
 #define ES_PRIMERA_LINEA cfg->cantCasillas == 1
-
-// Sencilla configuracion por defecto, para testing:
-#define CANT_CASILLAS_DEFAULT 20
-#define CANT_BANDIDOS_DEFAULT 3
-#define CANT_OASIS_DEFAULT 2
-#define CANT_PREMIO_DEFAULT 2
-#define CANT_VIDA_DEFAULT 2
-#define CANT_TOR_DEFAULT 2
 
 /**
  * @typedef tTipoCasilla

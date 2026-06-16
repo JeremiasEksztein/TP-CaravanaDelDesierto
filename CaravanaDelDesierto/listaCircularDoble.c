@@ -9,42 +9,31 @@ void listaCircularDobleCrear(tListaCircularDoble *l)
 	*l = NULL;
 }
 
-int listaCircularDobleEmpujar(tListaCircularDoble *l, const void *data,
-			      unsigned n)
+int listaCircularDobleEmpujar(tListaCircularDoble *l, const void *d,
+			      const unsigned tam)
 {
-	tNodo2 *nuevo;
-
-	if (!l || !data) {
+	tNodo2 *nue = (tNodo2 *)malloc(sizeof(tNodo2));
+	if (!nue)
+		return ERR;
+	nue->data = malloc(tam);
+	if (!nue->data) {
+		free(nue);
 		return ERR;
 	}
+	memcpy(nue->data, d, tam);
+	nue->n = tam;
 
-	nuevo = malloc(sizeof(tNodo2));
-
-	if (!nuevo) {
-		return ERR;
-	}
-
-	nuevo->data = malloc(n);
-
-	if (!nuevo->data) {
-		free(nuevo);
-		return ERR;
-	}
-
-	memcpy(nuevo->data, data, n);
-	nuevo->n = n;
-
-	if (!*l) {
-		nuevo->sig = nuevo;
-		nuevo->ant = nuevo;
-		(*l) = nuevo;
+	if (*l == NULL) {
+		nue->sig = nue;
+		nue->ant = nue;
+		*l = nue;
 	} else {
-		nuevo->ant = (*l)->ant;
-		nuevo->sig = (*l);
-		nuevo->ant->sig = nuevo;
-		(*l)->sig = nuevo;
+		tNodo2 *tail = (*l)->ant;
+		nue->sig = *l;
+		nue->ant = tail;
+		tail->sig = nue;
+		(*l)->ant = nue;
 	}
-
 	return OK;
 }
 
