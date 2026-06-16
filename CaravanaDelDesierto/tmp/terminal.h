@@ -3,10 +3,12 @@
 
 #include <stddef.h>
 
+/* Gracias a MagicalBat */
+
 typedef struct {
     void *backend;
-    unsigned capacidadBuffer;
-    unsigned largoBuffer;
+    unsigned cap;
+    unsigned len;
     unsigned char *buffer;
 } tTerminal;
 

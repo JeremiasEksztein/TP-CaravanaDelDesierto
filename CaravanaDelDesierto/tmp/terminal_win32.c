@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <Windows.h>
 
-/* Gracias a MagicalBat */
-
 typedef struct {
     HANDLE stdinHandle;
     HANDLE stdoutHandle;
