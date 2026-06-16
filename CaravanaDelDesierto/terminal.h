@@ -5,6 +5,9 @@
 
 typedef struct {
     void *backend;
+    unsigned capacidadBuffer;
+    unsigned largoBuffer;
+    unsigned char *buffer;
 } tTerminal;
 
 typedef enum {

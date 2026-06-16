@@ -211,17 +211,70 @@ void terminalRestablecerAtributos(tTerminal *term)
 void terminalEscribir(
     tTerminal *term,
     const char *texto
-);
+) {
+    if(!term || !term->backend) {
+        return;
+    }
+
+    fputs(texto, term->backend->stdoutHandle);
+}
 
 int terminalLeerEvento(
     tTerminal *term,
     tEventoTecla *ev
-);
+) {
+    if(!term || !term->backend || !ev) {
+        return ERR;
+    }
+
+    /* Implementación pendiente: Leer eventos de teclado usando ReadConsoleInput y mapearlos a tEventoTecla */
+    return ERR;
+}
 
 void terminalObtenerTam(
     tTerminal *term,
     unsigned *filas,
     unsigned *columnas
-);
+) {
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-void terminalActualizar(tTerminal *term);
+    if(!term || !term->backend || !filas || !columnas) {
+        return;
+    }
+
+    if(GetConsoleScreenBufferInfo(term->backend->stdoutHandle, &csbi) == 0) {
+        *filas = 0;
+        *columnas = 0;
+        return;
+    }
+
+    *filas = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+    *columnas = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+}
+
+void terminalActualizar(tTerminal *term)
+{
+    DWORD written = 0;
+    int ret;
+
+    if(!term || !term->backend) {
+        return;
+    }
+
+    ret = WriteConsoleA(
+        term->backend->stdout_handle,
+        term->draw_buf,
+        term->draw_buf_pos,
+        &written, NULL
+    );
+
+    if (ret == FALSE || written != term->draw_buf_pos) {
+        return;
+    }
+
+    term->draw_buf_pos = 0;
+
+    fputs("\x1b[?25l", term->backend->stdoutHandle); /* Oculta el cursor para evitar parpadeos */
+    fputs("\x1b[H\x1b[2J", term->backend->stdoutHandle); /* Mueve el cursor a la posición inicial y limpia la pantalla */
+    fflush(term->backend->stdoutHandle);
+}
