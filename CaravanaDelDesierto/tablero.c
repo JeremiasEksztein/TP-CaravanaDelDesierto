@@ -418,8 +418,6 @@ void sincronizarJugadorEnTablero(tJugador *j, tTablero *t)
 {
 	int posAnt = obtenerPosAnteriorJugador(j);
 	int posAct = obtenerPosJugador(j);
-	printf("[DEBUG sincronizarJugador] posAnt=%d -> posAct=%d\n", posAnt,
-	       posAct);
 	sincronizarPieza(t, posAnt, posAct, CASILLA_JUGADOR);
 }
 
@@ -437,8 +435,6 @@ void sincronizarBandidoEnTablero(tBandido *b, tTablero *t)
 {
 	int posAnt = obtenerPosAnteriorBandido(b);
 	int posAct = obtenerPosBandido(b);
-	printf("[DEBUG sincronizarBandido] posAnt=%d -> posAct=%d\n", posAnt,
-	       posAct);
 	sincronizarPieza(t, posAnt, posAct, CASILLA_BANDIDO);
 }
 
