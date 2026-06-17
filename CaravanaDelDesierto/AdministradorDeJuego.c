@@ -35,6 +35,8 @@ int AdministrarJuego(const char *nombreJugador, int idJugador,
 			size_t written = fwrite(partidaOut,
 						sizeof(tRegistroPartida), 1,
 						archPartidas);
+			 if(written != 1)
+                    puts("Error escribiendo la partida");
 			fclose(archPartidas);
 		} else {
 			printf("Error al abrir %s para escritura\n",
