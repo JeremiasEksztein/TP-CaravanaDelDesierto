@@ -17,7 +17,7 @@
 #define CASILLA_INICIO 'I'
 #define CASILLA_JUGADOR 'J'
 #define OK 0
-// Otros defines
+/* Otros defines */
 #define ERROR_ARCHIVO 4
 #define TAM_LINEA 150
 #define ES_PRIMERA_LINEA cfg->cantCasillas == 1
@@ -138,7 +138,7 @@ void sincronizarJugadorEnTablero(tJugador *j, tTablero *t);
  */
 void sincronizarBandidoEnTablero(tBandido *b, tTablero *t);
 
-// OTRAS FUNCIONES AUXILIARES PARA EL MANEJO DEL TABLERO:
+/* OTRAS FUNCIONES AUXILIARES PARA EL MANEJO DEL TABLERO: */
 int CargarConfiguracionDeTablero(const char *nombreArchivo,
                                  tConfigTablero *cfg);
 

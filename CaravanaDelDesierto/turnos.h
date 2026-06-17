@@ -14,9 +14,9 @@ typedef enum { EVT_JUGADOR, EVT_BANDIDO } tTipoTurno;
 
 typedef struct {
   tTipoTurno tipo;
-  int id;  // 0 para jugador, o id de bandido
-  int mov; // cantidad de pasos (1..6)
-  int dir; // +1 adelante, -1 atrás
+  int id;  /* 0 para jugador, o id de bandido */
+  int mov; /* cantidad de pasos (1..6) */
+  int dir; /* +1 adelante, -1 atrás */
 } tTurno;
 
 /**

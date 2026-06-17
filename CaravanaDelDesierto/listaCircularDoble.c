@@ -112,12 +112,15 @@ void listaCircularDobleDestruir(tListaCircularDoble *l)
 int listaCircularDobleBuscarPos(tListaCircularDoble *l, const void *d,
 				fnCmp cmp)
 {
+    tNodo2 *head, *act;
+    int pos;
 	if (!l || !*l || !cmp)
 		return ERR;
 
-	tNodo2 *head = *l;
-	tNodo2 *act = head;
-	int pos = 0;
+	head = *l;
+	act = head;
+	pos = 0;
+
 	do {
 		if (cmp(d, act->data) == 0)
 			return pos;
@@ -129,12 +132,15 @@ int listaCircularDobleBuscarPos(tListaCircularDoble *l, const void *d,
 int listaCircularDobleMostrarLR(const tListaCircularDoble *l,
 				const fnAccion print)
 {
+    tNodo2 *start, *act;
+    int cant;
+
 	if (!l || !*l || !print)
 		return 0;
 
-	tNodo2 *start = (*l)->ant;
-	tNodo2 *act = start;
-	int cant = 0;
+	start = (*l)->ant;
+	act = start;
+    cant = 0;
 	do {
 		print(act->data, NULL);
 		act = act->ant;
@@ -145,12 +151,14 @@ int listaCircularDobleMostrarLR(const tListaCircularDoble *l,
 int listaCircularDobleMirarEnPos(tListaCircularDoble *l, void *buff,
 				 const unsigned tam, int pos)
 {
+    tNodo2 *head, *act;
+    int i;
 	if (!l || !*l || pos < 0)
 		return ERR;
 
-	tNodo2 *head = *l;
-	tNodo2 *act = head;
-	int i = 0;
+	head = *l;
+	act = head;
+	i = 0;
 	do {
 		if (i == pos)
 			break;

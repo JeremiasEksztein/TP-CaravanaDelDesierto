@@ -11,7 +11,7 @@ typedef struct sNodo {
     unsigned n;
     void *data;
 }tNodo;
-//typedef struct sNodo tNodo;
+/*typedef struct sNodo tNodo;*/
 
 typedef struct {
     tNodo *pri, *ult;

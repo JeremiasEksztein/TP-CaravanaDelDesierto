@@ -18,7 +18,7 @@
 #include "turnos.h"
 #define FILE_CONFIG "config.txt"
 
-// Sencilla configuracion por defecto, para testing:
+/* Sencilla configuracion por defecto, para testing: */
 #define CANT_CASILLAS_DEFAULT 20
 #define CANT_BANDIDOS_DEFAULT 3
 #define CANT_OASIS_DEFAULT 2
@@ -33,8 +33,8 @@ typedef struct {
 } tConfig;
 
 typedef struct {
-  tBandido *bandido; //Este es un array de bandidos
-  tJugador *jugador; //Esste si es un puntero a una estructura
+  tBandido *bandido; /* Este es un array de bandidos */
+  tJugador *jugador; /* Este si es un puntero a una estructura */
   tTablero tablero;
   tConfig cfg;
   int cantBandidosActivos;

@@ -88,7 +88,7 @@ void crearTurnoBandido(tTurno *t, const tBandido *b, const tJugador *j,
 void IniciarElTurnoDelJugador(tTurno* turno)
 {
 	turno->tipo = EVT_JUGADOR;
-	turno->id = 0; //Id del jugador;
+	turno->id = 0; /* Id del jugador; */
 	turno->mov = 0;
 	turno->dir = 0;
 }
@@ -104,7 +104,7 @@ void DesordenarVectorDeTurnos(tTurno* turnos, int cantTotal)
 	int nroTurno;
 	int i;
 	tTurno auxSwapping;
-	//permutar artificialmente
+	/* permutar artificialmente */
 	for(i = 0; i < cantTotal ; i++)
 	{
 		nroTurno = rand()%(cantTotal-i);

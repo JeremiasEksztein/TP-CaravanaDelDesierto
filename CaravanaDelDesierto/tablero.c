@@ -1,3 +1,7 @@
+#if defined(__linux__) || defined(__gnu_linux__)
+#define _XOPEN_SOURCE 501
+#endif
+
 #include "tablero.h"
 #include "jugador.h"
 #include "bandido.h"
@@ -25,7 +29,7 @@ void limpiarPantalla(void)
 	fflush(stdout);
 }
 
-// Wrappers
+/* Wrappers */
 static int casillaPonerJugador(tCasilla *c)
 {
 	if (c->pieza == CASILLA_JUGADOR) {
@@ -166,8 +170,8 @@ void ponerJugadorEnPosTablero(tTablero *t, int pos)
  */
 void prnt(void *d, void *aux)
 {
-	(void)aux;
 	tCasilla tc;
+	(void)aux;
 	if (!d) {
 		return;
 	}
@@ -254,6 +258,7 @@ int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
 	int restN = (cfg->cantCasillas - 2) -
 		    (restO + restT + restV + restP + restB);
 	int total = restO + restT + restV + restP + restB + restN;
+	int r;
 
 	tCasilla c;
 
@@ -263,7 +268,7 @@ int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
 
 	for (; i < cfg->cantCasillas - 1; i++) {
 		total = restO + restT + restV + restP + restB + restN;
-		int r = rand() % total;
+        r = rand() % total;
 
 		if (r < restO) {
 			crearCasilla(&c, CASILLA_OASIS);
@@ -454,7 +459,7 @@ void eliminarBandidoDeTablero(tTablero *t, tBandido *b)
 					  wrapperQuitarBandido);
 }
 
-//Extras
+/* Extras */
 
 int ContarOcurrencias(const char *cadena, char caracter)
 {

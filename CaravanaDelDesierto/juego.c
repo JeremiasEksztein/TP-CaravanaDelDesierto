@@ -36,7 +36,7 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 	tTablero t;
 	tBandido *b;
 
-	// Verificar que la configuración es válida antes de proceder con la inicialización.
+	/* Verificar que la configuración es válida antes de proceder con la inicialización. */
 	if ((code = verificarCapacidad(&(c->tCfg))) != OK) {
 		return code;
 	}
@@ -234,7 +234,7 @@ int correrTurno(tJuego *juego, tTurno *t)
 {
 	juego->cantMovimientos++;
 
-	//Si el turno es de jugador
+	/* Si el turno es de jugador */
 	if (t->tipo == EVT_JUGADOR) {
 		moverYActualizarJugador(juego, t);
 		if (obtenerPosJugador(juego->jugador) ==
@@ -243,7 +243,7 @@ int correrTurno(tJuego *juego, tTurno *t)
 		}
 		return 0;
 	}
-	//Si es de bandido:
+	/* Si es de bandido: */
 	moverYActualizarBandido(juego, t);
 	return 0;
 }
@@ -263,6 +263,7 @@ void terminarTurno(tJuego *j)
  */
 void terminarJuego(const tJuego *juego)
 {
+    (void)juego;
 	/* Placeholder: los recursos de la partida se liberan en AdministrarJuego. */
 }
 

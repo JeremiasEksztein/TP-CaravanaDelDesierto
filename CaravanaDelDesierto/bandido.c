@@ -119,7 +119,8 @@ void moverBandido(tBandido *b, const int mov, const int n)
 }
 int BuscarIndiceDeBandido(const tBandido* arrayBandidos, const int id, int cantBandidos)
 {
-	for(int i = 0; i < cantBandidos; i++)
+    int i;
+	for(i = 0; i < cantBandidos; i++)
 	{
 		if(arrayBandidos[i].id == id)
 		{

@@ -1,6 +1,10 @@
 #ifndef RANKING_H_INCLUDED
 #define RANKING_H_INCLUDED
 
+#if defined(__linux__) || defined(__gnu_linux__)
+    #define _XOPEN_SOURCE 501
+#endif
+
 #include "jugador.h"
 #include "usuarios_db.h"
 #include "arbolBinBusq.h"
