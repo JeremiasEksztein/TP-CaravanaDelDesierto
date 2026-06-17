@@ -10,6 +10,8 @@ char CrearMenuInicial(const char *menuTexto, const char *opciones)
 		printf("%s\n", menuTexto);
 		printf("Seleccione una opción: ");
 		scanf(" %c", &opcion);
+		/* consumir resto de la linea para no contaminar futuras lecturas */
+		limpiarBuff();
 		if (strchr(opciones, opcion) == NULL) {
 			printf("Opción no válida. Por favor, Ingresa de nuevo.\n");
 		}
@@ -17,16 +19,16 @@ char CrearMenuInicial(const char *menuTexto, const char *opciones)
 	return opcion;
 }
 
-void MostrarMensajeEsTurnoDeJugador(const char* jugNombre)
+void MostrarMensajeEsTurnoDeJugador(const char *jugNombre)
 {
 	printf("---------------------------------\n");
-	printf("¡Es tu turno %s!\n",jugNombre);
+	printf("¡Es tu turno %s!\n", jugNombre);
 	printf("---------------------------------\n");
 }
 
-void MostrarMensajeOmisionDeTurno(const char* jugNombre)
+void MostrarMensajeOmisionDeTurno(const char *jugNombre)
 {
-    (void)jugNombre; /* Deberia llamar al jugador por nombre? */
+	(void)jugNombre; /* Deberia llamar al jugador por nombre? */
 	printf("¡Vaya! Parece que la tormenta te ha atrapado. No puedes jugar este turno.\n");
 }
 
@@ -36,21 +38,18 @@ void MostrarMensajeTurnoBandido(int numDado)
 	printf("Ha Sacado: %d En el dado\n", numDado);
 }
 
-int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado)
+int SolicitarDireccionDeMovimiento(const char *jugNombre, int numDado)
 {
 	char caracter = 0;
 	(void)jugNombre; /* Deberia llamar al jugador por el nombre? */
 	printf("Has Sacado: %d En el Dado\n", numDado);
 	printf("¿Que direccion pretendes  moverte?...\n\'A\' para Avanzar \n\'R\' para retroceder\n");
-	while(caracter != 'A' && caracter != 'R')
-	{
+	while (caracter != 'A' && caracter != 'R') {
 		scanf("%c", &caracter);
-		while(caracter == '\n')
-		{
+		while (caracter == '\n') {
 			scanf("%c", &caracter);
 		}
-		if(caracter != 'A' && caracter != 'R')
-		{
+		if (caracter != 'A' && caracter != 'R') {
 			printf("\nError, Intenta de nuevo\n");
 		}
 	}
@@ -90,35 +89,32 @@ void SolicitarNombreJugador(char *nombre, int maxLen)
 
 	do {
 		valid = 1;
-		printf("Ingrese su nombre (max %d caracteres alfanumericos): ", maxLen - 1);
+		printf("Ingrese su nombre (max %d caracteres alfanumericos): ",
+		       maxLen - 1);
 		if (fgets(nombre, maxLen, stdin) == NULL) {
 			valid = 0;
 			continue;
 		}
-		/* Remove trailing newline if present */
+		/* Quitar newline si esta presente, o limpiar buffer si fue truncado */
 		{
-			size_t len = strlen(nombre);
+			int len = strlen(nombre);
 			if (len > 0 && nombre[len - 1] == '\n') {
 				nombre[len - 1] = '\0';
-			} else if (len == (size_t)(maxLen - 1)) {
-				/* Input was truncated; discard remaining chars */
-				int c;
-				while ((c = getchar()) != '\n' && c != EOF) {
-				}
+			} else if (len == maxLen - 1) {
+				limpiarBuff();
 			}
 		}
-		for(i = 0; nombre[i] && i < maxLen; i++) {
-			if(!isalnum((unsigned char)nombre[i])) {
+		for (i = 0; nombre[i] && i < maxLen; i++) {
+			if (!isalnum((unsigned char)nombre[i])) {
 				valid = 0;
 				printf("Nombre invalido. Solo se permiten letras y numeros.\n");
 				break;
 			}
 		}
 
-		if(valid && strlen(nombre) == 0) {
+		if (valid && strlen(nombre) == 0) {
 			valid = 0;
 			printf("El nombre no puede estar vacio.\n");
 		}
-	} while(!valid);
+	} while (!valid);
 }
-
