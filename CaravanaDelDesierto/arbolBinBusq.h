@@ -61,4 +61,6 @@ void arbolBinBusqVisitar(
 
 void arbolBinBusqDestruir(tArbolBinBusq *bst);
 
+int arbolBinBusqContarNodos(const tArbolBinBusq *a);
+
 #endif

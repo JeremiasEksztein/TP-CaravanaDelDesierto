@@ -133,7 +133,7 @@ int arbolBinBusqPoner(
         return ERR;
     }
 
-    while(!*bst) {
+    while(*bst) {
         compar = cmp((*bst)->data, data);
 
         if(compar > 0) {
@@ -163,6 +163,7 @@ int arbolBinBusqPoner(
     (*bst)->n = n;
     (*bst)->izq = (*bst)->der = NULL;
 
+
     return OK;
 }
 
@@ -179,7 +180,7 @@ int arbolBinBusqSacar(
         return ERR;
     }
 
-    while(!*bst) {
+    while(*bst) {
         compar = cmp((*bst)->data, clave);
 
         if(compar > 0) {
@@ -218,7 +219,7 @@ int arbolBinBusqBuscar(
         return ERR;
     }
 
-    while(!*bst) {
+    while(*bst) {
         compar = cmp((*bst)->data, clave);
 
         if(compar > 0) {
@@ -247,10 +248,13 @@ void arbolBinBusqImprimir(
     switch(tipo) {
         case E_INORDEN:
             _inorden(bst, imprimir);
+            break;
         case E_PREORDEN:
             _preorden(bst, imprimir);
+            break;
         case E_POSTORDEN:
             _postorden(bst, imprimir);
+            break;
         default:
             return;
     }
@@ -270,10 +274,13 @@ void arbolBinBusqVisitar(
     switch(tipo) {
         case E_INORDEN:
             _mut_inorden(bst, accion, usuario);
+            break;
         case E_PREORDEN:
             _mut_preorden(bst, accion, usuario);
+            break;
         case E_POSTORDEN:
             _mut_postorden(bst, accion, usuario);
+            break;
         default:
             return;
     }
@@ -292,4 +299,16 @@ void arbolBinBusqDestruir(tArbolBinBusq *bst)
     free(*bst);
 
     *bst = NULL;
+}
+
+int _contarNodos(const tNodoArbol *nodo)
+{
+    if (!nodo) return 0;
+    return 1 + _contarNodos(nodo->izq) + _contarNodos(nodo->der);
+}
+
+int arbolBinBusqContarNodos(const tArbolBinBusq *a)
+{
+    if (!a || !*a) return 0;
+    return _contarNodos(*a);
 }
