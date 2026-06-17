@@ -10,9 +10,6 @@ char CrearMenuInicial(const char *menuTexto, const char *opciones)
 		printf("%s\n", menuTexto);
 		printf("Seleccione una opción: ");
 		scanf(" %c", &opcion);
-		while (opcion == '\n') {
-			scanf(" %c", &opcion);
-		}
 		if (strchr(opciones, opcion) == NULL) {
 			printf("Opción no válida. Por favor, Ingresa de nuevo.\n");
 		}
@@ -94,9 +91,22 @@ void SolicitarNombreJugador(char *nombre, int maxLen)
 	do {
 		valid = 1;
 		printf("Ingrese su nombre (max %d caracteres alfanumericos): ", maxLen - 1);
-		scanf(" %10s", nombre);
-		limpiarBuff();
-
+		if (fgets(nombre, maxLen, stdin) == NULL) {
+			valid = 0;
+			continue;
+		}
+		/* Remove trailing newline if present */
+		{
+			size_t len = strlen(nombre);
+			if (len > 0 && nombre[len - 1] == '\n') {
+				nombre[len - 1] = '\0';
+			} else if (len == (size_t)(maxLen - 1)) {
+				/* Input was truncated; discard remaining chars */
+				int c;
+				while ((c = getchar()) != '\n' && c != EOF) {
+				}
+			}
+		}
 		for(i = 0; nombre[i] && i < maxLen; i++) {
 			if(!isalnum((unsigned char)nombre[i])) {
 				valid = 0;
