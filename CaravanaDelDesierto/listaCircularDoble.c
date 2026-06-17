@@ -47,6 +47,13 @@ int listaCircularDobleBuscar(tListaCircularDoble *l, const void *clave,
 		return ERR;
 	}
 
+	compar = cmp(comienzo->data, clave);
+	if (compar == 0) {
+		memcpy(buf, comienzo->data, MIN(comienzo->n, n));
+		return OK;
+	}
+
+	l = &(*l)->sig;
 	while (*l != comienzo) {
 		compar = cmp((*l)->data, clave);
 
@@ -94,19 +101,23 @@ int listaCircularDobleActualizarEnPos(tListaCircularDoble *l, const void *data,
 
 void listaCircularDobleDestruir(tListaCircularDoble *l)
 {
-	tNodo2 *tmp;
+	tNodo2 *act, *sig;
 
-	while (*l) {
-		tmp = *l;
-		l = &(*l)->sig;
-
-		tmp->ant->sig = tmp->sig;
-		tmp->sig->ant = tmp->ant;
-
-		free(tmp->data);
-		free(tmp);
-		tmp = NULL;
+	if (!l || !*l) {
+		return;
 	}
+
+	(*l)->ant->sig = NULL;
+	act = *l;
+
+	while (act) {
+		sig = act->sig;
+		free(act->data);
+		free(act);
+		act = sig;
+	}
+
+	*l = NULL;
 }
 
 int listaCircularDobleBuscarPos(tListaCircularDoble *l, const void *d,

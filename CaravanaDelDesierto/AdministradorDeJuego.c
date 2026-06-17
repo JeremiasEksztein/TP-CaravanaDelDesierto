@@ -60,6 +60,7 @@ int AdministrarJuego(const char *nombreJugador, int idJugador,
 	}
 
 	free(partidaActual.bandido);
+	listaCircularDobleDestruir(&partidaActual.tablero.casillas);
 	return retorno;
 }
 
