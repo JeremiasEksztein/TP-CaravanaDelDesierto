@@ -63,7 +63,7 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 	juego->tablero = t;
 	juego->turno = 0;
 	juego->cantBandidosActivos = c->tCfg.maxBands;
-	
+
 	return OK;
 }
 
@@ -137,6 +137,23 @@ static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
 	listaCircularDobleMirarEnPos(&juego->tablero.casillas, &tc,
 				     sizeof(tCasilla), j->pos);
 
+	switch (tc.base) {
+	case CASILLA_TORMENTA:
+		omitirTurno(j);
+		break;
+	case CASILLA_OASIS:
+		hacerInvulnerable(j);
+		break;
+	case CASILLA_PREMIO:
+		obtenerPunto(j);
+		consumirCasilla(&(juego->tablero), j->pos);
+		break;
+	case CASILLA_VIDA:
+		obtenerVida(j);
+		consumirCasilla(&(juego->tablero), j->pos);
+		break;
+	}
+
 	for (i = 0; i < juego->cantBandidosActivos; i++) {
 		if (hayCaptura(j, &juego->bandido[i])) {
 			int last;
@@ -164,23 +181,6 @@ static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
 			aplicarCaptura(juego, j->posAnterior);
 			return;
 		}
-	}
-
-	switch (tc.base) {
-	case CASILLA_TORMENTA:
-		omitirTurno(j);
-		break;
-	case CASILLA_OASIS:
-		hacerInvulnerable(j);
-		break;
-	case CASILLA_PREMIO:
-		obtenerPunto(j);
-		consumirCasilla(&(juego->tablero), j->pos);
-		break;
-	case CASILLA_VIDA:
-		obtenerVida(j);
-		consumirCasilla(&(juego->tablero), j->pos);
-		break;
 	}
 
 	/*
@@ -293,22 +293,21 @@ int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
 {
 	FILE *f;
 	char linea[TAM_LINEA];
-	char* iterador;
+	char *iterador;
 	int valor;
 
 	f = fopen(nombreArchivo, "rt");
 	if (!f) {
 		return -1;
 	}
-	while (fgets(linea,sizeof(linea),f)) {
-        iterador = strrchr(linea,'\n');
-        if(iterador)
-        {
-            *iterador = '\0';
-        }
-        iterador = strrchr(linea,':');
-        valor = atoi((iterador+2));
-        *iterador = '\0';
+	while (fgets(linea, sizeof(linea), f)) {
+		iterador = strrchr(linea, '\n');
+		if (iterador) {
+			*iterador = '\0';
+		}
+		iterador = strrchr(linea, ':');
+		valor = atoi((iterador + 2));
+		*iterador = '\0';
 		if (strcmp(linea, "cantidad_posiciones") == 0) {
 			cfg->tCfg.cantCasillas = valor;
 		} else if (strcmp(linea, "vidas_inicio") == 0) {
