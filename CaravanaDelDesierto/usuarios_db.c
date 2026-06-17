@@ -49,6 +49,10 @@ int tablaCrear(
         return ERR;
     }
 
+    if(regTam == 0) {
+        return ERR;
+    }
+
     t->archDatos = NULL;
     arbolBinBusqCrear(&t->indice);
     strncpy(t->pathDatos, pathDatos, ARCHPATHLEN);
@@ -213,9 +217,11 @@ int tablaCerrar(tTabla *t)
         return ERR;
     }
 
-    fflush(t->archDatos);
-    fclose(t->archDatos);
-    t->archDatos = NULL;
+if (t->archDatos) {
+        fflush(t->archDatos);
+        fclose(t->archDatos);
+    }
+	t->archDatos = NULL;
 
     if(t->indiceSucio) {
         fpIndice = fopen(t->pathIndice, "wb");

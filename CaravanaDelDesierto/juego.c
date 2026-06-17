@@ -55,7 +55,9 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 
 	crearTablero(&t, c->tCfg.cantCasillas);
 	if ((code = distribuirCasillas(&t, &(c->tCfg), juego->jugador,
-				       juego->bandido)) != OK) {
+					juego->bandido)) != OK) {
+		listaCircularDobleDestruir(&t.casillas);
+		free(juego->bandido);
 		return code;
 	}
 
@@ -171,7 +173,7 @@ static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
 			}
 			juego->cantBandidosActivos--;
 
-			aplicarCaptura(juego, j->posAnterior);
+			aplicarCaptura(juego, j->pos);
 			return;
 		}
 	}
@@ -336,6 +338,9 @@ int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
 			*iterador = '\0';
 		}
 		iterador = strrchr(linea, ':');
+		if (!iterador) {
+			continue;
+		}
 		valor = atoi((iterador + 2));
 		*iterador = '\0';
 		if (strcmp(linea, "cantidad_posiciones") == 0) {
