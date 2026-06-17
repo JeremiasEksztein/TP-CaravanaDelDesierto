@@ -105,7 +105,10 @@ int MostrarRanking(tTabla *tablaJugadores)
 			nodo.nombre[10] = '\0';
 		}
 		if (nodo.nombre[0] == '\0') {
-			snprintf(nodo.nombre, 11, "ID:%d", id);
+			char tmp[32];
+			sprintf(tmp, "ID:%d", id);
+			strncpy(nodo.nombre, tmp, 10);
+			nodo.nombre[10] = '\0';
 		}
 
 		nodo.id = id;

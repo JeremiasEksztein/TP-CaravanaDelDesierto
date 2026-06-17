@@ -1,5 +1,5 @@
 #if defined(__linux__) || defined(__gnu_linux__)
-#define _XOPEN_SOURCE 501
+#define _POSIX_C_SOURCE 199309L
 #endif
 
 #include "tablero.h"
@@ -11,7 +11,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #else
-#include <unistd.h>
+#include <time.h>
 #endif
 
 void esperar(unsigned int ms)
@@ -19,7 +19,10 @@ void esperar(unsigned int ms)
 #ifdef _WIN32
 	Sleep(ms);
 #else
-	usleep(ms * 1000);
+	struct timespec ts;
+	ts.tv_sec = ms / 1000;
+	ts.tv_nsec = (long)(ms % 1000) * 1000000L;
+	nanosleep(&ts, NULL);
 #endif
 }
 
