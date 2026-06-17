@@ -1,12 +1,44 @@
 #include "usuarios_db.h"
 
+static void _accionGrabarEnArch(void *data, void *usuario)
+{
+    FILE *fp = (FILE *)usuario;
+    fwrite(data, sizeof(tEntradaIndice), 1, fp);
+}
+
+static void _guardarIndice(tTabla *t)
+{
+    FILE *fp;
+    if (!t || !t->indice) return;
+    fp = fopen(t->pathIndice, "wb");
+    if (!fp) return;
+    arbolBinBusqVisitar(&t->indice, E_INORDEN, _accionGrabarEnArch, fp);
+    fclose(fp);
+    t->indiceSucio = FALSE;
+}
+
+int jugadorIndiceCmp(const void *a, const void *b)
+{
+    const tEntradaIndice *ea = (const tEntradaIndice *)a;
+    const tEntradaIndice *eb = (const tEntradaIndice *)b;
+    return strcmp(ea->clave, eb->clave);
+}
+
+int jugadorLeerClave(void *out, const void *in)
+{
+    const tRegistroJugador *reg = (const tRegistroJugador *)in;
+    strncpy((char *)out, reg->nombre, INDICE_CLAVE_LEN - 1);
+    ((char *)out)[INDICE_CLAVE_LEN - 1] = '\0';
+    return OK;
+}
+
 int tablaCrear(
-    tTabla *t, 
-    const char *pathDatos, 
-    const char *pathIndice, 
+    tTabla *t,
+    const char *pathDatos,
+    const char *pathIndice,
     fnCmp cmp,
     fnLeerClave leer,
-    unsigned regTam, 
+    unsigned regTam,
     unsigned claveTam
 ) {
     if(!t || !pathDatos || !pathIndice || !cmp || !leer) {
@@ -33,10 +65,8 @@ int tablaCrear(
 static int _cargarIndice(tTabla *t, FILE *fpIndice)
 {
     tEntradaIndice tmp;
-    
-    while(!feof(fpIndice)) {
-        fread(&tmp, sizeof(tEntradaIndice), 1, fpIndice);
 
+    while(fread(&tmp, sizeof(tEntradaIndice), 1, fpIndice) == 1) {
         if(arbolBinBusqPoner(&t->indice, &tmp, sizeof(tmp), t->cmp) != OK) {
             return ERR;
         }
@@ -68,21 +98,22 @@ int tablaAbrir(tTabla *t)
     if(fpIndice) {
         _cargarIndice(t, fpIndice);
         fclose(fpIndice);
+    } else {
+        /* Reconstruir índice desde archivo de datos */
+        long offset = 0;
+        char buf[256];
+        tEntradaIndice entrada;
+
+        fseek(t->archDatos, 0, SEEK_SET);
+        while (fread(buf, t->regTam, 1, t->archDatos) == 1) {
+            t->leerClave(entrada.clave, buf);
+            entrada.offset = offset++;
+            entrada.id = ((tRegistroJugador *)buf)->id;
+            arbolBinBusqPoner(&t->indice, &entrada,
+                              sizeof(tEntradaIndice), t->cmp);
+        }
+        _guardarIndice(t);
     }
-
-    /*
-    IF t->pathDatos NOT EXISTS
-        CREATE t->pathDatos
-        OPEN t->pathDatos
-    ENDIF
-
-    IF t->pathIndice EXISTS
-        OPEN t->pathIndice
-        LOAD t->pathIndice INTO t->indice
-    ELSE
-        CREATE t->pathIndice
-    ENDIF
-    */
 
     return OK;
 }
@@ -98,25 +129,18 @@ int tablaIngresar(tTabla *t, const void *reg)
 
     fseek(t->archDatos, 0, SEEK_END);
     ultimoOffset = ftell(t->archDatos) / t->regTam;
-    
+
     t->leerClave(entrada.clave, reg);
     entrada.offset = ultimoOffset;
-    
+    entrada.id = ((tRegistroJugador *)reg)->id;
+
     if(arbolBinBusqPoner(&t->indice, &entrada, sizeof(tEntradaIndice), t->cmp) == ERR) {
         return ERR;
     }
-    
+
     fwrite(reg, t->regTam, 1, t->archDatos);
-    
-    t->indiceSucio = TRUE;
 
-    /*
-        APPEND reg INTO t->archDatos
-
-        INSERT t->leer(reg) INTO t->indice
-    
-        SET t->indiceSucio TO TRUE
-    */
+    _guardarIndice(t);
 
     return OK;
 }
@@ -131,20 +155,13 @@ int tablaBuscar(tTabla *t, const void *clave, void *buf)
 
     t->leerClave(claveBusqueda.clave, clave);
 
-    if(arbolBinBusqBuscar(&t->indice, &claveBusqueda, &entrada, sizeof(tEntradaIndice), t->cmp)) {
+    if(arbolBinBusqBuscar(&t->indice, &claveBusqueda, &entrada, sizeof(tEntradaIndice), t->cmp) == OK) {
         fseek(t->archDatos, entrada.offset * t->regTam, SEEK_SET);
         fread(buf, t->regTam, 1, t->archDatos);
     } else {
         return ERR;
     }
 
-    /*
-        IF clave IN t->indice 
-            READ FROM t->archDatos IN OFFSET GIVEN
-            WRITE TO buf
-        ELSE
-            RETURN ERROR
-    */
 
     return OK;
 }
@@ -159,7 +176,7 @@ int tablaActualizar(tTabla *t, const void *clave, const void *reg)
 
     t->leerClave(entrada.clave, clave);
 
-    if(arbolBinBusqBuscar(&t->indice, &entrada, &entrada, sizeof(tEntradaIndice), t->cmp)) {
+    if(arbolBinBusqBuscar(&t->indice, &entrada, &entrada, sizeof(tEntradaIndice), t->cmp) == OK) {
         fseek(t->archDatos, entrada.offset * t->regTam, SEEK_SET);
         fwrite(reg, t->regTam, 1, t->archDatos);
         fflush(t->archDatos);
@@ -167,35 +184,31 @@ int tablaActualizar(tTabla *t, const void *clave, const void *reg)
         return ERR;
     }
 
-    /*
-        IF clave IN t->indice
-            WRITE TO t->archivos IN OFFSET GIVEN reg
-        ELSE
-            RETURN ERROR
-    */
 
     return OK;
 }
 
 int tablaRecorrer(tTabla *t, fnAccion accion, void *usuario)
 {
-    if(!t || !accion) {
+    char buf[256];
+
+    if(!t || !accion || !t->archDatos) {
         return ERR;
     }
 
+    fseek(t->archDatos, 0, SEEK_SET);
 
-
-    /*
-        FOR clave IN t->indice
-            READ INTO tmp FROM t->archDatos[clave]
-            accion(tmp, usuario)
-    */
+    while(fread(buf, t->regTam, 1, t->archDatos) == 1) {
+        accion(buf, usuario);
+    }
 
     return OK;
 }
 
 int tablaCerrar(tTabla *t)
 {
+    FILE *fpIndice;
+
     if(!t) {
         return ERR;
     }
@@ -205,25 +218,16 @@ int tablaCerrar(tTabla *t)
     t->archDatos = NULL;
 
     if(t->indiceSucio) {
-        t->archDatos = fopen(t->pathIndice, "wb");
+        fpIndice = fopen(t->pathIndice, "wb");
 
-        if(!t->archDatos) {
+        if(!fpIndice) {
             return ERR;
         }
 
-        arbolBinBusqVisitar(&t->indice, E_PREORDEN, _accionGrabarEnArch, t);
+        arbolBinBusqVisitar(&t->indice, E_PREORDEN, _accionGrabarEnArch, fpIndice);
 
-        fclose(t->archDatos);
-        t->archDatos = NULL;
+        fclose(fpIndice);
     }
-
-
-    /*
-        CLOSE t->archDatos
-
-        VISIT PREORDER t->indice
-            WRITE TO t->pathIndice
-    */
 
     return OK;
 }
@@ -240,4 +244,17 @@ void tablaDestruir(tTabla *t)
     }
 
     arbolBinBusqDestruir(&t->indice);
+}
+
+int tablaProximoId(tTabla *t)
+{
+    long sz;
+
+    if(!t || !t->archDatos) {
+        return 0;
+    }
+
+    fseek(t->archDatos, 0, SEEK_END);
+    sz = ftell(t->archDatos);
+    return (int)(sz / t->regTam);
 }

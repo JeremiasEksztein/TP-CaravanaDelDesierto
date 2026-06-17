@@ -8,67 +8,55 @@
 #include "arbolBinBusq.h"
 #include "common.h"
 
-#define JUGADORES_DB    "jugadores.dat"
-#define PARTIDA_DB      "partidas.dat"
+#define TAM_NOMBRE_JUG 11
 
-#define ARCHPATHLEN         256
+#define JUGADORES_DB "jugadores.dat"
+#define JUGADORES_IDX "jugadores.idx"
+#define PARTIDA_DB "partidas.dat"
 
-#define INDICE_CLAVE_LEN    256
+#define ARCHPATHLEN 256
 
-#define NOMBRECUENTALEN     64
-#define NOMBREUSUARIOLEN    64
+#define INDICE_CLAVE_LEN 256
 
 typedef int (*fnLeerClave)(void *, const void *);
 
 typedef struct {
-    char nombreCuenta[NOMBRECUENTALEN];
-    char nombreUsuario[NOMBREUSUARIOLEN];
-    int borradoLogico; /* 0: activo, 1: eliminado */
+  int id;
+  char nombre[TAM_NOMBRE_JUG];
+  int partidasJugadas;
 } tRegistroJugador;
 
 typedef struct {
-    char nombreCuenta[NOMBRECUENTALEN]; /* FK(Jugadores) */
-    int idPartida; /* PK */
-    int cantJugadas;
-    int puntaje;
-    int borradoLogico; /* 0: activo, 1: eliminado */
+  int idJugador;
+  int puntosObtenidos;
+  int movimientosRealizados;
 } tRegistroPartida;
 
 typedef struct {
-    FILE *archDatos;
+  FILE *archDatos;
 
-    tArbolBinBusq indice;
-    const char pathDatos[ARCHPATHLEN];
-    const char pathIndice[ARCHPATHLEN];    
-    unsigned regTam, claveTam;
+  tArbolBinBusq indice;
+  char pathDatos[ARCHPATHLEN];
+  char pathIndice[ARCHPATHLEN];
+  unsigned regTam, claveTam;
 
-    fnCmp cmp;
-    fnLeerClave leerClave;
-    
-    int indiceSucio;
+  fnCmp cmp;
+  fnLeerClave leerClave;
+
+  int indiceSucio;
 } tTabla;
 
-
-typedef struct { 
-    char clave[INDICE_CLAVE_LEN];
-    long offset;
+typedef struct {
+  char clave[INDICE_CLAVE_LEN];
+  long offset;
+  int id;
 } tEntradaIndice;
 
-int tablaCrear(
-    tTabla *t, 
-    const char *pathDatos, 
-    const char *pathIndice, 
-    fnCmp cmp,
-    fnLeerClave leer,
-    unsigned regTam, 
-    unsigned claveTam
-);
+int tablaCrear(tTabla *t, const char *pathDatos, const char *pathIndice,
+               fnCmp cmp, fnLeerClave leer, unsigned regTam, unsigned claveTam);
 
 int jugadorIndiceCmp(const void *a, const void *b);
-int jugadorLeerClave(void *out, void *in);
-
-int partidaIndiceCmp(const void *a, const void *b);
-int partidaLeerClave(void *out, void *in);
+int jugadorLeerClave(void *out, const void *in);
 
 int tablaAbrir(tTabla *t);
 
@@ -84,69 +72,7 @@ int tablaCerrar(tTabla *t);
 
 void tablaDestruir(tTabla *t);
 
-/*
+int tablaProximoId(tTabla *t);
 
-int crearArchivoJugadores(const char *path);
-int crearArchivoPartidas(const char *path);
-
-int abrirArchivoJugadores(tArbolBinBusq *indice, const char *path);
-int abrirArchivoPartidas(tArbolBinBusq *indice, const char *path);
-
-int agregarJugador(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const tRegistroJugador *registro
-);
-
-int agregarPartida(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const tRegistroPartida *registro
-);
-
-int obtenerJugador(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const char *nombreCuenta, 
-    tRegistroJugador *registro
-);
-
-int obtenerPartida(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const char *nombreCuenta, 
-    int idPartida, 
-    tRegistroPartida *registro
-);
-
-int eliminarJugador(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const char *nombreCuenta
-);
-
-int eliminarPartida(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const char *nombreCuenta, 
-    int idPartida
-);
-
-int modificarJugador(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const tRegistroJugador *registro
-);
-
-int modificarPartida(
-    tArbolBinBusq *indice, 
-    FILE *fp, 
-    const tRegistroPartida *registro
-);
-
-int cerrarArchivoJugadores(tArbolBinBusq *indice, FILE *fp);
-int cerrarArchivoPartidas(tArbolBinBusq *indice, FILE *fp);
-
-*/
 
 #endif
