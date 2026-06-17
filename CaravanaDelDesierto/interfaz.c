@@ -1,6 +1,7 @@
 #include "interfaz.h"
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 char CrearMenuInicial(const char *menuTexto, const char *opciones)
 {
@@ -79,3 +80,29 @@ void MostrarMensajeVictoria(const char *nombre)
 	printf("  %s HA LLEGADO A LA META!\n", nombre);
 	printf("=================================\n");
 }
+
+void SolicitarNombreJugador(char *nombre, int maxLen)
+{
+	int i, valid;
+
+	do {
+		valid = 1;
+		printf("Ingrese su nombre (max %d caracteres alfanumericos): ", maxLen - 1);
+		scanf(" %10s", nombre);
+		limpiarBuff();
+
+		for(i = 0; nombre[i] && i < maxLen; i++) {
+			if(!isalnum((unsigned char)nombre[i])) {
+				valid = 0;
+				printf("Nombre invalido. Solo se permiten letras y numeros.\n");
+				break;
+			}
+		}
+
+		if(valid && strlen(nombre) == 0) {
+			valid = 0;
+			printf("El nombre no puede estar vacio.\n");
+		}
+	} while(!valid);
+}
+

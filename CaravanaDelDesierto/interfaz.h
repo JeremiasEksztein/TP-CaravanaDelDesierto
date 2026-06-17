@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "jugador.h"
+#include "usuarios_db.h"
 #define MENU_TEXTO "==========================\n"\
                     "Bienvenido a la Caravana del Desierto\n"\
                     "\n1. JUGAR\n"\
@@ -21,4 +22,5 @@ int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado);
 void MostrarEstadoJugador(const tJugador *j);
 void MostrarMensajeDerrota(const char *nombre);
 void MostrarMensajeVictoria(const char *nombre);
+void SolicitarNombreJugador(char *nombre, int maxLen);
 #endif
