@@ -23,11 +23,33 @@
 void crearTurnoJugador(tTurno *t, const int mov, const tTablero *tab,
 		       const tJugador *j)
 {
+	int jp = j->pos, casillaFinal = tab->cant - 1;
+	int movAbs = mov;
+	int dir = 1;
+
+	if (mov < 0) {
+		movAbs = -mov;
+		dir = -1;
+	}
+
 	t->tipo = EVT_JUGADOR;
 	t->id = 0;
+	if (jp + movAbs > casillaFinal && dir == 1) {
+		t->mov = (-2 * jp - movAbs + 2 * casillaFinal);
+		printf("Posicion Actual: %d; Movimiento Jugador: %d, Nueva posicion: %d\n",
+		       jp, t->mov, t->mov);
+		return;
+	}
+	if (jp - movAbs < 0 && dir == -1) {
+		t->mov = (2 * jp - movAbs);
+		printf("Posicion Actual: %d; Movimiento Jugador: %d, Nueva posicion: %d\n",
+		       jp, t->mov, t->mov);
+		if (t->mov < 0) {
+			t->mov = -t->mov;
+		}
+		return;
+	}
 	t->mov = mov;
-	(void)tab;
-	(void)j;
 }
 
 /**
