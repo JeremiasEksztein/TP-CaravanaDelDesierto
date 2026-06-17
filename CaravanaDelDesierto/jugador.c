@@ -185,8 +185,6 @@ void moverJugador(tJugador *j, const int mov, const int n)
 	       j->pos, j->posAnterior, mov, n, range);
 	j->mov = mov;
 	j->invulnerable = 0;
-	printf("[DEBUG moverJugador] OUT: pos=%d posAnt=%d\n", j->pos,
-	       j->posAnterior);
 }
 int ConsultarOmisionDeTurno(tJugador* t)
 {
