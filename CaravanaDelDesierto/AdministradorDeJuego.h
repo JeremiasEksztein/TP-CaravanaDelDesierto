@@ -6,6 +6,7 @@
 #include "cola.h"
 #include "interfaz.h"
 #include "usuarios_db.h"
+
 #define AGREGADO 2
 #define MOSTRAR 1
 #define JUGADOR_GANO 0
@@ -20,4 +21,5 @@ int AdministrarRanking(int operacion, tTabla *tablaJugadores);
 
 int Jugar(tJuego* jue, tJugador* jug, tTablero* partida,
           int idJugador, tRegistroPartida *partidaOut);
+
 #endif

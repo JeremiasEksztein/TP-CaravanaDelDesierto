@@ -7,7 +7,7 @@
 #include "AdministradorDeJuego.h"
 #include "usuarios_db.h"
 
-int main()
+int main(void)
 {
 	char opcion;
 	tTabla tablaJugadores;
@@ -44,15 +44,15 @@ int main()
 					&foundJugador) == OK) {
 				idJugador = foundJugador.id;
 			} else {
-			idJugador = tablaProximoId(&tablaJugadores);
-			regJugador.id = idJugador;
-			regJugador.partidasJugadas = 0;
-			if (tablaIngresar(&tablaJugadores,
-						  &regJugador) != OK) {
-					printf("Error al registrar nuevo jugador.\n");
-					break;
-				}
-			}
+                idJugador = tablaProximoId(&tablaJugadores);
+                regJugador.id = idJugador;
+                regJugador.partidasJugadas = 0;
+                if (tablaIngresar(&tablaJugadores,
+                              &regJugador) != OK) {
+                        printf("Error al registrar nuevo jugador.\n");
+                        break;
+                    }
+            }
 
 			if (AdministrarJuego(nombre, idJugador, &tablaJugadores,
 					     &partidaOut) == JUGADOR_GANO) {

@@ -19,6 +19,7 @@ char CrearMenuInicial(const char *menuTexto, const char *opciones)
 	}
 	return opcion;
 }
+
 void MostrarMensajeEsTurnoDeJugador(const char* jugNombre)
 {
 	printf("---------------------------------\n");
