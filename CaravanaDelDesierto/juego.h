@@ -12,6 +12,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "bandido.h"
+#include "cola.h"
 #include "jugador.h"
 #include "tablero.h"
 #include "turnos.h"
@@ -38,6 +39,8 @@ typedef struct {
   tConfig cfg;
   int cantBandidosActivos;
   int turno;
+  int cantMovimientos;
+  tCola registroMovimientos;
 } tJuego;
 
 /**
@@ -168,4 +171,9 @@ int tirarDado(void);
 int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg);
 
 int cargarConfiguracionPorDefecto(const char *nom, const tConfig *cfg);
+
+void inicializarRegistroMovimientos(tJuego *juego);
+void registrarMovimientoJugador(tJuego *juego, int mov);
+void mostrarRegistroMovimientos(tJuego *juego);
+void liberarRegistroMovimientos(tJuego *juego);
 #endif
