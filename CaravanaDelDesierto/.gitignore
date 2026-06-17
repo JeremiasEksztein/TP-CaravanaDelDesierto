@@ -1,0 +1,7 @@
+# SDD artifacts (no versionar)
+openspec/
+
+# Build outputs
+bin/
+obj/
+*.o
