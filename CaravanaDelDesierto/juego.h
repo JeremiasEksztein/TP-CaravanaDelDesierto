@@ -20,6 +20,7 @@
 #include "turnos.h"
 #include "jugador.h"
 #include "bandido.h"
+#include "interfaz.h"
 #define FILE_CONFIG "config.txt"
 
  /* Sencilla configuracion por defecto, para testing: */

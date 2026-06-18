@@ -204,7 +204,7 @@ static void moverYActualizarBandido(tJuego* juego, const tTurno* t)
 		}
 		else {
 			aplicarCaptura(juego, j->pos);
-			mostrarMensajePerdidaDeVida(j->name);
+			MostrarMensajePerdidaDeVida(j->name);
 		}
 		eliminarBandidoDeTablero(&(juego->tablero), b);
 		if (idx != juego->cantBandidosActivos - 1) {
