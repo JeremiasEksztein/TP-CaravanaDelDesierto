@@ -227,6 +227,20 @@ void mostrarTablero(const tTablero* t);
 void mostrarTableroCompacto(const tTablero* t, int posJugador);
 
 /**
+ * @brief Guarda el tablero en un archivo de texto, en el mismo formato
+ *        que mostrarTableroCompacto.
+ *
+ * Escribe cada casilla como [base J/B/.] al archivo indicado.
+ * Si el archivo no se puede abrir, retorna silenciosamente sin
+ * interrumpir el juego.
+ *
+ * @param t Puntero constante al tablero a guardar.
+ * @param posJugador Posicion actual del jugador en el tablero.
+ * @param nombreArchivo Ruta del archivo donde se escribira el tablero.
+ */
+void guardarTablero(const tTablero* t, int posJugador, const char* nombreArchivo);
+
+/**
  * @brief Limpia la pantalla de la terminal.
  *
  * Emite la secuencia de escape ANSI para borrar el contenido visible

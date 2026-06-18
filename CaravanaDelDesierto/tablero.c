@@ -333,7 +333,50 @@ int cmpJugador(const void* a, const void* b)
 	}
 	return -1;
 }
+void guardarTablero(const tTablero* t, int posJugador, const char* nombreArchivo)
+{
+	int i, b;
+	tCasilla c;
+	char base_char;
+	int has_jugador, n_bandidos;
+	FILE* f;
 
+	if (t == NULL || t->cant == 0) {
+		return;
+	}
+
+	f = fopen(nombreArchivo, "wt");
+	if (f == NULL) {
+		return;
+	}
+
+	for (i = 0; i < t->cant; i++) {
+		if (listaCircularDobleMirarEnPos(
+			(tListaCircularDoble*)&(t->casillas), &c,
+			sizeof(tCasilla), i) != OK) {
+			break;
+		}
+
+		base_char = (c.base != CASILLA_NORMAL) ? (char)c.base : '.';
+		has_jugador = (i == posJugador);
+		n_bandidos = c.cantBandidosEnCasilla;
+
+		fprintf(f, "[%c", base_char);
+
+		if (has_jugador)
+			fprintf(f, " J");
+
+		for (b = 0; b < n_bandidos; b++)
+			fprintf(f, " B");
+
+		if (!has_jugador && n_bandidos == 0)
+			fprintf(f, " .");
+
+		fprintf(f, "]");
+	}
+	fprintf(f, "\n");
+	fclose(f);
+}
 /**
  * @brief Funcion de comparacion para buscar una casilla con bandidos.
  *

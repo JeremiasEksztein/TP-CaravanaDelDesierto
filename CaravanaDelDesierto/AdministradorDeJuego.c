@@ -17,6 +17,7 @@ int AdministrarJuego(const char *nombreJugador, int idJugador,
 	retorno = iniciarJuego(&partidaActual, &jugadorActual, &configActual);
 
 	mostrarTableroCompacto(&partidaActual.tablero, jugadorActual.pos);
+	guardarTablero(&partidaActual.tablero, jugadorActual.pos, FILE_TABLERO);
 	if (retorno == 0) {
 		retorno = JUEGO_CONTINUA;
 		while (retorno == JUEGO_CONTINUA) {
