@@ -180,8 +180,6 @@ void moverJugador(tJugador *j, const int mov, const int n)
 	j->posAnterior = j->pos;
 	j->pos = j->pos + mov;
 	j->pos = ((j->pos % n) + n) % n;
-	printf("[DEBUG moverJugador] IN: pos=%d posAnt=%d mov=%d n=%d\n",
-	       j->pos, j->posAnterior, mov, n);
 	j->mov = mov;
 	j->invulnerable = 0;
 }
