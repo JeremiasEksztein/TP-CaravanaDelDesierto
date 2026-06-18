@@ -9,6 +9,7 @@
 
 
 #include "juego.h"
+#include "interfaz.h"
 
 
  /**

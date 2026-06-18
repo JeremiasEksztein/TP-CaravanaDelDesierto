@@ -54,6 +54,7 @@ int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado)
 		while (caracter == '\n') {
 			scanf("%c", &caracter);
 		}
+		caracter = toupper(caracter);
 		if (caracter != 'A' && caracter != 'R') {
 			printf("\nError, Intenta de nuevo\n");
 		}

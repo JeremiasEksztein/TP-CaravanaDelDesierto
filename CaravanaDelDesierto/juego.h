@@ -19,33 +19,90 @@
 #include "tablero.h"
 #include "turnos.h"
 #include "jugador.h"
-#include "bandido.h"
 #include "interfaz.h"
+#include "bandido.h"
+/**
+ * @def FILE_CONFIG
+ * @brief Nombre del archivo de configuración del juego.
+ *
+ * Define la ruta al archivo de texto que contiene los parámetros
+ * de configuración iniciales del juego (cantidad de casillas, bandidos, etc.).
+ */
 #define FILE_CONFIG "config.txt"
 
  /* Sencilla configuracion por defecto, para testing: */
+
+/**
+ * @def CANT_CASILLAS_DEFAULT
+ * @brief Cantidad de casillas del tablero por defecto para testing.
+ */
 #define CANT_CASILLAS_DEFAULT 20
+
+/**
+ * @def CANT_BANDIDOS_DEFAULT
+ * @brief Cantidad de bandidos por defecto para testing.
+ */
 #define CANT_BANDIDOS_DEFAULT 3
+
+/**
+ * @def CANT_OASIS_DEFAULT
+ * @brief Cantidad de casillas de oasis por defecto para testing.
+ */
 #define CANT_OASIS_DEFAULT 3
+
+/**
+ * @def CANT_PREMIO_DEFAULT
+ * @brief Cantidad de casillas con premio por defecto para testing.
+ */
 #define CANT_PREMIO_DEFAULT 2
+
+/**
+ * @def CANT_VIDA_DEFAULT
+ * @brief Cantidad de casillas con vida extra por defecto para testing.
+ */
 #define CANT_VIDA_DEFAULT 2
+
+/**
+ * @def CANT_TOR_DEFAULT
+ * @brief Cantidad de casillas de tormenta por defecto para testing.
+ */
 #define CANT_TOR_DEFAULT 2
+
+/**
+ * @def CANT_VIDAS_INICIO_DEFAULT
+ * @brief Cantidad de vidas iniciales del jugador por defecto para testing.
+ */
 #define CANT_VIDAS_INICIO_DEFAULT 3
 
+/**
+ * @struct tConfig
+ * @brief Configuración general del juego.
+ *
+ * Contiene las vidas iniciales del jugador y la configuración
+ * específica del tablero dentro de una misma estructura.
+ */
 typedef struct {
-	int vidasInicio;
-	tConfigTablero tCfg;
+	int vidasInicio;       /**< Cantidad de vidas iniciales del jugador. */
+	tConfigTablero tCfg;   /**< Configuración del tablero (casillas, bandidos, etc.). */
 } tConfig;
 
+/**
+ * @struct tJuego
+ * @brief Estado completo de una partida de "Caravana del Desierto".
+ *
+ * Agrupa todos los componentes del juego: los bandidos, el jugador,
+ * el tablero, la configuración, el turno actual y el registro
+ * de movimientos realizados.
+ */
 typedef struct {
-	tBandido* bandido; /* Este es un array de bandidos */
-	tJugador* jugador; /* Este si es un puntero a una estructura */
-	tTablero tablero;
-	tConfig cfg;
-	int cantBandidosActivos;
-	int turno;
-	int cantMovimientos;
-	tCola registroMovimientos;
+	tBandido* bandido;          /**< Array dinámico de bandidos activos. */
+	tJugador* jugador;          /**< Puntero al jugador controlado por el usuario. */
+	tTablero tablero;           /**< Tablero circular donde se desarrolla el juego. */
+	tConfig cfg;                /**< Configuración de la partida. */
+	int cantBandidosActivos;    /**< Cantidad de bandidos actualmente en juego. */
+	int turno;                  /**< Número de turno actual. */
+	int cantMovimientos;        /**< Cantidad total de movimientos realizados. */
+	tCola registroMovimientos;  /**< Cola con el historial de movimientos del jugador. */
 } tJuego;
 
 /**
@@ -173,12 +230,69 @@ int correrTurno(tJuego* juego, tTurno* t);
  */
 int tirarDado(void);
 
+/**
+ * @brief Carga la configuración del juego desde un archivo de texto.
+ *
+ * Lee los parámetros de configuración (cantidad de casillas, bandidos,
+ * oasis, etc.) desde el archivo especificado y los almacena en la
+ * estructura de configuración dada.
+ *
+ * @param nombreArchivo Ruta al archivo de configuración.
+ * @param cfg Puntero a la estructura donde se almacenará la configuración.
+ * @return 1 si la carga fue exitosa, 0 en caso de error.
+ */
 int cargarConfiguracion(const char* nombreArchivo, tConfig* cfg);
 
+/**
+ * @brief Carga una configuración por defecto del juego.
+ *
+ * Asigna valores predeterminados a todos los parámetros de configuración,
+ * útil para testing o cuando no existe un archivo de configuración válido.
+ *
+ * @param nom Nombre del archivo de configuración (se ignora si no existe).
+ * @param cfg Puntero a la estructura donde se almacenará la configuración.
+ * @return 1 si la carga fue exitosa, 0 en caso de error.
+ */
 int cargarConfiguracionPorDefecto(const char* nom, tConfig* cfg);
 
+/**
+ * @brief Inicializa la cola de registro de movimientos del juego.
+ *
+ * Crea y prepara la cola que almacenará el historial de movimientos
+ * realizados por el jugador a lo largo de la partida.
+ *
+ * @param juego Puntero al estado del juego cuyo registro se inicializará.
+ */
 void inicializarRegistroMovimientos(tJuego* juego);
+
+/**
+ * @brief Registra un movimiento del jugador en el historial.
+ *
+ * Agrega la cantidad de casillas movidas al registro de movimientos
+ * de la partida actual.
+ *
+ * @param juego Puntero al estado del juego.
+ * @param mov Cantidad de casillas que se movió el jugador.
+ */
 void registrarMovimientoJugador(tJuego* juego, int mov);
+
+/**
+ * @brief Muestra el registro completo de movimientos del jugador.
+ *
+ * Recorre la cola de movimientos y muestra cada entrada registrada
+ * durante la partida.
+ *
+ * @param juego Puntero al estado del juego cuyo registro se mostrará.
+ */
 void mostrarRegistroMovimientos(tJuego* juego);
+
+/**
+ * @brief Libera la memoria del registro de movimientos.
+ *
+ * Destruye la cola de movimientos y libera todos los recursos
+ * asociados al historial de la partida.
+ *
+ * @param juego Puntero al estado del juego cuyo registro se liberará.
+ */
 void liberarRegistroMovimientos(tJuego* juego);
 #endif
