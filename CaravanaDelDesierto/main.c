@@ -17,7 +17,7 @@ int main(void)
 	char nombre[TAM_NOMBRE];
 	int idJugador;
 
-	#if defined(WIN32) || defined(WIN64)
+	#if defined(_WIN32) || defined(_WIN64)
 
 	system("chcp 65001 > nul");
 
