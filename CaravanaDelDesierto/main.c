@@ -7,6 +7,7 @@
 #include "AdministradorDeJuego.h"
 #include "usuarios_db.h"
 
+
 int main(void)
 {
 	char opcion;
@@ -19,8 +20,8 @@ int main(void)
 	srand(time(NULL));
 
 	tablaCrear(&tablaJugadores, JUGADORES_DB, JUGADORES_IDX,
-		   jugadorIndiceCmp, jugadorLeerClave, sizeof(tRegistroJugador),
-		   TAM_NOMBRE_JUG);
+						 jugadorIndiceCmp, jugadorLeerClave, sizeof(tRegistroJugador),
+						 TAM_NOMBRE_JUG);
 	if (tablaAbrir(&tablaJugadores) != OK) {
 		printf("Error al abrir la base de datos de jugadores.\n");
 		printf("Verifique que el directorio tenga permisos de escritura.\n");
@@ -28,11 +29,12 @@ int main(void)
 	}
 
 	opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
-	limpiarBuff();
+
 
 	while (opcion != SALIR) {
 		switch (opcion) {
 		case JUGAR:
+			limpiarPantalla();
 			printf("Iniciando el juego...\n");
 			SolicitarNombreJugador(nombre, TAM_NOMBRE);
 
@@ -41,25 +43,27 @@ int main(void)
 			regJugador.nombre[TAM_NOMBRE_JUG - 1] = '\0';
 
 			if (tablaBuscar(&tablaJugadores, &regJugador,
-					&foundJugador) == OK) {
+											&foundJugador) == OK) {
 				idJugador = foundJugador.id;
-			} else {
-                idJugador = tablaProximoId(&tablaJugadores);
-                regJugador.id = idJugador;
-                regJugador.partidasJugadas = 0;
-                if (tablaIngresar(&tablaJugadores,
-                              &regJugador) != OK) {
-                        printf("Error al registrar nuevo jugador.\n");
-                        break;
-                    }
-            }
+			}
+			else {
+				idJugador = tablaProximoId(&tablaJugadores);
+				regJugador.id = idJugador;
+				regJugador.partidasJugadas = 0;
+				if (tablaIngresar(&tablaJugadores,
+													&regJugador) != OK) {
+					printf("Error al registrar nuevo jugador.\n");
+					break;
+				}
+			}
 
 			if (AdministrarJuego(nombre, idJugador, &tablaJugadores,
-					     &partidaOut) == JUGADOR_GANO) {
+													 &partidaOut) == JUGADOR_GANO) {
 				/* Victoria — persistencia ya manejada en AdministrarJuego */
 			}
 			break;
 		case RANKING:
+			limpiarPantalla();
 			printf("Mostrando el ranking...\n");
 			AdministrarRanking(MOSTRAR, &tablaJugadores);
 			break;

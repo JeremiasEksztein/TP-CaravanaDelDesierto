@@ -20,11 +20,13 @@
 char CrearMenuInicial(const char* menuTexto, const char* opciones);
 void MostrarMensajeEsTurnoDeJugador(const char* jugNombre);
 void MostrarMensajeOmisionDeTurno(const char* jugNombre);
+
+void MostrarMensajePerdidaDeVida(const char* jugNombre);
 void MostrarMensajeTurnoBandido(int numDado);
 int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado);
-void MostrarEstadoJugador(const tJugador *j);
-void MostrarMensajeDerrota(const char *nombre);
-void MostrarMensajeVictoria(const char *nombre);
-void SolicitarNombreJugador(char *nombre, int maxLen);
+void MostrarEstadoJugador(const tJugador* j);
+void MostrarMensajeDerrota(const char* nombre);
+void MostrarMensajeVictoria(const char* nombre);
+void SolicitarNombreJugador(char* nombre, int maxLen);
 
 #endif

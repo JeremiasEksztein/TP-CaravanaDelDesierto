@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-char CrearMenuInicial(const char *menuTexto, const char *opciones)
+char CrearMenuInicial(const char* menuTexto, const char* opciones)
 {
 	char opcion = 1;
 	while (strchr(opciones, opcion) == NULL) {
@@ -19,17 +19,22 @@ char CrearMenuInicial(const char *menuTexto, const char *opciones)
 	return opcion;
 }
 
-void MostrarMensajeEsTurnoDeJugador(const char *jugNombre)
+void MostrarMensajeEsTurnoDeJugador(const char* jugNombre)
 {
 	printf("---------------------------------\n");
 	printf("¡Es tu turno %s!\n", jugNombre);
 	printf("---------------------------------\n");
 }
 
-void MostrarMensajeOmisionDeTurno(const char *jugNombre)
+void MostrarMensajeOmisionDeTurno(const char* jugNombre)
 {
 	(void)jugNombre; /* Deberia llamar al jugador por nombre? */
 	printf("¡Vaya! Parece que la tormenta te ha atrapado. No puedes jugar este turno.\n");
+}
+void MostrarMensajePerdidaDeVida(const char* jugNombre)
+{
+	(void)jugNombre; /* Deberia llamar al jugador por nombre? */
+	printf("¡Te han matado! Volviendo al inicio\n");
 }
 
 void MostrarMensajeTurnoBandido(int numDado)
@@ -38,7 +43,7 @@ void MostrarMensajeTurnoBandido(int numDado)
 	printf("Ha Sacado: %d En el dado\n", numDado);
 }
 
-int SolicitarDireccionDeMovimiento(const char *jugNombre, int numDado)
+int SolicitarDireccionDeMovimiento(const char* jugNombre, int numDado)
 {
 	char caracter = 0;
 	(void)jugNombre; /* Deberia llamar al jugador por el nombre? */
@@ -56,7 +61,7 @@ int SolicitarDireccionDeMovimiento(const char *jugNombre, int numDado)
 	return caracter == 'A' ? 1 : -1;
 }
 
-void MostrarEstadoJugador(const tJugador *j)
+void MostrarEstadoJugador(const tJugador* j)
 {
 	printf("---------------------------------\n");
 	printf(" Jugador: %s\n", j->name);
@@ -69,28 +74,28 @@ void MostrarEstadoJugador(const tJugador *j)
 	printf("---------------------------------\n");
 }
 
-void MostrarMensajeDerrota(const char *nombre)
+void MostrarMensajeDerrota(const char* nombre)
 {
 	printf("\n=================================\n");
 	printf("  %s HA MUERTO EN EL DESIERTO\n", nombre);
 	printf("=================================\n");
 }
 
-void MostrarMensajeVictoria(const char *nombre)
+void MostrarMensajeVictoria(const char* nombre)
 {
 	printf("\n=================================\n");
 	printf("  %s HA LLEGADO A LA META!\n", nombre);
 	printf("=================================\n");
 }
 
-void SolicitarNombreJugador(char *nombre, int maxLen)
+void SolicitarNombreJugador(char* nombre, int maxLen)
 {
 	int i, valid;
 
 	do {
 		valid = 1;
 		printf("Ingrese su nombre (max %d caracteres alfanumericos): ",
-		       maxLen - 1);
+					 maxLen - 1);
 		if (fgets(nombre, maxLen, stdin) == NULL) {
 			valid = 0;
 			continue;
@@ -100,7 +105,8 @@ void SolicitarNombreJugador(char *nombre, int maxLen)
 			int len = strlen(nombre);
 			if (len > 0 && nombre[len - 1] == '\n') {
 				nombre[len - 1] = '\0';
-			} else if (len == maxLen - 1) {
+			}
+			else if (len == maxLen - 1) {
 				limpiarBuff();
 			}
 		}
