@@ -17,6 +17,12 @@ int main(void)
 	char nombre[TAM_NOMBRE];
 	int idJugador;
 
+	#if defined(WIN32) || defined(WIN64)
+
+	system("chcp 65001 > nul");
+
+	#endif
+
 	srand(time(NULL));
 
 	tablaCrear(&tablaJugadores, JUGADORES_DB, JUGADORES_IDX,
