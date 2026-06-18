@@ -26,7 +26,8 @@
  */
 void crearJugador(tJugador *j, const char *name, const int vidas)
 {
-	strcpy(j->name, name);
+	strncpy(j->name, name, TAM_NOMBRE - 1);
+	j->name[TAM_NOMBRE - 1] = '\0';
 	j->vidas = vidas;
 	j->puntos = 0;
 	j->invulnerable = 1;
@@ -176,17 +177,13 @@ void colocarJugadorEnPos(tJugador *j, const int pos)
  */
 void moverJugador(tJugador *j, const int mov, const int n)
 {
-	int range = n;
-
 	j->posAnterior = j->pos;
 	j->pos = j->pos + mov;
 	j->pos = ((j->pos % n) + n) % n;
-	printf("[DEBUG moverJugador] IN: pos=%d posAnt=%d mov=%d n=%d range=%d\n",
-	       j->pos, j->posAnterior, mov, n, range);
+	printf("[DEBUG moverJugador] IN: pos=%d posAnt=%d mov=%d n=%d\n",
+	       j->pos, j->posAnterior, mov, n);
 	j->mov = mov;
 	j->invulnerable = 0;
-	printf("[DEBUG moverJugador] OUT: pos=%d posAnt=%d\n", j->pos,
-	       j->posAnterior);
 }
 int ConsultarOmisionDeTurno(tJugador* t)
 {

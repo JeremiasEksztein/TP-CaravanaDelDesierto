@@ -3,14 +3,18 @@
 
 #include "jugador.h"
 #include "usuarios_db.h"
+#include "arbolBinBusq.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct {
+	int id;
+	char nombre[11];
+	int puntosAcumulados;
+	int movimientosAcumulados;
+} tNodoRanking;
 
-#define NOMBRE_ARCHIVO_RANKING "Ranking.bin"
-
-int MostrarRankingDeJugadores();
-int GuardarJugadorEnRanking(tJugador* jugador);
+int MostrarRanking(tTabla *tablaJugadores);
 
 #endif

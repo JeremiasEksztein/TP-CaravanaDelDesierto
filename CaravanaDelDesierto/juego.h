@@ -9,35 +9,43 @@
 
 #ifndef JUEGO_H
 #define JUEGO_H
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include "bandido.h"
+#include "cola.h"
 #include "jugador.h"
 #include "tablero.h"
 #include "turnos.h"
+#include "jugador.h"
+#include "bandido.h"
+#include "interfaz.h"
 #define FILE_CONFIG "config.txt"
 
-// Sencilla configuracion por defecto, para testing:
+ /* Sencilla configuracion por defecto, para testing: */
 #define CANT_CASILLAS_DEFAULT 20
 #define CANT_BANDIDOS_DEFAULT 3
-#define CANT_OASIS_DEFAULT 2
+#define CANT_OASIS_DEFAULT 3
 #define CANT_PREMIO_DEFAULT 2
 #define CANT_VIDA_DEFAULT 2
 #define CANT_TOR_DEFAULT 2
 #define CANT_VIDAS_INICIO_DEFAULT 3
 
 typedef struct {
-  int vidasInicio;
-  tConfigTablero tCfg;
+	int vidasInicio;
+	tConfigTablero tCfg;
 } tConfig;
 
 typedef struct {
-  tBandido *bandido; //Este es un array de bandidos
-  tJugador *jugador; //Esste si es un puntero a una estructura
-  tTablero tablero;
-  tConfig cfg;
-  int cantBandidosActivos;
-  int turno;
+	tBandido* bandido; /* Este es un array de bandidos */
+	tJugador* jugador; /* Este si es un puntero a una estructura */
+	tTablero tablero;
+	tConfig cfg;
+	int cantBandidosActivos;
+	int turno;
+	int cantMovimientos;
+	tCola registroMovimientos;
 } tJuego;
 
 /**
@@ -46,69 +54,69 @@ typedef struct {
  */
 #define FILE_CONFIG "config.txt"
 
-/**
- * @def DADO
- * @brief Cantidad de caras del dado utilizado para determinar los movimientos.
- */
+ /**
+	* @def DADO
+	* @brief Cantidad de caras del dado utilizado para determinar los movimientos.
+	*/
 #define DADO 6
 
-/**
- * @def VIDAS_DEFAULT
- * @brief Cantidad de vidas iniciales por defecto si no se especifica en la
- * configuracion.
- */
+	/**
+	 * @def VIDAS_DEFAULT
+	 * @brief Cantidad de vidas iniciales por defecto si no se especifica en la
+	 * configuracion.
+	 */
 #define VIDAS_DEFAULT 3
 
-/**
- * @def CANT_POSICIONES_DEFAULT
- * @brief Cantidad de casillas del tablero por defecto si no se especifica en la
- * configuracion.
- */
+	 /**
+		* @def CANT_POSICIONES_DEFAULT
+		* @brief Cantidad de casillas del tablero por defecto si no se especifica en la
+		* configuracion.
+		*/
 #define CANT_POSICIONES_DEFAULT 25
 
-/**
- * @def MAX_BANDIDOS_DEFAULT
- * @brief Cantidad maxima de bandidos en el tablero por defecto.
- */
+		/**
+		 * @def MAX_BANDIDOS_DEFAULT
+		 * @brief Cantidad maxima de bandidos en el tablero por defecto.
+		 */
 #define MAX_BANDIDOS_DEFAULT 3
 
-/**
- * @def MAX_PREMIOS_DEFAULT
- * @brief Cantidad maxima de premios en el tablero por defecto.
- */
+		 /**
+			* @def MAX_PREMIOS_DEFAULT
+			* @brief Cantidad maxima de premios en el tablero por defecto.
+			*/
 #define MAX_PREMIOS_DEFAULT 5
 
-/**
- * @def MAX_VIDAS_EXTRAS_DEFAULT
- * @brief Cantidad maxima de vidas extras en el tablero por defecto.
- */
+			/**
+			 * @def MAX_VIDAS_EXTRAS_DEFAULT
+			 * @brief Cantidad maxima de vidas extras en el tablero por defecto.
+			 */
 #define MAX_VIDAS_EXTRAS_DEFAULT 1
 
-/**
- * @def MAX_OASIS_DEFAULT
- * @brief Cantidad maxima de oasis en el tablero por defecto.
- */
+			 /**
+				* @def MAX_OASIS_DEFAULT
+				* @brief Cantidad maxima de oasis en el tablero por defecto.
+				*/
 #define MAX_OASIS_DEFAULT 1
 
-/**
- * @def MAX_TORMENTAS_DEFAULT
- * @brief Cantidad maxima de tormentas en el tablero por defecto.
- */
+				/**
+				 * @def MAX_TORMENTAS_DEFAULT
+				 * @brief Cantidad maxima de tormentas en el tablero por defecto.
+				 */
 #define MAX_TORMENTAS_DEFAULT 2
 
-/**
- * @brief Inicializa el estado del juego y del jugador a partir de la
- * configuracion.
- *
- * Carga la configuracion, genera el tablero con sus casillas especiales,
- * inicializa los bandidos y posiciona al jugador en la casilla de inicio.
- *
- * @param juego Puntero al estado del juego a inicializar.
- * @param j Puntero al jugador a inicializar.
- * @param c Puntero a la configuracion de la partida.
- * @return 1 si la inicializacion fue exitosa, 0 en caso de error.
- */
-int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c);
+				 /**
+					* @brief Inicializa el estado del juego y del jugador a partir de la
+					* configuracion.
+					*
+					* Carga la configuracion, genera el tablero con sus casillas especiales,
+					* inicializa los bandidos y posiciona al jugador en la casilla de inicio.
+					*
+					* @param juego Puntero al estado del juego a inicializar.
+					* @param j Puntero al jugador a inicializar.
+					* @param c Puntero a la configuracion de la partida.
+					* @return 1 si la inicializacion fue exitosa, 0 en caso de error.
+					*/
+int iniciarJuego(tJuego* juego, tJugador* j, const tConfig* c);
 
 /**
  * @brief Ejecuta todas las acciones correspondientes al turno actual.
@@ -119,7 +127,7 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c);
  *
  * @param juego Puntero al estado del juego.
  */
-void correrTurnoJuego(tJuego *juego);
+void correrTurnoJuego(tJuego* juego);
 
 /**
  * @brief Verifica si la partida ha finalizado.
@@ -130,7 +138,7 @@ void correrTurnoJuego(tJuego *juego);
  * @param juego Puntero constante al estado del juego.
  * @return 1 si el juego termino (por victoria o derrota), 0 si aun continua.
  */
-int juegoTermino(const tJuego *juego);
+int juegoTermino(const tJuego* juego);
 
 /**
  * @brief Libera los recursos y muestra el resultado final de la partida.
@@ -140,7 +148,7 @@ int juegoTermino(const tJuego *juego);
  *
  * @param juego Puntero constante al estado del juego.
  */
-void terminarJuego(const tJuego *juego);
+void terminarJuego(const tJuego* juego);
 
 /**
  * @brief Procesa un movimiento individual dentro del turno.
@@ -153,7 +161,7 @@ void terminarJuego(const tJuego *juego);
  * @param t Puntero a la estructura que describe el movimiento a realizar.
  * @return 1 si el movimiento se realizo correctamente, 0 en caso de error.
  */
-int correrTurno(tJuego *juego, tTurno *t);
+int correrTurno(tJuego* juego, tTurno* t);
 
 /**
  * @brief Simula la tirada del dado de DADO caras.
@@ -165,7 +173,12 @@ int correrTurno(tJuego *juego, tTurno *t);
  */
 int tirarDado(void);
 
-int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg);
+int cargarConfiguracion(const char* nombreArchivo, tConfig* cfg);
 
-int cargarConfiguracionPorDefecto(const char *nom, const tConfig *cfg);
+int cargarConfiguracionPorDefecto(const char* nom, tConfig* cfg);
+
+void inicializarRegistroMovimientos(tJuego* juego);
+void registrarMovimientoJugador(tJuego* juego, int mov);
+void mostrarRegistroMovimientos(tJuego* juego);
+void liberarRegistroMovimientos(tJuego* juego);
 #endif

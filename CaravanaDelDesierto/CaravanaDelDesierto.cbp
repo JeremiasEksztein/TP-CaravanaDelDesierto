@@ -5,7 +5,7 @@
 		<Option title="CaravanaDelDesierto" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="utils/;tui/;juego/;escenas/;usuario/;juego/tablero/;juego/entidades/;start/" />
+		<Option virtualFolders="utils/;start/;start/;utils/;juego/entidades/;juego/tablero/;juego/;usuario/;interfaz/;app/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/CaravanaDelDesierto" prefix_auto="1" extension_auto="1" />
@@ -13,6 +13,10 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-ansi" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -34,12 +38,18 @@
 		</Compiler>
 		<Unit filename="AdministradorDeJuego.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="app/" />
 		</Unit>
-		<Unit filename="AdministradorDeJuego.h" />
+		<Unit filename="AdministradorDeJuego.h">
+			<Option virtualFolder="app/" />
+		</Unit>
 		<Unit filename="Ranking.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="app/" />
 		</Unit>
-		<Unit filename="Ranking.h" />
+		<Unit filename="Ranking.h">
+			<Option virtualFolder="app/" />
+		</Unit>
 		<Unit filename="arbolBinBusq.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="utils/" />
@@ -70,8 +80,11 @@
 		</Unit>
 		<Unit filename="interfaz.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="interfaz/" />
 		</Unit>
-		<Unit filename="interfaz.h" />
+		<Unit filename="interfaz.h">
+			<Option virtualFolder="interfaz/" />
+		</Unit>
 		<Unit filename="juego.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="juego/" />
@@ -110,6 +123,10 @@
 		</Unit>
 		<Unit filename="turnos.h">
 			<Option virtualFolder="juego/" />
+		</Unit>
+		<Unit filename="usuarios_db.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="usuario/" />
 		</Unit>
 		<Unit filename="usuarios_db.h">
 			<Option virtualFolder="usuario/" />

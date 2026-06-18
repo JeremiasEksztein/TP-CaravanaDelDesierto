@@ -6,18 +6,15 @@
  *          y finalización de la partida.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+
 
 #include "juego.h"
-#include "tablero.h"
-#include "jugador.h"
-#include "bandido.h"
 
-/**
- * @brief Simula el lanzamiento de un dado.
- * @return Un número entero aleatorio entre 1 y DADO (inclusive).
- */
+
+ /**
+	* @brief Simula el lanzamiento de un dado.
+	* @return Un número entero aleatorio entre 1 y DADO (inclusive).
+	*/
 int tirarDado()
 {
 	return (rand() % DADO) + 1;
@@ -30,13 +27,13 @@ int tirarDado()
  * @param c Puntero a la configuración del tablero y los bandidos.
  * @return OK si la inicialización fue exitosa, o un código de error en caso contrario.
  */
-int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
+int iniciarJuego(tJuego* juego, tJugador* j, const tConfig* c)
 {
 	int code;
 	tTablero t;
-	tBandido *b;
+	tBandido* b;
 
-	// Verificar que la configuración es válida antes de proceder con la inicialización.
+	/* Verificar que la configuración es válida antes de proceder con la inicialización. */
 	if ((code = verificarCapacidad(&(c->tCfg))) != OK) {
 		return code;
 	}
@@ -44,7 +41,7 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 	juego->jugador = j;
 
 	juego->bandido =
-		(tBandido *)malloc(sizeof(tBandido) * c->tCfg.maxBands);
+		(tBandido*)malloc(sizeof(tBandido) * c->tCfg.maxBands);
 	if (!juego->bandido) {
 		return -3;
 	}
@@ -55,7 +52,9 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 
 	crearTablero(&t, c->tCfg.cantCasillas);
 	if ((code = distribuirCasillas(&t, &(c->tCfg), juego->jugador,
-				       juego->bandido)) != OK) {
+																 juego->bandido)) != OK) {
+		listaCircularDobleDestruir(&t.casillas);
+		free(juego->bandido);
 		return code;
 	}
 
@@ -63,7 +62,9 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
 	juego->tablero = t;
 	juego->turno = 0;
 	juego->cantBandidosActivos = c->tCfg.maxBands;
-	
+	juego->cantMovimientos = 0;
+	inicializarRegistroMovimientos(juego);
+
 	return OK;
 }
 
@@ -74,7 +75,7 @@ int iniciarJuego(tJuego *juego, tJugador *j, const tConfig *c)
  * @return 1 si el bandido y el jugador comparten posición y el jugador
  *         no es invulnerable, 0 en caso contrario.
  */
-static int hayCaptura(const tJugador *j, const tBandido *b)
+static int hayCaptura(const tJugador* j, const tBandido* b)
 {
 	return (j->pos == b->pos && j->invulnerable != 1);
 }
@@ -85,7 +86,7 @@ static int hayCaptura(const tJugador *j, const tBandido *b)
  * @param id Identificador del bandido a buscar.
  * @return El índice del bandido en el arreglo si se encuentra, -1 en caso contrario.
  */
-static int buscarBandidoPorId(const tJuego *juego, int id)
+static int buscarBandidoPorId(const tJuego* juego, int id)
 {
 	int i;
 	for (i = 0; i < juego->cantBandidosActivos; i++) {
@@ -103,15 +104,16 @@ static int buscarBandidoPorId(const tJuego *juego, int id)
  * @param juego Puntero a la estructura del juego.
  * @param idxBandido Índice del bandido que capturó al jugador.
  */
-static void aplicarCaptura(tJuego *juego, int posJugadorEnTablero)
+static void aplicarCaptura(tJuego* juego, int posJugadorEnTablero)
 {
-	tJugador *j = juego->jugador;
+	tJugador* j = juego->jugador;
 
 	quitarVida(j);
 	quitarOmitirTurno(j);
 	colocarJugadorEnPos(j, 0);
+	hacerInvulnerable(j);
 	printf("[DEBUG captura] Reubicando jugador a pos=0 (posAnt ahora=%d)\n",
-	       j->posAnterior);
+				 j->posAnterior);
 	quitarJugadorDePos(&(juego->tablero), posJugadorEnTablero);
 	ponerJugadorEnPosTablero(&(juego->tablero), 0);
 }
@@ -121,75 +123,61 @@ static void aplicarCaptura(tJuego *juego, int posJugadorEnTablero)
  * @param juego Puntero a la estructura del juego.
  * @param t Puntero constante al turno con la información de movimiento.
  */
-static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
+static void moverYActualizarJugador(tJuego* juego, const tTurno* t)
 {
 	int i;
-	tJugador *j = juego->jugador;
+	tJugador* j = juego->jugador;
 	tCasilla tc;
 
 	/*
 	printf("[DEBUG turnoJugador] mov=%d tablero.cant=%d\n", t->mov,
-	       juego->tablero.cant);
+				 juego->tablero.cant);
 	*/
 	moverJugador(j, t->mov, juego->tablero.cant);
 
 	listaCircularDobleMirarEnPos(&juego->tablero.casillas, &tc,
-				     sizeof(tCasilla), j->pos);
+															 sizeof(tCasilla), j->pos);
+
+	switch (tc.base) {
+	case CASILLA_TORMENTA:
+		omitirTurno(j);
+		break;
+	case CASILLA_OASIS:
+		hacerInvulnerable(j);
+		break;
+	case CASILLA_PREMIO:
+		obtenerPunto(j);
+		consumirCasilla(&(juego->tablero), j->pos);
+		break;
+	case CASILLA_VIDA:
+		obtenerVida(j);
+		consumirCasilla(&(juego->tablero), j->pos);
+		break;
+	}
 
 	for (i = 0; i < juego->cantBandidosActivos; i++) {
 		if (hayCaptura(j, &juego->bandido[i])) {
 			int last;
-			/*
-			printf("[DEBUG turnoJugador] CAPTURA con bandido idx=%d\n",
-			       i);
-			*/
+
 			quitarBandidoDePos(&(juego->tablero),
-					   juego->bandido[i].pos);
+												 juego->bandido[i].pos);
 			last = juego->cantBandidosActivos - 1;
 			if (i != last) {
-				/*
-				printf("[DEBUG captura] Swapping bandidos: idx=%d <-> last=%d\n",
-				       i, last);
-				*/
+
 				tBandido aux = juego->bandido[last];
 				juego->bandido[last] = juego->bandido[i];
 				juego->bandido[i] = aux;
 			}
 			juego->cantBandidosActivos--;
-			/*
-			printf("[DEBUG captura] cantBandidosActivos ahora=%d\n",
-			       juego->cantBandidosActivos);
-			*/
-			aplicarCaptura(juego, j->posAnterior);
+
+			aplicarCaptura(juego, j->pos);
 			return;
 		}
 	}
 
-	switch (tc.base) {
-	case CASILLA_TORMENTA:
-		j->omitirTurno++;
-		break;
-	case CASILLA_OASIS:
-		j->invulnerable++;
-		break;
-	case CASILLA_PREMIO:
-		j->puntos++;
-		consumirCasilla(&(juego->tablero), j->pos);
-		break;
-	case CASILLA_VIDA:
-		j->vidas++;
-		consumirCasilla(&(juego->tablero), j->pos);
-		break;
-	}
 
-	/*
-	printf("[DEBUG turnoJugador] sincronizando jugador pos=%d posAnt=%d\n",
-	       obtenerPosJugador(j), obtenerPosAnteriorJugador(j));
-	*/
 	sincronizarJugadorEnTablero(j, &(juego->tablero));
-	/*
-	printf("[DEBUG turnoJugador] fin turno\n");
-	*/
+
 }
 
 /**
@@ -197,58 +185,43 @@ static void moverYActualizarJugador(tJuego *juego, const tTurno *t)
  * @param juego Puntero a la estructura del juego.
  * @param t Puntero constante al turno con el identificador y movimiento del bandido.
  */
-static void moverYActualizarBandido(tJuego *juego, const tTurno *t)
+static void moverYActualizarBandido(tJuego* juego, const tTurno* t)
 {
 	int idx = buscarBandidoPorId(juego, t->id);
-	tJugador *j = juego->jugador;
-	tBandido *b;
+	tJugador* j = juego->jugador;
+	tBandido* b;
 
 	if (idx < 0) {
 		return;
 	}
 
 	b = &juego->bandido[idx];
-	/*
-	printf("[DEBUG turnoBandido] id=%d mov=%d tablero.cant=%d\n", t->id,
-	       t->mov, juego->tablero.cant);
-	*/
+
 	moverBandido(b, t->mov, juego->tablero.cant);
 	if (hayCaptura(j, b)) {
 		if (j->invulnerable) {
 			quitarInvulnerable(j);
-		} else {
-			/*
-			printf("[DEBUG turnoBandido] CAPTURA!\n");
-			*/
+		}
+		else {
 			aplicarCaptura(juego, j->pos);
+			MostrarMensajePerdidaDeVida(j->name);
 		}
 		eliminarBandidoDeTablero(&(juego->tablero), b);
 		if (idx != juego->cantBandidosActivos - 1) {
 			tBandido aux =
 				juego->bandido[juego->cantBandidosActivos - 1];
-			/*
-			printf("[DEBUG captura] Swapping bandidos: idx=%d <-> last=%d\n",
-			       idx, juego->cantBandidosActivos - 1);
-			*/
+
 			juego->bandido[juego->cantBandidosActivos - 1] = *b;
 			*b = aux;
 		}
 		juego->cantBandidosActivos--;
-		/*
-		printf("[DEBUG captura] cantBandidosActivos ahora=%d\n",
-		       juego->cantBandidosActivos);
-		*/
+
 		return;
 	}
 
-	/*
-	printf("[DEBUG turnoBandido] sincronizando bandido pos=%d posAnt=%d\n",
-	       obtenerPosBandido(b), obtenerPosAnteriorBandido(b));
-	*/
+
 	sincronizarBandidoEnTablero(b, &(juego->tablero));
-	/*
-	printf("[DEBUG turnoBandido] fin turno\n");
-	*/
+
 }
 
 /**
@@ -257,18 +230,20 @@ static void moverYActualizarBandido(tJuego *juego, const tTurno *t)
  * @param t Puntero al turno a ejecutar.
  * @return 1 si el jugador llegó a la última casilla (ganó el juego), 0 en caso contrario.
  */
-int correrTurno(tJuego *juego, tTurno *t)
+int correrTurno(tJuego* juego, tTurno* t)
 {
-	//Si el turno es de jugador
+	juego->cantMovimientos++;
+
+	/* Si el turno es de jugador */
 	if (t->tipo == EVT_JUGADOR) {
 		moverYActualizarJugador(juego, t);
 		if (obtenerPosJugador(juego->jugador) ==
-		    juego->tablero.cant - 1) {
+				juego->tablero.cant - 1) {
 			return 1;
 		}
 		return 0;
 	}
-	//Si es de bandido:
+	/* Si es de bandido: */
 	moverYActualizarBandido(juego, t);
 	return 0;
 }
@@ -277,7 +252,7 @@ int correrTurno(tJuego *juego, tTurno *t)
  * @brief Incrementa el contador de turnos del juego.
  * @param j Puntero a la estructura del juego.
  */
-void terminarTurno(tJuego *j)
+void terminarTurno(tJuego* j)
 {
 	j->turno++;
 }
@@ -286,11 +261,68 @@ void terminarTurno(tJuego *j)
  * @brief Finaliza el juego y libera los recursos asociados.
  * @param juego Puntero constante a la estructura del juego.
  */
-void terminarJuego(const tJuego *juego);
-
-int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
+void terminarJuego(const tJuego* juego)
 {
-	FILE *f;
+	(void)juego;
+	/* Placeholder: los recursos de la partida se liberan en AdministrarJuego. */
+}
+
+void inicializarRegistroMovimientos(tJuego* juego)
+{
+	colaCrear(&juego->registroMovimientos);
+}
+
+void registrarMovimientoJugador(tJuego* juego, int mov)
+{
+	colaEncolar(&juego->registroMovimientos, &mov, sizeof(int));
+}
+
+void mostrarRegistroMovimientos(tJuego* juego)
+{
+	tCola copia;
+	int mov;
+
+	printf("\n=== Registro de movimientos ===\n");
+
+	if (colaEstaVacia(&juego->registroMovimientos)) {
+		printf("(sin movimientos)\n");
+		return;
+	}
+
+	/* Trabajamos sobre una copia para no destruir la original */
+	colaCrear(&copia);
+
+	/* Volcamos toda la cola original a la copia */
+	while (!colaEstaVacia(&juego->registroMovimientos)) {
+		colaDesencolar(&juego->registroMovimientos, &mov, sizeof(int));
+		colaEncolar(&copia, &mov, sizeof(int));
+	}
+
+	/* Mostramos desde la copia y restauramos la original */
+	while (!colaEstaVacia(&copia)) {
+		colaDesencolar(&copia, &mov, sizeof(int));
+		colaEncolar(&juego->registroMovimientos, &mov, sizeof(int));
+
+		if (mov > 0) {
+			printf("F%d ", mov);
+		}
+		else {
+			printf("B%d ", -mov);
+		}
+	}
+	printf("\n===============================\n");
+
+	colaDestruir(&copia);
+}
+
+void liberarRegistroMovimientos(tJuego* juego)
+{
+	colaDestruir(&juego->registroMovimientos);
+}
+
+int cargarConfiguracion(const char* nombreArchivo, tConfig* cfg)
+{
+	FILE* f;
 	char linea[TAM_LINEA];
 	char* iterador;
 	int valor;
@@ -299,51 +331,69 @@ int cargarConfiguracion(const char *nombreArchivo, tConfig *cfg)
 	if (!f) {
 		return -1;
 	}
-	while (fgets(linea,sizeof(linea),f)) {
-        iterador = strrchr(linea,'\n');
-        if(iterador)
-        {
-            *iterador = '\0';
-        }
-        iterador = strrchr(linea,':');
-        valor = atoi((iterador+2));
-        *iterador = '\0';
+	while (fgets(linea, sizeof(linea), f)) {
+		iterador = strrchr(linea, '\n');
+		if (iterador) {
+			*iterador = '\0';
+		}
+		iterador = strrchr(linea, ':');
+		if (!iterador) {
+			continue;
+		}
+		valor = atoi((iterador + 2));
+		*iterador = '\0';
 		if (strcmp(linea, "cantidad_posiciones") == 0) {
 			cfg->tCfg.cantCasillas = valor;
-		} else if (strcmp(linea, "vidas_inicio") == 0) {
+		}
+		else if (strcmp(linea, "vidas_inicio") == 0) {
 			cfg->vidasInicio = valor;
 			cfg->tCfg.vidasInicio = valor;
-		} else if (strcmp(linea, "maximo_bandidos") == 0) {
+		}
+		else if (strcmp(linea, "maximo_bandidos") == 0) {
 			cfg->tCfg.maxBands = valor;
-		} else if (strcmp(linea, "maximo_premios") == 0) {
+		}
+		else if (strcmp(linea, "maximo_premios") == 0) {
 			cfg->tCfg.maxPrem = valor;
-		} else if (strcmp(linea, "maximo_vidas_extra") == 0) {
+		}
+		else if (strcmp(linea, "maximo_vidas_extra") == 0) {
 			cfg->tCfg.maxVida = valor;
-		} else if (strcmp(linea, "maximo_oasis") == 0) {
+		}
+		else if (strcmp(linea, "maximo_oasis") == 0) {
 			cfg->tCfg.maxOasis = valor;
-		} else if (strcmp(linea, "maximo_tormentas") == 0) {
+		}
+		else if (strcmp(linea, "maximo_tormentas") == 0) {
 			cfg->tCfg.maxTor = valor;
 		}
 	}
-
+	if (cfg->tCfg.cantCasillas <= 0 || cfg->tCfg.maxBands < 0 || cfg->tCfg.maxTor < 0 || cfg->tCfg.maxVida <= 0 || cfg->tCfg.maxPrem < 0 || cfg->tCfg.maxOasis < 0)
+	{
+		fclose(f);
+		return -1;
+	}
 	fclose(f);
 	return OK;
 }
 
-int cargarConfiguracionPorDefecto(const char *nom, const tConfig *cfg)
+int cargarConfiguracionPorDefecto(const char* nom, tConfig* cfg)
 {
-	FILE *f = fopen(nom, "wt");
+	FILE* f = fopen(nom, "wt");
 	if (!f) {
 		return -1;
 	}
-
-	fprintf(f, "CANT_CASILLAS=%d\n", cfg->tCfg.cantCasillas);
-	fprintf(f, "VIDAS_INICIO=%d\n", cfg->vidasInicio);
-	fprintf(f, "MAXIMO_BANDIDOS=%d\n", cfg->tCfg.maxBands);
-	fprintf(f, "MAXIMO_PREMIOS=%d\n", cfg->tCfg.maxPrem);
-	fprintf(f, "MAXIMO_VIDAS_EXTRAS=%d\n", cfg->tCfg.maxVida);
-	fprintf(f, "MAXIMO_OASIS=%d\n", cfg->tCfg.maxOasis);
-	fprintf(f, "MAXIMO_TORMENTAS=%d\n", cfg->tCfg.maxTor);
+	cfg->tCfg.cantCasillas = CANT_CASILLAS_DEFAULT;
+	cfg->vidasInicio = CANT_VIDA_DEFAULT;
+	cfg->tCfg.vidasInicio = CANT_VIDA_DEFAULT;
+	cfg->tCfg.maxBands = CANT_BANDIDOS_DEFAULT;
+	cfg->tCfg.maxPrem = CANT_PREMIO_DEFAULT;
+	cfg->tCfg.maxOasis = CANT_OASIS_DEFAULT;
+	cfg->tCfg.maxTor = CANT_TOR_DEFAULT;
+	fprintf(f, "cantidad_posiciones: %d\n", cfg->tCfg.cantCasillas);
+	fprintf(f, "vidas_inicio: %d\n", cfg->vidasInicio);
+	fprintf(f, "maximo_bandidos: %d\n", cfg->tCfg.maxBands);
+	fprintf(f, "maximo_premios: %d\n", cfg->tCfg.maxPrem);
+	fprintf(f, "maximo_vidas_extra: %d\n", cfg->tCfg.maxVida);
+	fprintf(f, "maximo_oasis: %d\n", cfg->tCfg.maxOasis);
+	fprintf(f, "maximo_tormentas: %d\n", cfg->tCfg.maxTor);
 
 	fclose(f);
 	return OK;

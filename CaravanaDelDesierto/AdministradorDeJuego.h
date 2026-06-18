@@ -5,15 +5,21 @@
 #include "Ranking.h"
 #include "cola.h"
 #include "interfaz.h"
+#include "usuarios_db.h"
+
 #define AGREGADO 2
 #define MOSTRAR 1
 #define JUGADOR_GANO 0
-#define MEMORIA_LLENA -1
+#define MEMORIA_LLENA -2
 #define DERROTA -1
 #define JUEGO_CONTINUA 1
-int AdministrarJuego();
 
-int AdministrarRanking(int operacion, void* extras);
+int AdministrarJuego(const char *nombreJugador, int idJugador,
+                     tTabla *tablaJugadores, tRegistroPartida *partidaOut);
 
-int Jugar(tJuego* jue,tJugador* jug, tTablero* partida);
+int AdministrarRanking(int operacion, tTabla *tablaJugadores);
+
+int Jugar(tJuego* jue, tJugador* jug, tTablero* partida,
+          int idJugador, tRegistroPartida *partidaOut);
+
 #endif

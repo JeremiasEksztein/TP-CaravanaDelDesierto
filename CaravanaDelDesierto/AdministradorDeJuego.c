@@ -1,119 +1,172 @@
 #include "AdministradorDeJuego.h"
 #include "juego.h"
 
-int AdministrarJuego()
+int AdministrarJuego(const char *nombreJugador, int idJugador,
+		     tTabla *tablaJugadores, tRegistroPartida *partidaOut)
 {
 	short int retorno;
 	tJuego partidaActual;
 	tConfig configActual;
 	tJugador jugadorActual;
+	FILE *archPartidas;
 
 	if (cargarConfiguracion(FILE_CONFIG, &configActual) != 0) {
-		//MostrarMensajeArchivoNoEncontrado(ARCHIVO_CONFIG_TABLERO);
 		cargarConfiguracionPorDefecto(FILE_CONFIG, &configActual);
 	}
-	//crearConfig(&configActual, NIVEL_DEFAULT, DIFICULTAD_DEFAULT);
-	crearJugador(&jugadorActual, "Jugador1", VIDAS_DEFAULT);
+	crearJugador(&jugadorActual, nombreJugador, VIDAS_DEFAULT);
 	retorno = iniciarJuego(&partidaActual, &jugadorActual, &configActual);
+
+	mostrarTableroCompacto(&partidaActual.tablero, jugadorActual.pos);
 	if (retorno == 0) {
 		retorno = JUEGO_CONTINUA;
 		while (retorno == JUEGO_CONTINUA) {
-			//Jugar
 			retorno = Jugar(&partidaActual, &jugadorActual,
-					&partidaActual.tablero);
+					&partidaActual.tablero, idJugador,
+					partidaOut);
 		}
 	}
-	//AdministrarRanking(AGREGADO, &jugadorActual);
+
+	if (retorno == JUGADOR_GANO || retorno == DERROTA) {
+		mostrarRegistroMovimientos(&partidaActual);
+		liberarRegistroMovimientos(&partidaActual);
+
+		archPartidas = fopen(PARTIDA_DB, "ab");
+		if (archPartidas) {
+			size_t written = fwrite(partidaOut,
+						sizeof(tRegistroPartida), 1,
+						archPartidas);
+			 if(written != 1)
+                    puts("Error escribiendo la partida");
+			fclose(archPartidas);
+		} else {
+			printf("Error al abrir %s para escritura\n",
+			       PARTIDA_DB);
+		}
+
+		if (tablaJugadores) {
+			tRegistroJugador current, searchKey;
+			memset(&searchKey, 0, sizeof(searchKey));
+			strncpy(searchKey.nombre, nombreJugador,
+				TAM_NOMBRE_JUG - 1);
+			searchKey.nombre[TAM_NOMBRE_JUG - 1] = '\0';
+
+		if (tablaBuscar(tablaJugadores, &searchKey, &current) ==
+		    OK) {
+			current.partidasJugadas++;
+			tablaActualizar(tablaJugadores, &searchKey,
+					&current);
+		}
+		}
+	}
+
+	free(partidaActual.bandido);
+	listaCircularDobleDestruir(&partidaActual.tablero.casillas);
 	return retorno;
 }
 
-int AdministrarRanking(int operacion, void *extras)
+int AdministrarRanking(int operacion, tTabla *tablaJugadores)
 {
 	switch (operacion) {
 	case AGREGADO:
-		GuardarJugadorEnRanking(extras);
 		break;
 	case MOSTRAR:
-		MostrarRankingDeJugadores();
+		MostrarRanking(tablaJugadores);
 		break;
 	}
 	return 0;
 }
 
-int Jugar(tJuego *jue, tJugador *jug, tTablero *partida)
+int Jugar(tJuego *jue, tJugador *jug, tTablero *partida, int idJugador,
+	  tRegistroPartida *partidaOut)
 {
-	//Auxiliares
-	unsigned totalDeTurnos = 1 + jue->cantBandidosActivos;
 	short int dado;
 	int i;
-	//Vitales
 	tCola colaDeTurnos;
 	tTurno actual;
 	short int banderaDeVictoria = 0;
 
-	tTurno *turnos = (tTurno *)malloc(totalDeTurnos * sizeof(tTurno));
+	tTurno *turnos =
+		(tTurno *)malloc(jue->cantBandidosActivos * sizeof(tTurno));
 
 	if (!turnos) {
 		return MEMORIA_LLENA;
 	}
 
-	//Siempre el primer turno es del jugador.
-	IniciarElTurnoDelJugador(&(turnos[0]));
+	colaCrear(&colaDeTurnos);
+
+	if (ConsultarOmisionDeTurno(jug) > 0) {
+		MostrarMensajeOmisionDeTurno(jug->name);
+		quitarOmitirTurno(jug);
+		esperar(1500);
+	} else {
+		short int movJugador;
+		MostrarMensajeEsTurnoDeJugador(jug->name);
+		dado = tirarDado();
+		movJugador = SolicitarDireccionDeMovimiento(jug->name, dado);
+		movJugador *= dado;
+		registrarMovimientoJugador(jue, movJugador);
+		IniciarElTurnoDelJugador(&actual);
+		crearTurnoJugador(&actual, movJugador, partida, jug);
+		colaEncolar(&colaDeTurnos, &actual, sizeof(tTurno));
+	}
 
 	for (i = 0; i < jue->cantBandidosActivos; i++) {
-		//Suma uno en la posición de turnos, porque el [0] es el jugador
-		IniciarElTurnoDelBandido(&(turnos[i + 1]),
+		dado = tirarDado();
+		MostrarMensajeTurnoBandido(dado);
+		IniciarElTurnoDelBandido(&actual,
 					 obtenerIdBandido(&(jue->bandido[i])));
+		crearTurnoBandido(&actual, jue->bandido + i, jug, partida,
+				  dado);
+		turnos[i] = actual;
 	}
-	//Comienza Turno
-	//Primero los desordenamos
-	DesordenarVectorDeTurnos(turnos, totalDeTurnos);
 
-	colaCrear(&colaDeTurnos);
-	//Colocarlos en la cola
-	for (i = 0; i < totalDeTurnos; i++) {
+	DesordenarVectorDeTurnos(turnos, jue->cantBandidosActivos);
+	for (i = 0; i < jue->cantBandidosActivos; i++) {
 		colaEncolar(&colaDeTurnos, turnos + i, sizeof(tTurno));
 	}
 	free(turnos);
-	while (!colaEstaVacia(&colaDeTurnos)) {
-		//Aun quedan turnos.
-		colaDesencolar(&colaDeTurnos, &actual, sizeof(tTurno));
-		if (esTurnoDeJugador(&actual)) {
-			//El jugador solo puede hacer algo si no está en estado de omisión
-			MostrarMensajeEsTurnoDeJugador(jug->name);
-			if (ConsultarOmisionDeTurno(jug) == OMISION) {
-				//Realizar un mensaje que explique al jugador que no puede jugar.
-				MostrarMensajeOmisionDeTurno(jug->name);
-				quitarOmitirTurno(jug);
 
-			} else {
-				//Lógica de jugabilidad.
-				dado = tirarDado();
-				//Logica de eleccion de direccion
-				
-				actual.dir =  SolicitarDireccionDeMovimiento(jug->name, dado);	
-				actual.dir*=dado;
-				crearTurnoJugador(&actual, dado, partida, jug);
-			}
-		} else 
-		{
-			dado = tirarDado();
-			MostrarMensajeTurnoBandido(dado);
-			//Hay que buscar el id del correspondiente bandido
-			i = BuscarIndiceDeBandido(jue->bandido,actual.id, jue->cantBandidosActivos);
-			crearTurnoBandido(&actual, 
-				jue->bandido + i,
-					  jug, partida, dado);
-		}
+	limpiarPantalla();
+	mostrarTableroCompacto(partida, jug->pos);
+	MostrarEstadoJugador(jug);
+
+	while (!colaEstaVacia(&colaDeTurnos)) {
+		colaDesencolar(&colaDeTurnos, &actual, sizeof(tTurno));
 		banderaDeVictoria = correrTurno(jue, &actual);
+
 		if (banderaDeVictoria) {
+			limpiarPantalla();
+			mostrarTableroCompacto(partida, jug->pos);
+			MostrarEstadoJugador(jug);
+			MostrarMensajeVictoria(jug->name);
 			colaDestruir(&colaDeTurnos);
+			if (partidaOut) {
+				partidaOut->idJugador = idJugador;
+				partidaOut->puntosObtenidos = jug->puntos;
+				partidaOut->movimientosRealizados =
+					jue->cantMovimientos;
+			}
 			return JUGADOR_GANO;
 		}
 		if (ConsultarVidasJugador(jug) == 0) {
+			limpiarPantalla();
+			mostrarTableroCompacto(partida, jug->pos);
+			MostrarEstadoJugador(jug);
+			MostrarMensajeDerrota(jug->name);
 			colaDestruir(&colaDeTurnos);
+			if (partidaOut) {
+				partidaOut->idJugador = idJugador;
+				partidaOut->puntosObtenidos = jug->puntos;
+				partidaOut->movimientosRealizados =
+					jue->cantMovimientos;
+			}
 			return DERROTA;
 		}
+
+		limpiarPantalla();
+		mostrarTableroCompacto(partida, jug->pos);
+		MostrarEstadoJugador(jug);
+		esperar(500);
 	}
 
 	colaDestruir(&colaDeTurnos);

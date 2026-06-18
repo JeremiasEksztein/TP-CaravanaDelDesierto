@@ -11,7 +11,7 @@
 #define JUGADOR_H
 #define OMISION 1
 /*Tipos de jugador*/
-#define TAM_NOMBRE 10
+#define TAM_NOMBRE 11
 typedef struct {
   int vidas;
   char name[TAM_NOMBRE];

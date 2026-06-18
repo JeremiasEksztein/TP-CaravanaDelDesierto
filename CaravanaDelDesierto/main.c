@@ -1,38 +1,79 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #include "interfaz.h"
 #include "AdministradorDeJuego.h"
+#include "usuarios_db.h"
 
-int main()
+
+int main(void)
 {
 	char opcion;
+	tTabla tablaJugadores;
+	tRegistroPartida partidaOut = { 0 };
+	tRegistroJugador regJugador, foundJugador;
+	char nombre[TAM_NOMBRE];
+	int idJugador;
 
-	// En esta parte hay un menú
+	srand(time(NULL));
+
+	tablaCrear(&tablaJugadores, JUGADORES_DB, JUGADORES_IDX,
+						 jugadorIndiceCmp, jugadorLeerClave, sizeof(tRegistroJugador),
+						 TAM_NOMBRE_JUG);
+	if (tablaAbrir(&tablaJugadores) != OK) {
+		printf("Error al abrir la base de datos de jugadores.\n");
+		printf("Verifique que el directorio tenga permisos de escritura.\n");
+		return 1;
+	}
+
 	opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
-	limpiarBuff();
+
 
 	while (opcion != SALIR) {
 		switch (opcion) {
 		case JUGAR:
+			limpiarPantalla();
 			printf("Iniciando el juego...\n");
-			// lógica inicio juego
-			if (AdministrarJuego() == 1) {
-				//Guardar en ranking;
+			SolicitarNombreJugador(nombre, TAM_NOMBRE);
+
+			memset(&regJugador, 0, sizeof(regJugador));
+			strncpy(regJugador.nombre, nombre, TAM_NOMBRE_JUG - 1);
+			regJugador.nombre[TAM_NOMBRE_JUG - 1] = '\0';
+
+			if (tablaBuscar(&tablaJugadores, &regJugador,
+											&foundJugador) == OK) {
+				idJugador = foundJugador.id;
 			}
-			//Guardar progreso
+			else {
+				idJugador = tablaProximoId(&tablaJugadores);
+				regJugador.id = idJugador;
+				regJugador.partidasJugadas = 0;
+				if (tablaIngresar(&tablaJugadores,
+													&regJugador) != OK) {
+					printf("Error al registrar nuevo jugador.\n");
+					break;
+				}
+			}
+
+			if (AdministrarJuego(nombre, idJugador, &tablaJugadores,
+													 &partidaOut) == JUGADOR_GANO) {
+				/* Victoria — persistencia ya manejada en AdministrarJuego */
+			}
 			break;
 		case RANKING:
+			limpiarPantalla();
 			printf("Mostrando el ranking...\n");
-			//  lógica para el ranking
-			if (AdministrarRanking(MOSTRAR, NULL) != 0) {
-				printf("No se encuentra el ranking.\n");
-			}
+			AdministrarRanking(MOSTRAR, &tablaJugadores);
 			break;
 		default:
-			printf("Opción inválida. Por favor, intente de nuevo.\n");
+			printf("Opcion invalida. Por favor, intente de nuevo.\n");
 		}
 		opcion = CrearMenuInicial(MENU_TEXTO, OPCIONES_MENU);
 	}
+
+	tablaCerrar(&tablaJugadores);
+	tablaDestruir(&tablaJugadores);
 	return 0;
 }

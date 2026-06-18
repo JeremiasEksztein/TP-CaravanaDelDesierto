@@ -1,11 +1,41 @@
+#if defined(__linux__) || defined(__gnu_linux__)
+#define _POSIX_C_SOURCE 199309L
+#endif
+
 #include "tablero.h"
 #include "jugador.h"
 #include "bandido.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-// Wrappers
-static int casillaPonerJugador(tCasilla *c)
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <time.h>
+#endif
+
+void esperar(unsigned int ms)
+{
+#ifdef _WIN32
+	Sleep(ms);
+#else
+	struct timespec ts;
+	ts.tv_sec = ms / 1000;
+	ts.tv_nsec = (long)(ms % 1000) * 1000000L;
+	nanosleep(&ts, NULL);
+#endif
+}
+
+void limpiarPantalla(void)
+{
+	printf("\033[2J\033[H");
+	fflush(stdout);
+}
+
+
+/* Wrappers */
+static int casillaPonerJugador(tCasilla* c)
 {
 	if (c->pieza == CASILLA_JUGADOR) {
 		return 0;
@@ -14,7 +44,7 @@ static int casillaPonerJugador(tCasilla *c)
 	return 1;
 }
 
-static int casillaQuitarJugador(tCasilla *c)
+static int casillaQuitarJugador(tCasilla* c)
 {
 	if (c->pieza == CASILLA_JUGADOR) {
 		c->pieza = 0;
@@ -23,13 +53,13 @@ static int casillaQuitarJugador(tCasilla *c)
 	return 0;
 }
 
-static void casillaPonerBandido(tCasilla *c)
+static void casillaPonerBandido(tCasilla* c)
 {
 	c->cantBandidosEnCasilla++;
 	c->pieza = CASILLA_BANDIDO;
 }
 
-static int casillaQuitarBandido(tCasilla *c)
+static int casillaQuitarBandido(tCasilla* c)
 {
 	c->cantBandidosEnCasilla--;
 	if (c->cantBandidosEnCasilla == 0) {
@@ -39,35 +69,35 @@ static int casillaQuitarBandido(tCasilla *c)
 	return 1;
 }
 
-static void wrapperQuitarJugador(void *ctx, void *d)
+static void wrapperQuitarJugador(void* ctx, void* d)
 {
 	(void)d;
-	casillaQuitarJugador((tCasilla *)ctx);
+	casillaQuitarJugador((tCasilla*)ctx);
 }
 
-static void wrapperPonerJugador(void *ctx, void *d)
+static void wrapperPonerJugador(void* ctx, void* d)
 {
 	(void)d;
-	casillaPonerJugador((tCasilla *)ctx);
+	casillaPonerJugador((tCasilla*)ctx);
 }
 
-static void wrapperQuitarBandido(void *ctx, void *d)
+static void wrapperQuitarBandido(void* ctx, void* d)
 {
 	(void)d;
-	casillaQuitarBandido((tCasilla *)ctx);
+	casillaQuitarBandido((tCasilla*)ctx);
 }
 
-static void wrapperPonerBandido(void *ctx, void *d)
+static void wrapperPonerBandido(void* ctx, void* d)
 {
 	(void)d;
-	casillaPonerBandido((tCasilla *)ctx);
+	casillaPonerBandido((tCasilla*)ctx);
 }
 
-static void wrapperConsumirCasilla(void *ctx, void *d)
+static void wrapperConsumirCasilla(void* ctx, void* d)
 {
-	tCasilla *c;
+	tCasilla* c;
 	(void)d;
-	c = (tCasilla *)ctx;
+	c = (tCasilla*)ctx;
 	c->base = CASILLA_NORMAL;
 }
 
@@ -80,10 +110,10 @@ static void wrapperConsumirCasilla(void *ctx, void *d)
  * @param t   Puntero al tablero donde se encuentra la casilla.
  * @param pos Indice de la casilla a consumir.
  */
-void consumirCasilla(tTablero *t, int pos)
+void consumirCasilla(tTablero* t, int pos)
 {
 	listaCircularDobleActualizarEnPos(&t->casillas, NULL, pos,
-					  wrapperConsumirCasilla);
+																		wrapperConsumirCasilla);
 }
 
 /**
@@ -95,10 +125,10 @@ void consumirCasilla(tTablero *t, int pos)
  * @param t   Puntero al tablero donde se encuentra la casilla.
  * @param pos Indice de la casilla de la que se quita el bandido.
  */
-void quitarBandidoDePos(tTablero *t, int pos)
+void quitarBandidoDePos(tTablero* t, int pos)
 {
 	listaCircularDobleActualizarEnPos(&t->casillas, NULL, pos,
-					  wrapperQuitarBandido);
+																		wrapperQuitarBandido);
 }
 
 /**
@@ -110,10 +140,10 @@ void quitarBandidoDePos(tTablero *t, int pos)
  * @param t   Puntero al tablero donde se encuentra la casilla.
  * @param pos Indice de la casilla de la que se quita al jugador.
  */
-void quitarJugadorDePos(tTablero *t, int pos)
+void quitarJugadorDePos(tTablero* t, int pos)
 {
 	listaCircularDobleActualizarEnPos(&t->casillas, NULL, pos,
-					  wrapperQuitarJugador);
+																		wrapperQuitarJugador);
 }
 
 /**
@@ -125,10 +155,10 @@ void quitarJugadorDePos(tTablero *t, int pos)
  * @param t   Puntero al tablero donde se encuentra la casilla.
  * @param pos Indice de la casilla donde se coloca al jugador.
  */
-void ponerJugadorEnPosTablero(tTablero *t, int pos)
+void ponerJugadorEnPosTablero(tTablero* t, int pos)
 {
 	listaCircularDobleActualizarEnPos(&t->casillas, NULL, pos,
-					  wrapperPonerJugador);
+																		wrapperPonerJugador);
 }
 
 /**
@@ -143,25 +173,26 @@ void ponerJugadorEnPosTablero(tTablero *t, int pos)
  *
  * @param d Puntero a la casilla (@ref tCasilla) a imprimir.
  */
-void prnt(void *d, void *aux)
+void prnt(void* d, void* aux)
 {
-	(void)aux;
 	tCasilla tc;
+	(void)aux;
 	if (!d) {
 		return;
 	}
-	tc = *(tCasilla *)d;
+	tc = *(tCasilla*)d;
 	if (tc.pieza) {
 		printf("[%c] base=%c bandidos=%d \n", tc.pieza, tc.base,
-		       tc.cantBandidosEnCasilla);
-	} else {
+					 tc.cantBandidosEnCasilla);
+	}
+	else {
 		printf(" .  base=%c bandidos=%d \n", tc.base,
-		       tc.cantBandidosEnCasilla);
+					 tc.cantBandidosEnCasilla);
 	}
 }
 
 /*Solo se debe usar al inicio de la partida*/
-static int ponerCasilla(tCasilla *c, tListaCircularDoble *l)
+static int ponerCasilla(tCasilla* c, tListaCircularDoble* l)
 {
 	int code;
 
@@ -185,44 +216,47 @@ static int ponerCasilla(tCasilla *c, tListaCircularDoble *l)
  * @param c Puntero a la casilla (@ref tCasilla) a inicializar.
  * @param tipo Tipo de casilla a crear (usando las constantes @ref tTipoCasilla).
  */
-/*
- * Crea la casilla al principio del juego
- */
-static void crearCasilla(tCasilla *c, const tTipoCasilla tipo)
+ /*
+	* Crea la casilla al principio del juego
+	*/
+static void crearCasilla(tCasilla* c, const tTipoCasilla tipo)
 {
 	if (tipo == CASILLA_INICIO) {
 		c->cantBandidosEnCasilla = 0;
 		c->base = tipo;
 		c->pieza = CASILLA_JUGADOR;
-	} else if (tipo == CASILLA_BANDIDO) {
+	}
+	else if (tipo == CASILLA_BANDIDO) {
 		c->cantBandidosEnCasilla = 1;
 		c->pieza = CASILLA_BANDIDO;
 		c->base = CASILLA_NORMAL;
-	} else {
+	}
+	else {
 		c->cantBandidosEnCasilla = 0;
 		c->pieza = 0;
 		c->base = tipo;
 	}
 }
 
-void crearTablero(tTablero *t, int nCasillas)
+void crearTablero(tTablero* t, int nCasillas)
 {
 	t->cant = nCasillas;
 	listaCircularDobleCrear(&(t->casillas));
 }
 
-int verificarCapacidad(const tConfigTablero *cfg)
+int verificarCapacidad(const tConfigTablero* cfg)
 {
 	if (cfg->cantCasillas < cfg->maxBands + cfg->maxTor + cfg->maxVida +
-					cfg->maxPrem + cfg->maxOasis) {
+			cfg->maxPrem + cfg->maxOasis) {
 		perror("Cantidad de objetos es mayor a las casillas disponibles");
 		return -1;
 	}
+
 	return OK;
 }
 
-int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
-		       tBandido *b)
+int distribuirCasillas(tTablero* t, const tConfigTablero* cfg, tJugador* j,
+											 tBandido* b)
 {
 	int i = 1;
 	int restO = cfg->maxOasis;
@@ -231,8 +265,9 @@ int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
 	int restP = cfg->maxPrem;
 	int restB = cfg->maxBands;
 	int restN = (cfg->cantCasillas - 2) -
-		    (restO + restT + restV + restP + restB);
+		(restO + restT + restV + restP + restB);
 	int total = restO + restT + restV + restP + restB + restN;
+	int r;
 
 	tCasilla c;
 
@@ -242,26 +277,31 @@ int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
 
 	for (; i < cfg->cantCasillas - 1; i++) {
 		total = restO + restT + restV + restP + restB + restN;
-		int r = rand() % total;
+		r = rand() % total;
 
 		if (r < restO) {
 			crearCasilla(&c, CASILLA_OASIS);
 			restO--;
-		} else if (r < restO + restT) {
+		}
+		else if (r < restO + restT) {
 			crearCasilla(&c, CASILLA_TORMENTA);
 			restT--;
-		} else if (r < restO + restT + restV) {
+		}
+		else if (r < restO + restT + restV) {
 			crearCasilla(&c, CASILLA_VIDA);
 			restV--;
-		} else if (r < restO + restT + restV + restP) {
+		}
+		else if (r < restO + restT + restV + restP) {
 			crearCasilla(&c, CASILLA_PREMIO);
 			restP--;
-		} else if (r < restO + restT + restV + restP + restB) {
+		}
+		else if (r < restO + restT + restV + restP + restB) {
 			crearCasilla(&c, CASILLA_BANDIDO);
 			colocarBandidoEnPos(b, i);
 			b++;
 			restB--;
-		} else {
+		}
+		else {
 			crearCasilla(&c, CASILLA_NORMAL);
 			restN--;
 		}
@@ -270,8 +310,6 @@ int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
 
 	crearCasilla(&c, CASILLA_META);
 	ponerCasilla(&c, &(t->casillas));
-
-	listaCircularDobleMostrarLR(&(t->casillas), prnt);
 
 	return OK;
 }
@@ -287,9 +325,9 @@ int distribuirCasillas(tTablero *t, const tConfigTablero *cfg, tJugador *j,
  * @param b Puntero a la segunda casilla (@ref tCasilla) a comparar.
  * @return 0 si ambas casillas tienen al jugador, -1 en caso contrario.
  */
-int cmpJugador(const void *a, const void *b)
+int cmpJugador(const void* a, const void* b)
 {
-	tCasilla *ctx = (tCasilla *)a, *d = (tCasilla *)b;
+	tCasilla* ctx = (tCasilla*)a, * d = (tCasilla*)b;
 	if (ctx->pieza == d->pieza && ctx->pieza == 'J') {
 		return 0;
 	}
@@ -308,40 +346,80 @@ int cmpJugador(const void *a, const void *b)
  * @return 0 si las casillas coinciden en tipo base o cantidad de bandidos,
  *         -1 en caso contrario.
  */
-int cmpBandido(const void *a, const void *b)
+int cmpBandido(const void* a, const void* b)
 {
-	tCasilla *ctx = (tCasilla *)a, *d = (tCasilla *)b;
+	tCasilla* ctx = (tCasilla*)a, * d = (tCasilla*)b;
 	if (ctx->base == d->base ||
-	    ctx->cantBandidosEnCasilla == d->cantBandidosEnCasilla) {
+			ctx->cantBandidosEnCasilla == d->cantBandidosEnCasilla) {
 		return 0;
 	}
 	return -1;
 }
 
-void mostrarTablero(const tTablero *t)
+void mostrarTableroCompacto(const tTablero* t, int posJugador)
 {
-	listaCircularDobleMostrarLR(&(t->casillas), prnt);
+	int i, b;
+	tCasilla c;
+	char base_char;
+	int has_jugador, n_bandidos;
+
+	if (t == NULL || t->cant == 0) {
+		return;
+	}
+
+	for (i = 0; i < t->cant; i++) {
+		if (listaCircularDobleMirarEnPos(
+			(tListaCircularDoble*)&(t->casillas), &c,
+			sizeof(tCasilla), i) != OK) {
+			break;
+		}
+
+		base_char = (c.base != CASILLA_NORMAL) ? (char)c.base : '.';
+		has_jugador = (i == posJugador);
+		n_bandidos = c.cantBandidosEnCasilla;
+
+		printf("[%c", base_char);
+
+		if (has_jugador)
+			printf(" J");
+
+		for (b = 0; b < n_bandidos; b++)
+			printf(" B");
+
+		if (!has_jugador && n_bandidos == 0)
+			printf(" .");
+
+		printf("]");
+	}
+	printf("\n");
 }
 
-static void sincronizarPieza(tTablero *t, int posAnterior, int posActual,
-			     tTipoCasilla tipo)
+void mostrarTablero(const tTablero* t)
+{
+	mostrarTableroCompacto(t, -1);
+}
+
+static void sincronizarPieza(tTablero* t, int posAnterior, int posActual,
+														 tTipoCasilla tipo)
 {
 	if (posAnterior != posActual) {
 		if (tipo == CASILLA_JUGADOR) {
 			listaCircularDobleActualizarEnPos(&(t->casillas), NULL,
-							  posAnterior,
-							  wrapperQuitarJugador);
-		} else {
+																				posAnterior,
+																				wrapperQuitarJugador);
+		}
+		else {
 			listaCircularDobleActualizarEnPos(&(t->casillas), NULL,
-							  posAnterior,
-							  wrapperQuitarBandido);
+																				posAnterior,
+																				wrapperQuitarBandido);
 		}
 	}
 
 	if (tipo == CASILLA_JUGADOR) {
 		listaCircularDobleActualizarEnPos(
 			&(t->casillas), NULL, posActual, wrapperPonerJugador);
-	} else {
+	}
+	else {
 		listaCircularDobleActualizarEnPos(
 			&(t->casillas), NULL, posActual, wrapperPonerBandido);
 	}
@@ -357,12 +435,10 @@ static void sincronizarPieza(tTablero *t, int posAnterior, int posActual,
  * @param t Puntero al tablero (@ref tTablero) donde se realiza el
  *        movimiento.
  */
-void sincronizarJugadorEnTablero(tJugador *j, tTablero *t)
+void sincronizarJugadorEnTablero(tJugador* j, tTablero* t)
 {
 	int posAnt = obtenerPosAnteriorJugador(j);
 	int posAct = obtenerPosJugador(j);
-	printf("[DEBUG sincronizarJugador] posAnt=%d -> posAct=%d\n", posAnt,
-	       posAct);
 	sincronizarPieza(t, posAnt, posAct, CASILLA_JUGADOR);
 }
 
@@ -376,12 +452,10 @@ void sincronizarJugadorEnTablero(tJugador *j, tTablero *t)
  * @param t Puntero al tablero (@ref tTablero) donde se realiza el
  *        movimiento.
  */
-void sincronizarBandidoEnTablero(tBandido *b, tTablero *t)
+void sincronizarBandidoEnTablero(tBandido* b, tTablero* t)
 {
 	int posAnt = obtenerPosAnteriorBandido(b);
 	int posAct = obtenerPosBandido(b);
-	printf("[DEBUG sincronizarBandido] posAnt=%d -> posAct=%d\n", posAnt,
-	       posAct);
 	sincronizarPieza(t, posAnt, posAct, CASILLA_BANDIDO);
 }
 
@@ -395,15 +469,15 @@ void sincronizarBandidoEnTablero(tBandido *b, tTablero *t)
  * @param t Puntero al tablero (@ref tTablero) del cual se elimina el bandido.
  * @param b Puntero al bandido (@ref tBandido) a eliminar del tablero.
  */
-void eliminarBandidoDeTablero(tTablero *t, tBandido *b)
+void eliminarBandidoDeTablero(tTablero* t, tBandido* b)
 {
 	listaCircularDobleActualizarEnPos(&t->casillas, NULL, b->posAnterior,
-					  wrapperQuitarBandido);
+																		wrapperQuitarBandido);
 }
 
-//Extras
+/* Extras */
 
-int ContarOcurrencias(const char *cadena, char caracter)
+int ContarOcurrencias(const char* cadena, char caracter)
 {
 	int contador = 0;
 

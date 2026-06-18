@@ -63,26 +63,17 @@ int obtenerPosAnteriorBandido(tBandido *bandido)
 	return bandido->posAnterior;
 }
 
-/**
- * @brief Actualiza la posicion del bandido a partir de un puntero a entero.
- *
- * @note Declaracion adelantada. La implementacion se encuentra en otro
- *       modulo o aun no esta definida.
- *
- * @param bandido Puntero al tBandido a modificar.
- * @param pos Puntero a entero con la nueva posicion.
- */
-void actualizarPosBandido(tBandido *bandido, void *pos);
+void actualizarPosBandido(tBandido *bandido, void *pos)
+{
+	bandido->pos = *(int *)pos;
+}
 
-/**
- * @brief Libera los recursos asociados al bandido.
- *
- * @note Declaracion adelantada. La implementacion se encuentra en otro
- *       modulo o aun no esta definida.
- *
- * @param bandido Puntero al tBandido a destruir.
- */
-void destruirBandido(tBandido *bandido);
+void destruirBandido(tBandido *bandido)
+{
+	(void)bandido;
+	/* No-op: bandidos are stored in a heap-allocated array freed
+	   as a whole by AdministrarJuego. */
+}
 
 /**
  * @brief Coloca el bandido en una posicion especifica del tablero.
@@ -119,7 +110,8 @@ void moverBandido(tBandido *b, const int mov, const int n)
 }
 int BuscarIndiceDeBandido(const tBandido* arrayBandidos, const int id, int cantBandidos)
 {
-	for(int i = 0; i < cantBandidos; i++)
+    int i;
+	for(i = 0; i < cantBandidos; i++)
 	{
 		if(arrayBandidos[i].id == id)
 		{
