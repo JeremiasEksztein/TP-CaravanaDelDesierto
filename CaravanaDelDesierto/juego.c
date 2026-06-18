@@ -113,8 +113,6 @@ static void aplicarCaptura(tJuego* juego, int posJugadorEnTablero)
 	quitarOmitirTurno(j);
 	colocarJugadorEnPos(j, 0);
 	hacerInvulnerable(j);
-	printf("[DEBUG captura] Reubicando jugador a pos=0 (posAnt ahora=%d)\n",
-				 j->posAnterior);
 	quitarJugadorDePos(&(juego->tablero), posJugadorEnTablero);
 	ponerJugadorEnPosTablero(&(juego->tablero), 0);
 }
