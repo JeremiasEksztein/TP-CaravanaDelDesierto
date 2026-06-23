@@ -75,13 +75,13 @@ Llegar a la **última casilla del tablero** (la meta) sin perder todas las vidas
 
 ## ⚙️ Compilación y ejecución
 
-El proyecto está escrito en **C99/C11 puro** y no requiere librerías externas. Se compila con `gcc` en Linux, macOS o Windows (MinGW/Cygwin).
+El proyecto está escrito en **C89 pedantic** y no requiere librerías externas. Se compila con `gcc` en Linux, macOS o Windows (MinGW/Cygwin).
 
 ### Compilación manual
 
 ```bash
 # Desde el directorio CaravanaDelDesierto/
-gcc -std=c99 -Wall -Wextra -pedantic -o bin/caravana \
+gcc -std=c89 -Wall -Wextra -pedantic -o bin/caravana \
     main.c \
     AdministradorDeJuego.c \
     arbolBinBusq.c \
@@ -286,5 +286,10 @@ En el directorio `Documentacion/` se encuentra el PDF original del trabajo prác
 ---
 
 ## 🧑‍💻 Autores
+
+- Doricich, Agustin Francisco
+- Eksztein Rolón, Jeremías Octavio
+- Miranda, Guillermo Damian 
+- Nieva, Alejo Nicolas
 
 Trabajo práctico de la materia **Algoritmos y Estructuras de Datos**.
